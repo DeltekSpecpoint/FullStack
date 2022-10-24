@@ -1,0 +1,3 @@
+[submodule "contacts-app"]
+	path = contacts-app
+	url = https://github.com/DeltekSpecpoint/FullStack.git
