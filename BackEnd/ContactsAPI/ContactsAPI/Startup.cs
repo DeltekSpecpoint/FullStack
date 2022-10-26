@@ -1,15 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Contact.Data;
+using Contacts.Logic.Mappers;
+using Contacts.Repositories;
+using Contacts.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace ContactsAPI
@@ -43,6 +42,30 @@ namespace ContactsAPI
                     },
                 });
             });
+
+            services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IContactRepository, ContactRepository>();
+            services.AddScoped<IContactMapper, ContactMapper>();
+
+            var options = new DbContextOptionsBuilder<ContactContext>()
+                    .UseInMemoryDatabase(databaseName: "Contacts")
+                    .Options;
+
+            services.AddSingleton<ContactContext>(x =>
+            {
+                var context = new ContactContext(options);
+
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                return context;
+            });
+
+            services.AddCors(options => options.AddPolicy("Default", x => 
+            {
+                x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            }));
+         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,9 +88,11 @@ namespace ContactsAPI
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("Default");
 
             app.UseAuthorization();
 
@@ -75,6 +100,7 @@ namespace ContactsAPI
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }
