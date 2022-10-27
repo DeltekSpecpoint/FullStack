@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 
-function AddContact(props) {
+function UpdateContact(props) {
+    const [name, setName] = useState(props.contact.name);
+    const [number, setNumber] = useState(props.contact.number);
+    const [email, setEmail] = useState(props.contact.emailAddress);
+    const [address, setAddress] = useState(props.contact.address);
 
-    const [name, setName] = useState('');
-    const [number, setNumber] = useState('');
-    const [email, setEmail] = useState('');
-    const [address, setAddress] = useState('');
-
-    let buildAddJson = event => {
+    let buildUpdateJson = event => {
         let json = 
         {
-            "contactId": "00000000-0000-0000-0000-000000000000",
+            "contactId": props.contact.contactId,
             "name": name,
             "number": number,
             "emailAddress": email,
             "address": address
         }
-        props.handleAddContact(json);
+        props.handleUpdateContact(props.contact.contactId, json);
     };
 
     let handleNameChange = event => {
@@ -34,10 +33,10 @@ function AddContact(props) {
     let handleAddressChange = event => {
         setAddress(event.target.value)
     };
-
+    
     return (
         <div className="signup-form col-md-8 col mx-auto">
-            <h2>Create Contact</h2>
+            <h2>Update Contact</h2>
             <div className="form-group">
                 <div className="row">
                     <div className="col"><input type="text" className="form-control" placeholder="Name" required="required" value={name} onChange={handleNameChange}></input></div>
@@ -50,11 +49,11 @@ function AddContact(props) {
                 <input type="text" className="form-control" name="email" placeholder="Email" required="required" value={email} onChange={handleEmailChange}></input>
             </div>  
             <div className="form-group">
-                <input type="text" className="form-control" name="Address" placeholder="Address" required="required" value={address} onChange={handleAddressChange}></input>
+                <input type="text" className="form-control" name="Address" required="required" value={address} onChange={handleAddressChange}></input>
             </div>
             <div className="form-group">
                 <div className="row">
-                <div className="col"><button type="submit" className="btn btn-success btn-lg btn-block" onClick={buildAddJson}>Add</button></div>
+                <div className="col"><button type="submit" className="btn btn-success btn-lg btn-block" onClick={buildUpdateJson}>Update</button></div>
                 <div className="col"><button type="submit" className="btn btn-success btn-lg btn-block" onClick={props.handleBack}>Back</button></div>
                 </div>
             </div>
@@ -62,4 +61,4 @@ function AddContact(props) {
     );
 }
 
-export default AddContact;
+export default UpdateContact;
