@@ -4,6 +4,7 @@ import ContactTable from './Pages/ContactTable';
 import Header from './Pages/Header';
 import AddContact from './Pages/AddContact';
 import UpdateContact from './Pages/UpdateContact';
+import Pagination from './Pages/Pagination';
 
 function MainComponent() {
     const [contacts, setContacts] = useState([]);
@@ -11,6 +12,18 @@ function MainComponent() {
     const [addContactvisibility, setAddContactVisibility] = useState(false);
     const [updateContactvisibility, setUpdateContactVisibility] = useState(false);
     const [mainContactVisibility, setMainContactVisibility] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(5);
+
+    //Get Contacts Per Page
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = contacts.slice(indexOfFirstPost, indexOfLastPost);
+
+    //Change Page Number
+    let paginate = pageNumber => {
+        setCurrentPage(pageNumber);
+    }
 
     useEffect(() => {
         GetContacts().then(
@@ -64,7 +77,7 @@ function MainComponent() {
         })
     };
 
-    let handleAddContactVisibility = event => {
+    let handleAddContactVisibility = _ => {
         setAddContactVisibility(true);
         setUpdateContactVisibility(false);
         setMainContactVisibility(false);
@@ -78,7 +91,7 @@ function MainComponent() {
         setMainContactVisibility(false);
     };
 
-    let handleBackButton = event => {
+    let handleBackButton = _ => {
         setAddContactVisibility(false);
         setUpdateContactVisibility(false);
         setMainContactVisibility(true);
@@ -86,10 +99,36 @@ function MainComponent() {
 
     return (
         <div>
-            {mainContactVisibility == true && <Header handleChange={handleSearch} handleAdd={handleAddContactVisibility} />}
-            {mainContactVisibility == true && <ContactTable contacts={contacts} handleDelete={handleDelete} handleUpdateContactVisibility={handleUpdateContactVisibility} />}
-            {addContactvisibility == true && updateContactvisibility == false && <AddContact handleBack={handleBackButton} handleAddContact={handleAddContact} />}
-            {addContactvisibility == false && updateContactvisibility == true && <UpdateContact handleBack={handleBackButton} handleUpdateContact={handleUpdateContact} contact={contact} />}
+            {mainContactVisibility == true &&
+                <Header handleChange={handleSearch}
+                    handleAdd={handleAddContactVisibility}
+                />}
+
+            {mainContactVisibility == true &&
+                <ContactTable
+                    contacts={currentPosts}
+                    handleDelete={handleDelete}
+                    handleUpdateContactVisibility={handleUpdateContactVisibility}
+                />}
+
+            {mainContactVisibility == true && <Pagination
+                postsPerPage={postsPerPage}
+                totalPosts={contacts.length}
+                paginate={paginate}
+            />}
+
+            {addContactvisibility == true && updateContactvisibility == false &&
+                <AddContact
+                    handleBack={handleBackButton}
+                    handleAddContact={handleAddContact}
+                />}
+
+            {addContactvisibility == false && updateContactvisibility == true &&
+                <UpdateContact
+                    handleBack={handleBackButton}
+                    handleUpdateContact={handleUpdateContact}
+                    contact={contact}
+                />}
         </div>
     );
 }
