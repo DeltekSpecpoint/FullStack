@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Contact.Data.Models;
+using Contacts.Logic.Mappers;
+using Contacts.Models;
+using Contacts.Services;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,36 +14,67 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class ContactController : Controller
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IContactService _contactServices;
+        private readonly IContactMapper _contactMapper;
+
+        public ContactController(IContactService contactServices, IContactMapper ContactMapper)
         {
-            return new string[] { "value1", "value2" };
+            _contactServices = contactServices;
+            _contactMapper = ContactMapper;
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET: api/<controller>
+        [HttpGet]
+        public async Task<IEnumerable<ContactModel>> GetAll()
         {
-            return "value";
+            return await _contactServices.GetContactsAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ContactModel> GetAsync(Guid id)
+        {
+            return await _contactServices.GetContactAsync(id);
         }
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<ObjectResult> PostAsync([FromBody] ContactDto contact)
         {
+            try
+            {
+                var model = _contactMapper.ToModel(contact);
+                return Ok(await _contactServices.CreateContactAsync(model));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<ObjectResult> PutAsync(Guid id, [FromBody] ContactDto contact)
         {
+            try
+            {
+                contact.ContactId = id;
+
+                var model = _contactMapper.ToModel(contact);
+                await _contactServices.UpdateContactAsync(model);
+
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task DeleteAsync(Guid id)
         {
+            await _contactServices.DeleteContactAsync(id);
         }
     }
 }
