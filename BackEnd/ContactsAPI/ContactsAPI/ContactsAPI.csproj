@@ -11,5 +11,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Contacts.BusinessLogic\Contacts.BusinessLogic.csproj" />
+    <ProjectReference Include="..\Contacts.DataSource\Contacts.DataSource.csproj" />
+  </ItemGroup>
+
 
 </Project>
