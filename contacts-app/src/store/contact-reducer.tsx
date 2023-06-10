@@ -7,10 +7,7 @@ const initialState: ContactState = {
                    { contactId: Guid.create().toString(), firstName: "test3", middleName:"test3", lastName: "test3", contactNumber: "8764123", address: "adress 3" },
                    { contactId: Guid.create().toString(), firstName: "test4", middleName:"test4", lastName: "test4", contactNumber: "8764123", address: "adress 4" },
                    { contactId: Guid.create().toString(), firstName: "test5", middleName:"test5", lastName: "test5", contactNumber: "8764123", address: "adress 5" }],
-        isFetching: false,
-        isFetchingDetail: false,
-        contact: { contactId: Guid.createEmpty().toString(), firstName: "", middleName:"", lastName: "", contactNumber: "", address: "" },
-        isNew: false
+        contact: { contactId: Guid.createEmpty().toString(), firstName: "", middleName:"", lastName: "", contactNumber: "", address: "" }
   };
 
 

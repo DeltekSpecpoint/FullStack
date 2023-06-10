@@ -48,11 +48,18 @@ namespace ContactsAPI
                     },
                 });
             });
+
+            services.AddCors(options => options.AddPolicy("test", x =>
+            {
+                x.WithOrigins("http://localhost:5000").AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+          
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -70,9 +77,9 @@ namespace ContactsAPI
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseCors("test");
 
             app.UseAuthorization();
 

@@ -9,10 +9,7 @@ export interface IContact {
 
 export type ContactState = {
     contacts: any[],
-    isFetching: boolean,
-    isFetchingDetail: boolean,
-    contact: IContact,
-    isNew: boolean,
+    contact: IContact
   }
 
 export enum ActionTypes
