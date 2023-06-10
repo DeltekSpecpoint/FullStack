@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contacts.BusinessLogic;
+using Contacts.DataSource;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +30,9 @@ namespace ContactsAPI
         {
             services.AddControllers();
 
+            ContactsBusinessLogicDependencyInjection.Register(services);
+            ContactsDataSourceDependencyInjection.Register(services);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -43,11 +48,18 @@ namespace ContactsAPI
                     },
                 });
             });
+
+            services.AddCors(options => options.AddPolicy("test", x =>
+            {
+                x.WithOrigins("http://localhost:5000").AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+          
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -65,9 +77,9 @@ namespace ContactsAPI
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseCors("test");
 
             app.UseAuthorization();
 
