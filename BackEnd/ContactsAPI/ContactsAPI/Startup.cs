@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using ContactsAPI.Data;
 
 namespace ContactsAPI
 {
@@ -26,6 +28,8 @@ namespace ContactsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApiContext>(o => o.UseInMemoryDatabase("ContactsDB"));
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
