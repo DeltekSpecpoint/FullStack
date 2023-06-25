@@ -1,25 +1,23 @@
 import { useState, useEffect } from "react";
 
-function getSavedValue(key: string, initialValue: any) {
-    const savedValue = JSON.parse(localStorage.getItem(key) || '');
-    if (savedValue) {
-        return savedValue;
-    }
-    else {
-        return initialValue;
-    }
-}
-
-const useContactsStorage = (key: string, initialValue: any) => {
-    const [value, setValue] = useState(() => {
-        return getSavedValue(key, initialValue);
+const useContactsStorage = () => {
+    const contactsKey = 'contactsKey';
+    const [contacts, setContacts] = useState(() => {
+        const initVal = localStorage.getItem(contactsKey) || '';
+        if (initVal !== '') {
+            const savedValue = JSON.parse(initVal);
+            return savedValue;
+        }
+        else {
+            return [];
+        }
     });
 
     useEffect(() => {
-        localStorage.setItem(key, JSON.stringify(value));
-    }, [value]);
+        localStorage.setItem(contactsKey, JSON.stringify(contacts));
+    }, [contacts]);
 
-    return [value, setValue];
+    return [contacts, setContacts];
 }
 
 export default useContactsStorage

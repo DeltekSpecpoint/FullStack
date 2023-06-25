@@ -18,6 +18,15 @@ namespace ContactsAPI.Controllers
         public ContactController(ApiContext context)
         {
             _context = context;
+            // Ugly way to test data populate
+            _context.Contacts.Add(new Contact
+            {
+                LastName = "de Lastname",
+                FirstName = "Firstname",
+                EmailAddress = "address@email.com",
+                PhoneNumber = "0987654321"
+            });
+            _context.SaveChanges();
         }
 
         [HttpGet("GetAllContacts")]

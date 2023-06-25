@@ -47,6 +47,14 @@ namespace ContactsAPI
                     },
                 });
             });
+
+            // add CORS
+            services.AddCors(p => p.AddPolicy("corsPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +80,8 @@ namespace ContactsAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("corsPolicy");
 
             app.UseAuthorization();
 
