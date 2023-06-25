@@ -18,15 +18,6 @@ namespace ContactsAPI.Controllers
         public ContactController(ApiContext context)
         {
             _context = context;
-            // Ugly way to test data populate
-            _context.Contacts.Add(new Contact
-            {
-                LastName = "de Lastname",
-                FirstName = "Firstname",
-                EmailAddress = "address@email.com",
-                PhoneNumber = "0987654321"
-            });
-            _context.SaveChanges();
         }
 
         [HttpGet("GetAllContacts")]
@@ -34,13 +25,13 @@ namespace ContactsAPI.Controllers
         {
             if (_context.Contacts.Count() > 0)
             {
-                return new JsonResult(Ok(_context.Contacts));
+                return new JsonResult(Ok(_context.Contacts.OrderBy(x => x.Id)));
             }
             return new JsonResult(NoContent());
         }
 
         [HttpGet("GetContact")]
-        public JsonResult GetContact(int id)
+        public JsonResult GetContact([FromBody] int id)
         {
             if (id != 0)
             {
@@ -55,7 +46,7 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpPost("CreateContact")]
-        public JsonResult CreateContact(Contact value)
+        public JsonResult CreateContact([FromBody] Contact value)
         {
             if (value.Id == 0)
             {
@@ -68,7 +59,7 @@ namespace ContactsAPI.Controllers
 
 
         [HttpPut("UpdateContact")]
-        public JsonResult UpdateContact(Contact value)
+        public JsonResult UpdateContact([FromBody] Contact value)
         {
             if (value.Id != 0)
             {
@@ -92,9 +83,9 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpDelete("DeleteContact")]
-        public JsonResult DeleteContact(int id)
+        public JsonResult DeleteContact([FromBody] int value)
         {
-            Contact existingContact = _context.Contacts.Find(id);
+            Contact existingContact = _context.Contacts.Find(value);
 
             if (existingContact != null)
             {

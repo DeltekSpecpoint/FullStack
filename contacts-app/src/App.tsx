@@ -1,37 +1,83 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './assets/App.css';
 import Header from './components/Header';
 import Datagrid from './components/Datagrid';
-import { Container } from 'react-bootstrap';
+import ToolbarButtons from './components/ToolbarButtons';
+import EditorDialog from './components/EditorDialog';
+import { Container, Alert } from 'react-bootstrap';
 import useContactsStorage from './hooks/useContactsStorage';
-import { IRowData } from './commonModels';
+import { IRowData, UpdateAction, IDialogData, IFetchResult } from './commonModels';
+import { getRowData } from './data/fetchContactsApi';
+
+export const ContactsContext = React.createContext<IRowData[]>([]);
 
 const App = () => {
-  const [contacts, setContacts] = useContactsStorage();
+  // Alert
+  const [alertDisplayData, updateAlertDisplayData] = useState<IFetchResult>({ type: 'success', message: '', isShown: false });
+  const alertDisplay = useCallback(() => {
+    if (alertDisplayData.isShown) {
+      return <Alert variant={alertDisplayData.type} onClose={() => updateAlertDisplayData({ ...alertDisplayData, isShown: false })} dismissible>
+        {alertDisplayData.message}
+      </Alert>;
+    }
+    else {
+      return <></>;
+    }
+  }, [alertDisplayData]);
 
-  useEffect(() => {
-    // Get BE data on page load
-    fetch('https://localhost:5001/api/Contact/GetAllContacts', {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      // body: JSON.stringify({})
+  // Datagrid data
+  const { contacts, setContacts } = useContactsStorage();
+  const loadData = () => {
+    getRowData().then(getRowDataResult => {
+      if (getRowDataResult) {
+        setContacts([]);
+        if (getRowDataResult.data) {
+          setContacts(getRowDataResult.data);
+        }
+        else if (getRowDataResult.hasError) {
+          updateAlertDisplayData({ type: 'warning', message: getRowDataResult.error, isShown: true });
+        }
+      }
     })
-      .then(res => {
-        return res.json()
-      })
-      .then(data => {
-        console.log(data.value);
-        setContacts(data.value as IRowData[]);
-      })
+  };
+
+  // Get BE data on page load
+  useEffect(() => {
+    loadData();
   }, []);
+
+  // Datagrid selection
+  const [selectedContactId, setSelectedContactId] = useState<number>(0);
+  const handleOnselect = (id: number) => { setSelectedContactId(id) };
+
+  // Dialog
+  const [dialogState, setDialogState] = useState<IDialogData>({ isShown: false, mode: 'add', id: 0 });
+  const editoDialog = useCallback(() => {
+    if (dialogState.isShown) {
+      return <EditorDialog dialogParams={dialogState} handleSave={handleSaveDialog} handleClose={handleCloseDialog} />;
+    }
+    else {
+      return <></>;
+    }
+  }, [dialogState]);
+  const handleOpenDialog = (updateAction: UpdateAction) => setDialogState({ isShown: true, mode: updateAction, id: selectedContactId });
+  const handleCloseDialog = () => setDialogState({ ...dialogState, isShown: false });
+  const handleSaveDialog = (r: IFetchResult) => {
+    updateAlertDisplayData(r);
+    loadData();
+    handleCloseDialog();
+  };
 
   return (
     <>
       <Header />
       <Container>
-        <Datagrid rowData={contacts} />
+        <ContactsContext.Provider value={contacts}>
+          {alertDisplay()}
+          <ToolbarButtons disableModifyButtons={selectedContactId === 0} handleOpen={handleOpenDialog} />
+          <Datagrid selectedContactId={selectedContactId} setSelectedContact={handleOnselect} />
+          {editoDialog()}
+        </ContactsContext.Provider>
       </Container>
     </>
   );

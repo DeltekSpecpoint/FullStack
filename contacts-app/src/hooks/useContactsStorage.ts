@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
+import { IRowData } from '../commonModels';
 
 const useContactsStorage = () => {
-    const contactsKey = 'contactsKey';
-    const [contacts, setContacts] = useState(() => {
+    const contactsKey = 'Contacts';
+    const [contacts, setContacts] = useState<IRowData[]>(() => {
         const initVal = localStorage.getItem(contactsKey) || '';
         if (initVal !== '') {
-            const savedValue = JSON.parse(initVal);
-            return savedValue;
+            return JSON.parse(initVal) as IRowData[];
         }
         else {
             return [];
@@ -15,9 +15,9 @@ const useContactsStorage = () => {
 
     useEffect(() => {
         localStorage.setItem(contactsKey, JSON.stringify(contacts));
-    }, [contacts]);
+    }, [contacts, setContacts]);
 
-    return [contacts, setContacts];
+    return { contacts, setContacts };
 }
 
 export default useContactsStorage
