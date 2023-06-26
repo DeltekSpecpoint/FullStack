@@ -24,8 +24,17 @@ const Datagrid = (props: DatagridProps) => {
     const { selectedContactId, setSelectedContact } = props;
     const rowData = useContext(ContactsContext);
 
+    const EmptyRowsRenderer = () => {
+        return (
+            <div style={{ textAlign: 'center', gridColumn: '1/-1' }}>No contacts.</div>
+        );
+    };
+
     return (
         <DataGrid
+            className='rdg-light mainDatagrid'
+            headerRowHeight={56}
+            renderers={{ noRowsFallback: EmptyRowsRenderer() }}
             columns={columns}
             rows={rowData}
             rowKeyGetter={rowKeyGetter}

@@ -40,11 +40,55 @@
 
 .SelectedRow {
   .rdg-cell {
-    background-color: #375a7f;
+    background-color: #2780e3;
     color: white;
   }
 
   &:hover .rdg-cell {
-    background-color: #375a7f;
+    background-color: #2780e3;
   }
+}
+
+#root {
+  height: 100vh;
+}
+
+.contentContainer {
+  display: block;
+  height: calc(100% - 56px);
+}
+
+.contentContainer .toolbarRow {
+  height: 58px;
+}
+
+.contentContainer .datagridRow {
+  height: calc(100% - 114px);
+}
+
+.toolbarContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  column-gap: 10px;
+  margin: 10px 0px;
+}
+
+.toolbarContainer .btn {
+  margin: 0px 3px;
+}
+
+.alert {
+  margin: 10px 0px;
+  height: 37px;
+  line-height:37px;
+  padding: 0px 15px;
+}
+
+.alert .btn-close {
+  height: 0px;
+}
+
+.mainDatagrid {
+  min-height: calc(100% - 1px);
 }

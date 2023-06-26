@@ -117,7 +117,7 @@ const EditorDialog = (props: EditorDialogsProps) => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>Cancel</Button>
+        <Button variant="light" onClick={onClose}>Cancel</Button>
         <Button variant="primary" onClick={onSave}>{buttonCaption}</Button>
       </Modal.Footer>
     </Modal>

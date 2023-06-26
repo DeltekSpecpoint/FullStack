@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Datagrid from './components/Datagrid';
 import ToolbarButtons from './components/ToolbarButtons';
 import EditorDialog from './components/EditorDialog';
-import { Container, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
 import useContactsStorage from './hooks/useContactsStorage';
 import { IRowData, UpdateAction, IDialogData, IFetchResult } from './commonModels';
 import { getRowData } from './data/fetchContactsApi';
@@ -52,7 +52,7 @@ const App = () => {
 
   // Dialog
   const [dialogState, setDialogState] = useState<IDialogData>({ isShown: false, mode: 'add', id: 0 });
-  const editoDialog = useCallback(() => {
+  const editorDialog = useCallback(() => {
     if (dialogState.isShown) {
       return <EditorDialog dialogParams={dialogState} handleSave={handleSaveDialog} handleClose={handleCloseDialog} />;
     }
@@ -69,17 +69,21 @@ const App = () => {
   };
 
   return (
-    <>
+    <ContactsContext.Provider value={contacts}>
       <Header />
-      <Container>
-        <ContactsContext.Provider value={contacts}>
-          {alertDisplay()}
-          <ToolbarButtons disableModifyButtons={selectedContactId === 0} handleOpen={handleOpenDialog} />
-          <Datagrid selectedContactId={selectedContactId} setSelectedContact={handleOnselect} />
-          {editoDialog()}
-        </ContactsContext.Provider>
+      {editorDialog()}
+      <Container className='contentContainer'>
+        <Row className='toolbarRow'>
+          <Col xs={12} md={8}>{alertDisplay()}</Col>
+          <Col xs={6} md={4}><ToolbarButtons disableModifyButtons={selectedContactId === 0} handleOpen={handleOpenDialog} /></Col>
+        </Row>
+        <Row className='datagridRow'>
+          <Col>
+            <Datagrid selectedContactId={selectedContactId} setSelectedContact={handleOnselect} />
+          </Col>
+        </Row>
       </Container>
-    </>
+    </ContactsContext.Provider>
   );
 }
 

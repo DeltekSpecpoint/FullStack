@@ -10,11 +10,11 @@ interface ToolbarButtonsProps {
 const ToolbarButtons = (props: ToolbarButtonsProps) => {
   const { disableModifyButtons, handleOpen } = props;
   return (
-    <>
-      <Button variant="primary" onClick={() => handleOpen('add')}>Add</Button>
-      <Button variant="primary" onClick={() => handleOpen('edit')} disabled={disableModifyButtons}>Edit</Button>
-      <Button variant="primary" onClick={() => handleOpen('delete')} disabled={disableModifyButtons}>Delete</Button>
-    </>
+    <div className='toolbarContainer'>
+      <Button variant="primary" onClick={() => handleOpen('add')}>Add contact</Button>
+      <Button variant="primary" onClick={() => handleOpen('edit')} disabled={disableModifyButtons}>Edit contact</Button>
+      <Button variant="primary" onClick={() => handleOpen('delete')} disabled={disableModifyButtons}>Delete contact</Button>
+    </div>
   )
 }
 
