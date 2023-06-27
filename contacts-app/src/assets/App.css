@@ -92,3 +92,7 @@
 .mainDatagrid {
   min-height: calc(100% - 1px);
 }
+
+.form-floating>.form-control:not(:placeholder-shown):disabled~label::after {
+  background-color: var(--bs-secondary-bg);
+}

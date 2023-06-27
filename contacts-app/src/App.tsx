@@ -6,7 +6,7 @@ import ToolbarButtons from './components/ToolbarButtons';
 import EditorDialog from './components/EditorDialog';
 import { Container, Row, Col, Alert } from 'react-bootstrap';
 import useContactsStorage from './hooks/useContactsStorage';
-import { IRowData, UpdateAction, IDialogData, IFetchResult } from './commonModels';
+import { IRowData, UpdateAction, IDialogParams, IFetchResult } from './commonModels';
 import { getRowData } from './data/fetchContactsApi';
 
 export const ContactsContext = React.createContext<IRowData[]>([]);
@@ -51,7 +51,7 @@ const App = () => {
   const handleOnselect = (id: number) => { setSelectedContactId(id) };
 
   // Dialog
-  const [dialogState, setDialogState] = useState<IDialogData>({ isShown: false, mode: 'add', id: 0 });
+  const [dialogState, setDialogState] = useState<IDialogParams>({ isShown: false, mode: 'add', id: 0 });
   const editorDialog = useCallback(() => {
     if (dialogState.isShown) {
       return <EditorDialog dialogParams={dialogState} handleSave={handleSaveDialog} handleClose={handleCloseDialog} />;
