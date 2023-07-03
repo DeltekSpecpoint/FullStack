@@ -6,7 +6,7 @@ function ContactList({ items, onDelete }) {
 
   return (
     <ul>
-      {items.map(item => <ContactListItem value={item} onDelete={value => handleDelete(value)}/>)}
+      {items.map(item => <ContactListItem key={item.id} value={item} onDelete={value => handleDelete(value)}/>)}
     </ul>
   )
 }
@@ -19,6 +19,7 @@ function ContactListItem({ value, onDelete }) {
 
   return (
     <li>
+      <div>{value.name}</div>
       {/* render values here */}
       <button onClick={handleDelete}>x</button>
     </li>
