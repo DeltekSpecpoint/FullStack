@@ -1,6 +1,7 @@
 import React from 'react'
 import ContactList from "../components/contact-list";
 import ContactSearchForm from "../components/contact-search-form";
+import { NavLink, redirect } from 'react-router-dom';
 
 const contactsData = [
   {
@@ -15,7 +16,6 @@ const contactsData = [
 
 function Contacts({
   items,
-  onAdd,
   onSearch
 }) {
 
@@ -27,7 +27,7 @@ function Contacts({
     <div>
       <h1>Contacts</h1>
       <div>
-        <button onClick={onAdd}>Add</button>
+        <NavLink to={`add`}>Add</NavLink>
       </div>
       <ContactSearchForm onSubmit={handleSearchSubmit}/>
       <ContactList items={items}/>
@@ -50,7 +50,10 @@ function ContactsMaintenance() {
   }
 
   return (
-    <Contacts items={filteredItems} onSearch={handleOnSearch}/>
+    <Contacts 
+      items={filteredItems} 
+      onSearch={handleOnSearch}
+      />
   )
 }
 
