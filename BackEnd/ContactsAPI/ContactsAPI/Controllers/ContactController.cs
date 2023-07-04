@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContactsAPI.Models;
 using ContactsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,34 +21,41 @@ namespace ContactsAPI.Controllers
         }
         // GET: api/<controller>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<PaginatedList<Contact>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await service.GetContacts();
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<Contact> Get(int id)
         {
-            return "value";
+            return await service.GetContactById(id);
         }
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> Post(Contact value)
         {
+            var contact = await service.CreateContact(value);
+            return Created($"/contact/{contact.Id}", contact);
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> Put(int id, Contact value)
         {
+            value.Id = id;
+            var contact = await service.UpdateContact(value);
+            return Ok(contact);
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            await service.DeleteContact(id);
+            return NoContent();
         }
     }
 }
