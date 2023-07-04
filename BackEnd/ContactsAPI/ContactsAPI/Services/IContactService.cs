@@ -14,6 +14,6 @@ namespace ContactsAPI.Services
         Task<Contact> GetContactById(int id);
         Task<Contact> CreateContact(Contact contact);
         Task<Contact> UpdateContact(Contact contact);
-        Task<Contact> DeleteContact(int id);
+        Task DeleteContact(int id);
     }
 }
