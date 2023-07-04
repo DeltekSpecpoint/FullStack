@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom"
+
 function ContactList({ items, onDelete }) {
 
   const handleDelete = (value) => {
@@ -19,7 +21,7 @@ function ContactListItem({ value, onDelete }) {
 
   return (
     <li>
-      <div>{value.name}</div>
+      <NavLink to={`/edit/${value.id}`}>{value.name}</NavLink>
       {/* render values here */}
       <button onClick={handleDelete}>x</button>
     </li>

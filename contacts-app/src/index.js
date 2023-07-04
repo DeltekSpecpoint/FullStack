@@ -8,15 +8,26 @@ import {
   RouterProvider
 } from 'react-router-dom'
 import ContactsAdd from './modules/contacts-add';
+import ContactsMaintenance from './modules/contacts';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>
-  },
-  {
-    path: "/add",
-    element: <ContactsAdd/>
+    element: <App/>,
+    children: [
+      {
+        path: "/",
+        element: <ContactsMaintenance/>
+      },
+      {
+        path: "/add",
+        element: <ContactsAdd/>
+      },
+      {
+        path: "/edit/:id",
+        element: <ContactsAdd/>
+      }
+    ]
   }
 ])
 

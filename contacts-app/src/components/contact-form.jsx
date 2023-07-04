@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ContactForm({ onSubmit, children }) {
+function ContactForm({ value, onSubmit, children }) {
   const txtNameRef = React.useRef(null)
 
   const handleSubmit = (e) => {
@@ -12,7 +12,7 @@ function ContactForm({ onSubmit, children }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" ref={txtNameRef}/>
+      <input defaultValue={value.name} type="text" ref={txtNameRef}/>
       {children}
     </form>
   )
