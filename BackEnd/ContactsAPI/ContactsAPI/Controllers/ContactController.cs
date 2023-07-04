@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContactsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,6 +12,12 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class ContactController : Controller
     {
+        private readonly IContactService service;
+
+        public ContactController(IContactService service)
+        {
+            this.service = service;
+        }
         // GET: api/<controller>
         [HttpGet]
         public IEnumerable<string> Get()

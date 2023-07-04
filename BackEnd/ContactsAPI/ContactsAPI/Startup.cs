@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ContactsAPI.Data;
+using ContactsAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,8 @@ namespace ContactsAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ContactDbContext>(ctx => ctx.UseInMemoryDatabase(nameof(ContactDbContext)));
+
+            services.AddScoped<IContactService, ContactService>();
 
             services.AddControllers();
 
