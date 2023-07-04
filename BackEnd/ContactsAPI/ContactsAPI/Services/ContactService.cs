@@ -8,7 +8,7 @@ namespace ContactsAPI.Services
 {
     public class ContactService : IContactService
     {
-        public Task<Contact> CreateContact()
+        public Task<Contact> CreateContact(Contact contact)
         {
             throw new NotImplementedException();
         }
