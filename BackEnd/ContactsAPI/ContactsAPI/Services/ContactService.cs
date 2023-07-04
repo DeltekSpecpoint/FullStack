@@ -18,6 +18,11 @@ namespace ContactsAPI.Services
             throw new NotImplementedException();
         }
 
+        public Task<Contact> GetContactById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<PaginatedList<Contact>> GetContacts(int page = 1, int pageSize = 2, string query = "", string sortBy = "ASC")
         {
             throw new NotImplementedException();
