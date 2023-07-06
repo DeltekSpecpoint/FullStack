@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using System.IO;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace ContactsAPI
 {
@@ -30,6 +31,15 @@ namespace ContactsAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", new CorsPolicyBuilder()
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .Build());
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -81,6 +91,8 @@ namespace ContactsAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("AllowAll");
 
             app.UseAuthorization();
 

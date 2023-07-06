@@ -53,7 +53,7 @@ namespace ContactsAPI.Controllers
 
         // POST: api/Contacts
         [HttpPost]
-        public async Task<ActionResult<Contact>> CreateContact(Contact contact)
+        public async Task<ActionResult<Contact>> CreateContact([FromBody] Contact contact) // Add the [FromBody] attribute
         {
             var contactsRef = _firestoreDb.Collection("contacts");
             var docRef = await contactsRef.AddAsync(contact);
