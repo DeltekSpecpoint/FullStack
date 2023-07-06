@@ -6,6 +6,7 @@ using ContactsAPI.Repositories;
 using ContactsAPI.Services;
 using ContactsAPI.UoW;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,7 @@ namespace ContactsAPI
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IContactRepository, ContactRepository>();
             services.AddTransient<IContactService, ContactService>();
+            services.AddCors();
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -59,7 +61,9 @@ namespace ContactsAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(
+                options => options.WithOrigins("*").AllowAnyMethod().AllowAnyHeader()
+            );
             app.UseSwagger();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
