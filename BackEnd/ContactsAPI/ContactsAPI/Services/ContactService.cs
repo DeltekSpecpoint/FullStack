@@ -16,7 +16,7 @@ namespace ContactsAPI.Services
         {
             this.dbContext = dbContext;
         }
-        public async Task<Contact> CreateContact(Contact contact)
+        public async Task<Contact> CreateContact(CreateContact contact)
         {
             var entity = await this.dbContext.Contacts.AddAsync(new Data.Entities.Contact()
             { 
@@ -26,13 +26,17 @@ namespace ContactsAPI.Services
 
             await dbContext.SaveChangesAsync();
 
-            contact.Id = entity.Entity.Id;
-            return contact;
+            return new Contact()
+            {
+                Id = entity.Entity.Id,
+                Name = contact.Name,
+                MobileNumber = contact.MobileNumber
+            };
         }
 
-        public async Task DeleteContact(int id)
+        public async Task DeleteContact(int contactId)
         {
-            var entity = await this.dbContext.Contacts.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await this.dbContext.Contacts.FirstOrDefaultAsync(x => x.Id == contactId);
             if (entity != null)
             {
                 this.dbContext.Contacts.Remove(entity);
@@ -72,21 +76,23 @@ namespace ContactsAPI.Services
             };
         }
 
-        public async Task<Contact> UpdateContact(Contact contact)
+        public async Task<Contact> UpdateContact(int contactId, UpdateContact contact)
         {
             var entity = this.dbContext.Contacts.Update(new Data.Entities.Contact()
             {
-                Id = contact.Id,
+                Id = contactId,
                 Name = contact.Name,
                 MobileNumber = contact.MobileNumber,
             });
 
             await this.dbContext.SaveChangesAsync();
 
-            contact.MobileNumber = entity.Entity.MobileNumber;
-            contact.Name = entity.Entity.Name;
-
-            return contact;
+            return new Contact()
+            {
+                Id = entity.Entity.Id,
+                Name = entity.Entity.Name,
+                MobileNumber = entity.Entity.MobileNumber,
+            };
         }
     }
 }

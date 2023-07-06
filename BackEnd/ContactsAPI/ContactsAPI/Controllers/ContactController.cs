@@ -27,34 +27,33 @@ namespace ContactsAPI.Controllers
         }
 
         // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public async Task<Contact> Get(int id)
+        [HttpGet("{contactId}")]
+        public async Task<Contact> Get(int contactId)
         {
-            return await service.GetContactById(id);
+            return await service.GetContactById(contactId);
         }
 
         // POST api/<controller>
         [HttpPost]
-        public async Task<IActionResult> Post(Contact value)
+        public async Task<IActionResult> Post(CreateContact value)
         {
             var contact = await service.CreateContact(value);
-            return Created($"/contact/{contact.Id}", contact);
+            return Created($"/api/contact/{contact.Id}", contact);
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Contact value)
+        [HttpPut("{contactId}")]
+        public async Task<IActionResult> Put(int contactId, UpdateContact value)
         {
-            value.Id = id;
-            var contact = await service.UpdateContact(value);
+            var contact = await service.UpdateContact(contactId, value);
             return Ok(contact);
         }
 
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{contactId}")]
+        public async Task<IActionResult> Delete(int contactId)
         {
-            await service.DeleteContact(id);
+            await service.DeleteContact(contactId);
             return NoContent();
         }
     }

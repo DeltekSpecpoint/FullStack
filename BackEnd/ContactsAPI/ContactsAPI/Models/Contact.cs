@@ -7,8 +7,8 @@ namespace ContactsAPI.Models
 {
     public class Contact
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string MobileNumber { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public string MobileNumber { get; init; }
     }
 }
