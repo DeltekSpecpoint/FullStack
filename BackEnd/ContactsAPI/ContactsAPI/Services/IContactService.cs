@@ -10,7 +10,7 @@ namespace ContactsAPI.Services
 {
     public interface IContactService
     {
-        Task<PaginatedList<Contact>> GetContacts(int page = 1, int pageSize = 2, string query = "", string sortBy = "ASC");
+        Task<PaginatedList<Contact>> GetContacts(GetContactList model);
         Task<Contact> GetContactById(int contactId);
         Task<Contact> CreateContact(CreateContact contact);
         Task<Contact> UpdateContact(int contactId, UpdateContact contact);

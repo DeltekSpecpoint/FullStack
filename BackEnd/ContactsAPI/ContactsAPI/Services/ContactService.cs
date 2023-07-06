@@ -49,6 +49,8 @@ namespace ContactsAPI.Services
         {
             var entity = await this.dbContext.Contacts.FirstOrDefaultAsync(x => x.Id == id);
 
+            if (entity == null) return null;
+
             return new Contact()
             {
                 Id = entity.Id,
@@ -57,22 +59,26 @@ namespace ContactsAPI.Services
             };
         }
 
-        public async Task<PaginatedList<Contact>> GetContacts(int page = 1, int pageSize = 2, string query = "", string sortBy = "ASC")
+        public async Task<PaginatedList<Contact>> GetContacts(GetContactList model)
         {
-            var currentPage = page - 1;
-            currentPage = currentPage * pageSize;
-            var list = await this.dbContext.Contacts.AsNoTracking().OrderBy(x => x.Name).Skip(currentPage).Take(pageSize).ToListAsync();
+            var currentPage = model.Page - 1;
+            currentPage = currentPage * model.PageSize;
 
-            return new PaginatedList<Contact> 
-            { 
+            var list = await this.dbContext.Contacts.AsNoTracking().OrderBy(x => x.Name).Skip(currentPage).Take(model.PageSize).ToListAsync();
+
+            var count = await this.dbContext.Contacts.CountAsync();
+
+            return new PaginatedList<Contact>
+            {
                 Data = list.Select(x => new Contact()
                 {
                     Id = x.Id,
                     MobileNumber = x.MobileNumber,
                     Name = x.Name
                 }),
-                Page = page,
-                PageSize = pageSize
+                Page = model.Page,
+                PageSize = model.PageSize,
+                TotalRecordCount = count
             };
         }
 
