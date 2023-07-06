@@ -2,45 +2,96 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using FirebaseAdmin;
+using Google.Cloud.Firestore;
 
 namespace ContactsAPI.Controllers
 {
     [Route("api/[controller]")]
     public class ContactController : Controller
     {
-        // GET: api/<controller>
+        private readonly FirestoreDb _firestoreDb;
+
+        public ContactController()
+        {
+            var projectId = "react-firebase-37768";
+            _firestoreDb = FirestoreDb.Create(projectId);
+        }
+
+        // GET: api/Contacts
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
         {
-            return new string[] { "value1", "value2" };
+            var contactsRef = _firestoreDb.Collection("contacts");
+            var snapshot = await contactsRef.GetSnapshotAsync();
+            var contacts = snapshot.Documents.Select(doc =>
+            {
+                var contact = doc.ConvertTo<Contact>();
+                contact.Id = doc.Id;
+                return contact;
+            }).ToList();
+            return contacts;
         }
 
-        // GET api/<controller>/5
+        // GET api/Contacts/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Contact>> GetContact(string id)
         {
-            return "value";
+            var contactRef = _firestoreDb.Collection("contacts").Document(id);
+            var snapshot = await contactRef.GetSnapshotAsync();
+
+            if (!snapshot.Exists)
+            {
+                return NotFound();
+            }
+
+            var contact = snapshot.ConvertTo<Contact>();
+            return contact;
         }
 
-        // POST api/<controller>
+        // POST: api/Contacts
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<ActionResult<Contact>> CreateContact(Contact contact)
         {
+            var contactsRef = _firestoreDb.Collection("contacts");
+            var docRef = await contactsRef.AddAsync(contact);
+            contact.Id = docRef.Id;
+
+            return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
         }
 
-        // PUT api/<controller>/5
+        // PUT api/Contacts/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> UpdateContact(string id, Contact updatedContact)
         {
+            var contactRef = _firestoreDb.Collection("contacts").Document(id);
+            var snapshot = await contactRef.GetSnapshotAsync();
+
+            if (!snapshot.Exists)
+            {
+                return NotFound();
+            }
+
+            await contactRef.SetAsync(updatedContact, SetOptions.Overwrite);
+            return NoContent();
         }
 
-        // DELETE api/<controller>/5
+        // DELETE api/Contacts/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteContact(string id)
         {
+            var contactRef = _firestoreDb.Collection("contacts").Document(id);
+            var snapshot = await contactRef.GetSnapshotAsync();
+
+            if (!snapshot.Exists)
+            {
+                return NotFound();
+            }
+
+            await contactRef.DeleteAsync();
+            return NoContent();
         }
     }
 }

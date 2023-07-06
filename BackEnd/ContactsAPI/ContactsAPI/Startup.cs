@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using System.IO;
 
 namespace ContactsAPI
 {
@@ -42,6 +45,16 @@ namespace ContactsAPI
                         Url = new Uri("https://coderjony.com/"),
                     },
                 });
+            });
+
+            // Set GOOGLE_APPLICATION_CREDENTIALS environment variable
+            string firebaseServiceAccountPath = "FirebaseCredentials/react-firebase-37768-firebase-adminsdk-44o03-5c975e74d1.json";
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", Path.GetFullPath(firebaseServiceAccountPath));
+
+            // Initialize Firebase Admin SDK
+            FirebaseApp.Create(new AppOptions
+            {
+                Credential = GoogleCredential.GetApplicationDefault(),
             });
         }
 
