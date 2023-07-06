@@ -71,7 +71,7 @@ namespace ContactsAPI.Services
                     MobileNumber = x.MobileNumber,
                     Name = x.Name
                 }),
-                Page = currentPage,
+                Page = page,
                 PageSize = pageSize
             };
         }
