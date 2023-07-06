@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ContactsAPI.Data;
 using ContactsAPI.Services;
@@ -33,7 +34,8 @@ namespace ContactsAPI
 
             services.AddScoped<IContactService, ContactService>();
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSwaggerGen(c =>
             {
@@ -50,6 +52,8 @@ namespace ContactsAPI
                     },
                 });
             });
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
