@@ -1,9 +1,17 @@
-import React from 'react'
-
+import React, { useEffect } from 'react'
+import { useLoaderData } from 'react-router-dom'
+import { getContacts } from '../api'
 const ContactsContext = React.createContext()
 
 export function ContactsProvider({ children }) {
-  const [items, setItems] = React.useState([...contactsData])
+  const [items, setItems] = React.useState([])
+
+  const load = () => {
+    getContacts().then(response => {
+      console.log(response)
+      setItems(response.data)
+    })
+  }
 
   const handleAdd = (value) => {
     const newId = crypto.randomUUID()
@@ -30,23 +38,20 @@ export function ContactsProvider({ children }) {
   }
 
   return (
-    <ContactsContext.Provider value={{list: items, onAdd: handleAdd, onEdit: handleEdit, onDelete: handleDelete}}>
+    <ContactsContext.Provider value={{list: items, load: load, onAdd: handleAdd, onEdit: handleEdit, onDelete: handleDelete}}>
       {children}
     </ContactsContext.Provider>
   )
 }
 
 export function useContacts() {
-  return React.useContext(ContactsContext)
-}
+  var contactsCtx = React.useContext(ContactsContext)
 
-const contactsData = [
-  {
-    id: crypto.randomUUID(),
-    name: "Joel Manuel"
-  },
-  {
-    id: crypto.randomUUID(),
-    name: "Juan Dela Cruz"
+  useEffect(() => {
+    contactsCtx.load()
+  }, [])
+
+  return {
+    ...contactsCtx
   }
-]
+}

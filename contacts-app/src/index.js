@@ -8,7 +8,11 @@ import {
   RouterProvider
 } from 'react-router-dom'
 import ContactsAdd from './modules/contacts-add';
-import ContactsMaintenance from './modules/contacts';
+import ContactsEdit, { loader as contactLoader } from './modules/contacts-edit';
+import ContactsMaintenance, { loader as contactListLoader } from './modules/contacts';
+import axios from 'axios'
+
+axios.defaults.baseURL = 'http://localhost:5000/api'
 
 const router = createBrowserRouter([
   {
@@ -17,6 +21,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        loader: contactListLoader,
         element: <ContactsMaintenance/>
       },
       {
@@ -25,7 +30,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/edit/:id",
-        element: <ContactsAdd/>
+        loader: contactLoader,
+        element: <ContactsEdit/>
       }
     ]
   }
