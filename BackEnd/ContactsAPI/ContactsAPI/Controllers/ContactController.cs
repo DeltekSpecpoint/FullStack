@@ -42,7 +42,7 @@ namespace ContactsAPI.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        public async Task<Created<Contact>> Post(CreateContact value)
+        public async Task<Created<Contact>> Post([FromBody]CreateContact value)
         {
             var contact = await service.CreateContact(value);
 
@@ -51,7 +51,7 @@ namespace ContactsAPI.Controllers
 
         // PUT api/<controller>/5
         [HttpPut("{contactId}")]
-        public async Task<Results<Ok<Contact>, NotFound>> Put(int contactId, UpdateContact value)
+        public async Task<Results<Ok<Contact>, NotFound>> Put(int contactId, [FromBody]UpdateContact value)
         {
             if (await service.GetContactById(contactId) == null)
             {
