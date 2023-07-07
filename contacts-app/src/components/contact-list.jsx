@@ -36,7 +36,6 @@ function ContactListItem({ value, onDelete }) {
           >
           <Avatar 
             src="https://xsgames.co/randomusers/assets/avatars/female/20.jpg"
-            b
             />
         </Badge>
       </ListItemAvatar>

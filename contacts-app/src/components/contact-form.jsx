@@ -1,21 +1,17 @@
 import React from 'react'
+import usePersistForm from '../hooks/use-persist-form'
 
 function ContactForm({ value, onSubmit, children }) {
-  const txtNameRef = React.useRef(null)
-  const txtMobileNumberRef = React.useRef(null)
+  const { values, onChange, handleSubmit } = usePersistForm({ formValues: value })
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (onSubmit) onSubmit({
-      name: txtNameRef.current.value,
-      mobileNumber: txtMobileNumberRef.current.value
-    })
+  const onFormSubmit = (data) => {
+    if (onSubmit) onSubmit(data)
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input defaultValue={value.name} type="text" ref={txtNameRef}/>
-      <input defaultValue={value.mobileNumber} type="text" ref={txtMobileNumberRef}/>
+    <form onSubmit={handleSubmit(onFormSubmit)}>
+      <input value={values.name} type="text" onChange={(e) => onChange('name', e.target.value)}/>
+      <input value={values.mobileNumber} type="text" onChange={(e) => onChange('mobileNumber', e.target.value)}/>
       {children}
     </form>
   )
