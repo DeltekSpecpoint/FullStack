@@ -42,6 +42,22 @@ const Grid = ({ contacts, onDelete, onEdit }) => {
       flex: 0.25,
     },
     {
+      field: 'createdOn',
+      headerName: 'Created Date',
+      sortable: true,
+      editable: false,
+      flex: 0.25,
+      valueFormatter: params=> (new Date(params?.value)).toDateString()
+    },
+    {
+      field: 'modifiedOn',
+      headerName: 'Modified Date',
+      sortable: true,
+      editable: false,
+      flex: 0.25,
+      valueFormatter: params=> (new Date(params?.value)).toDateString()
+    },
+    {
       field: 'actions',
       headerName: 'Actions',
       flex: 0.25,

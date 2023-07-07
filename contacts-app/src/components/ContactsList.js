@@ -23,12 +23,13 @@ const ContactsList = () => {
         if (contact.id != null) updateData(contact.id, contact);
         else addData(contact);
         setOpen(false);
-
+setContact({});
     }
     const handleCancel = (e) => {
         e.preventDefault();
         setOpen(false);
-    }
+setContact({});
+}
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete?") == true)
             deleteData(id);
@@ -47,6 +48,7 @@ const ContactsList = () => {
         try {
             const response = await webApi.post('/', contact);
             if (response.data) alert("Added Succesfully");
+            else alert("Error adding contact");
             fetchData();
         } catch (error) {
             console.error('Error adding contact:', error)
@@ -56,6 +58,7 @@ const ContactsList = () => {
         try {
             const response = await webApi.put(`/${id}`, contact);
             if (response.data) alert("Updated Succesfully");
+            else alert("Error updating contact");
             fetchData();
         } catch (error) {
             console.error('Error updating contact:', error)
@@ -65,6 +68,7 @@ const ContactsList = () => {
         try {
             const response = await webApi.delete(id);
             if (response.data) alert("Deleted Succesfully");
+            else alert("Error deleting contact");
             fetchData();
         } catch (error) {
             console.error('Error deleting contact:', error)
