@@ -47,7 +47,7 @@ namespace ContactsAPI.Services
 
         public async Task<Contact> GetContactById(int id)
         {
-            var entity = await this.dbContext.Contacts.FirstOrDefaultAsync(x => x.Id == id);
+            var entity = await this.dbContext.Contacts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity == null) return null;
 
