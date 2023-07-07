@@ -4,6 +4,9 @@ import ContactSearchForm from "../components/contact-search-form";
 import { NavLink, redirect, useLoaderData } from 'react-router-dom';
 import { useContacts } from './contacts-context'
 import { deleteContact, getContacts } from '../api';
+import { Button, Fab, Link } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddIcon from '@mui/icons-material/Add';
 function Contacts({
   items,
   onSearch,
@@ -16,12 +19,11 @@ function Contacts({
 
   return (
     <div>
-      <h1>Contacts</h1>
-      <div>
-        <NavLink to={`add`}>Add</NavLink>
-      </div>
       <ContactSearchForm onSubmit={handleSearchSubmit}/>
       <ContactList items={items} onDelete={onDelete}/>
+      <Fab component={NavLink} to='add' sx={{ position: "absolute", bottom: 16, right: 16 }} color="primary" aria-label="add">
+        <AddIcon />
+      </Fab>
     </div>
   )
 }
@@ -46,15 +48,15 @@ function ContactsMaintenance() {
     deleteContact(value.id)
   }
 
-  let filteredItems = contacts
+  let filteredItems = contacts.data
 
   if (query) {
-    filteredItems = contacts.filter(c => c.name.toLowerCase().includes(query.toLowerCase()))
+    filteredItems = filteredItems.filter(c => c.name.toLowerCase().includes(query.toLowerCase()))
   }
 
   return (
     <Contacts 
-      items={contacts.data} 
+      items={filteredItems} 
       onSearch={handleOnSearch}
       onDelete={handleDelete}
       />

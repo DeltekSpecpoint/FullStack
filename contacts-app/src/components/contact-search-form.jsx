@@ -1,3 +1,5 @@
+import { Button, InputBase, IconButton } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search';
 import React from 'react'
 
 function ContactSearchForm({ onSubmit }) {
@@ -11,8 +13,17 @@ function ContactSearchForm({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" ref={inputRef}/>
-      <button>Search</button>
+      <div style={{display: "flex"}}>
+        <InputBase
+          inputRef={inputRef}
+          sx={{ ml: 1, flex: 1 }}
+          placeholder="Search Contacts"
+          inputProps={{ 'aria-label': 'search google maps' }}
+          />
+        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+          <SearchIcon />
+        </IconButton>
+      </div>
     </form>
   )
 }

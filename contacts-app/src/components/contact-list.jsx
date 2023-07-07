@@ -1,3 +1,8 @@
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
+import StarIcon from '@mui/icons-material/Star';
+import { Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, IconButton, Badge, Icon } from "@mui/material"
 import { NavLink } from "react-router-dom"
 
 function ContactList({ items, onDelete }) {
@@ -7,9 +12,9 @@ function ContactList({ items, onDelete }) {
   }
 
   return (
-    <ul>
+    <List>
       {items.map(item => <ContactListItem key={item.id} value={item} onDelete={value => handleDelete(value)}/>)}
-    </ul>
+    </List>
   )
 }
 
@@ -20,11 +25,30 @@ function ContactListItem({ value, onDelete }) {
   }
 
   return (
-    <li>
-      <NavLink to={`/edit/${value.id}`}>{value.name}</NavLink>
-      {/* render values here */}
-      <button onClick={handleDelete}>x</button>
-    </li>
+    <ListItem alignItems="flex-start" secondaryAction={<IconButton edge="end" aria-label="delete">
+    <MoreVertIcon />
+  </IconButton>}>
+      <ListItemAvatar>
+        <Badge
+          overlap='circular'
+          anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+          badgeContent={<Icon component={StarIcon} color='warning' fontSize='small'/>}
+          >
+          <Avatar 
+            src="https://xsgames.co/randomusers/assets/avatars/female/20.jpg"
+            b
+            />
+        </Badge>
+      </ListItemAvatar>
+      <ListItemButton component={NavLink}
+    to={`/edit/${value.id}`}>
+
+      <ListItemText
+        primary={value.name}
+        secondary={value.mobileNumber}
+        />
+        </ListItemButton>
+    </ListItem>
   )
 }
 

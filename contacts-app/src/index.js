@@ -11,6 +11,10 @@ import ContactsAdd from './modules/contacts-add';
 import ContactsEdit, { loader as contactLoader } from './modules/contacts-edit';
 import ContactsMaintenance, { loader as contactListLoader } from './modules/contacts';
 import axios from 'axios'
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
