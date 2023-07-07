@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ContactsAPI.Data;
@@ -35,7 +36,13 @@ namespace ContactsAPI
             services.AddScoped<IContactService, ContactService>();
 
             services.AddControllers()
-                    .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                    .AddJsonOptions(opt =>
+                    {
+                        opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                        opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    });
+
+            services.AddCors();
 
             services.AddSwaggerGen(c =>
             {
@@ -81,6 +88,8 @@ namespace ContactsAPI
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseEndpoints(endpoints =>
             {
