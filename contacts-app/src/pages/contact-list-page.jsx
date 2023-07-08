@@ -1,9 +1,9 @@
 import React from 'react'
 import ContactList from "../components/contact-list"
 import Page from "../components/page"
-import { Bars3Icon } from '@heroicons/react/24/outline'
+import { Bars3Icon, PlusIcon } from '@heroicons/react/24/outline'
 import useContacts from '../hooks/use-contacts'
-import { Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import contactEmptyPage from './contact-empty-page'
 import contactViewPage from './contact-view-page'
 import contactEditPage from './contact-edit-page'
@@ -21,12 +21,19 @@ function ContactListPage() {
       {loading 
         ? (<div>Loading...</div>) 
         : (
-          <div className='lg:flex'>
-            <ContactList items={Object.values(data.items)}/>
-            <div className='px-6 lg:flex-1'>
-              <Outlet/>
+          <>
+            <div className='lg:flex'>
+              <ContactList items={Object.values(data.items)}/>
+              <div className='px-6 lg:flex-1'>
+                <Outlet/>
+              </div>
             </div>
-          </div>
+            {/* fixed flex items-center justify-center w-12 h-12 text-center bg-red-500 rounded-lg shadow-md bottom-15 */}
+            <NavLink to={'/add'}
+              className='fixed flex items-center justify-center w-12 h-12 rounded-lg shadow-md bg-sky-500 bottom-10 right-6 text-sky-950'>
+              <PlusIcon className='w-6 h-6'/>
+            </NavLink>
+          </>
         )
       }
     </Page>
