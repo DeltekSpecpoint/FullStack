@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react"
-import { getContacts } from "../api"
+import { useContactsContext } from "."
 
 function useContacts() {
-  const [data, setData] = useState({})
+  const { state: data, loadContacts } = useContactsContext()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getContacts().then(data => {
-      let items = {};
-      for (let item of data.data) {
-        items[item.id] = item
-      }
-      setData({
-        items,
-        page: data.page,
-        pageSize: data.pageSize,
-        totalCount: data.totalRecordCount
-      })
+    loadContacts().then(() => {
       setLoading(false)
-    })  
+    })
   }, [])
 
   return {

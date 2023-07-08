@@ -10,7 +10,13 @@ import useContact from "../hooks/use-contact"
 function ContactViewPage() {
   const navigate = useNavigate()
   const { contactId } = useParams()
-  const { loading, contact } = useContact(contactId)
+  const { loading, contact, remove } = useContact(contactId)
+
+  const handleDelete = () => {
+    remove(contactId).then(() => {
+      navigate('/')
+    })
+  }
 
   return (
     <ModalPage
@@ -18,7 +24,7 @@ function ContactViewPage() {
       leftButton={{ icon: ArrowLeftIcon, type: "link", link: "/" }}
       actions={<span className="space-x-2">
         <NavBarButton icon={PencilIcon} type="link" link={`/contact/${contactId}/edit`} text="Edit"/>
-        <NavBarButton icon={TrashIcon} onClick={() => console.log('delete')} text="Delete"/>
+        <NavBarButton icon={TrashIcon} onClick={handleDelete} text="Delete"/>
       </span>}
       >
         { loading 

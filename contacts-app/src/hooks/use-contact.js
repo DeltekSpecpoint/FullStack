@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react"
 import { getContactById, updateContact, deleteContact } from "../api"
+import { useContactsContext } from "."
 
 function useContact(id) {
-  const [contact, setData] = useState({})
+  const { state: data, update, remove } = useContactsContext()
+  const [contact, setContact] = useState()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getContactById(id)
-      .then(d => {
-        setData(d)
-        setLoading(false)
-      })  
-  }, [id])
-
-  const update = (data) => {
-    updateContact(data.id, data)
-      .then(d => setData(d))
-  }
+    if (data.items[id]) {
+      setContact(data.items[id])
+      setLoading(false)
+    }
+  }, [id, data])
 
   return {
     loading,
     contact,
-    update
+    update,
+    remove
   }
 }
 

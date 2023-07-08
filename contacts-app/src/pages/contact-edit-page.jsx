@@ -10,11 +10,12 @@ import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import ContactForm from "../components/contact-form"
 
 function ContactEditPage() {
+  const navigate = useNavigate()
   const { contactId } = useParams()
   const { loading, contact, update } = useContact(contactId)
 
   const handleSubmit = (data) => {
-    update(data)
+    update(data).then(() => navigate(`/contact/${contactId}`))
   }
 
   return (
@@ -28,9 +29,10 @@ function ContactEditPage() {
           formId="frmContact"
         />
         <NavBarButton 
+          type='link'
           icon={XMarkIcon} 
           text="Cancel"
-          onClick={() => console.log('save')}
+          link={`/contact/${contactId}`}
         />
       </span>}
       >

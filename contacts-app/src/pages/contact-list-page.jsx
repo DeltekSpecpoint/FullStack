@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ContactList from "../components/contact-list"
 import Page from "../components/page"
 import { Bars3Icon } from '@heroicons/react/24/outline'
@@ -7,6 +7,7 @@ import { Outlet } from 'react-router-dom'
 import EmptyContactRoute from './contact-empty-page'
 import contactViewPage from './contact-view-page'
 import contactEditPage from './contact-edit-page'
+import { ContactsProvider } from '../contexts/contacts-context'
 
 function ContactListPage() {
   const { data, loading } = useContacts()
@@ -33,7 +34,11 @@ function ContactListPage() {
 
 const route = {
   path: '/',
-  element: <ContactListPage/>,
+  element: (
+    <ContactsProvider>
+      <ContactListPage/>
+    </ContactsProvider>
+  ),
   children: [
     EmptyContactRoute,
     contactViewPage,

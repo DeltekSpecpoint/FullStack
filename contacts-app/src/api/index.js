@@ -13,12 +13,12 @@ export async function getContactById(id) {
 
 export async function createContact(model) {
   var response = await axios.post('/contact', model)
-  return response
+  return response.data
 }
 
 export async function updateContact(id, model) {
   var response = await axios.put(`/contact/${id}`, model)
-  return response
+  return response.data
 }
 
 export async function deleteContact(id) {
