@@ -28,6 +28,7 @@ function usePersistForm({ formValues }) {
 
       // validations
 
+      // submit the form if all ok
       formSubmitHandler(event)
 
       // delete from localstorage
