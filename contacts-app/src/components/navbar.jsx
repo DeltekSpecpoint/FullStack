@@ -15,7 +15,7 @@ function Navbar({ children, title, leftButton }) {
 export function NavBarButton({ type = "button", icon, onClick, link, text }) {
   return type === "button" ? (
     <button className="inline-flex p-2" onClick={onClick}>
-      {React.createElement(icon, { className: "h-6 w-6 mr-3" })}
+      {React.createElement(icon, { className: "h-6 w-6 lg:mr-3" })}
       {text 
         ? (<span className='hidden lg:inline'>{text}</span>)
         : null
@@ -23,7 +23,7 @@ export function NavBarButton({ type = "button", icon, onClick, link, text }) {
     </button>
   ) : (
     <NavLink className="inline-flex p-2" to={link}>
-      {React.createElement(icon, { className: "h-6 w-6 mr-3" })}
+      {React.createElement(icon, { className: "h-6 w-6 lg:mr-3" })}
       {text 
         ? (<span className='hidden lg:inline'>{text}</span>)
         : null
