@@ -1,37 +1,28 @@
 import { UserIcon } from '@heroicons/react/24/solid'
 import { NavLink } from "react-router-dom"
 
-function ContactList({ items, onDelete }) {
-
-  const handleDelete = (value) => {
-    if (onDelete) onDelete(value)
-  }
-
+function ContactList({ items }) {
   return (
     <ul className='space-y-3'>
-      {items.map(item => <ContactListItem key={item.id} value={item} onDelete={value => handleDelete(value)}/>)}
+      {items.map(item => <ContactListItem key={item.id} value={item}/>)}
     </ul>
   )
 }
 
-function ContactListItem({ value, onDelete }) {
-
-  const handleDelete = () => {
-    if (onDelete) onDelete(value)
-  }
+function ContactListItem({ value }) {
 
   return (
     <li> 
       <NavLink 
         to={`/contact/${value.id}`}
-        className="flex px-4"
+        className="flex items-center px-4"
         >
         <span 
-          className={`relative flex items-center justify-center w-12 h-12 
+          className={`relative flex items-center justify-center w-10 h-10 
             text-2xl rounded-full border-spacing-1 border-slate-500 border-2 mr-2`
           }
           >
-          <UserIcon className="w-8 h-8 text-inherit" />
+          <UserIcon className="w-6 h-6 text-inherit" />
         </span>
         <div className='flex-1 px-2'>
           <div className='text-md'>{value.name}</div>
