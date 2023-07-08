@@ -1,8 +1,4 @@
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
-import StarIcon from '@mui/icons-material/Star';
-import { Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, IconButton, Badge, Icon } from "@mui/material"
+import { UserIcon } from '@heroicons/react/24/solid'
 import { NavLink } from "react-router-dom"
 
 function ContactList({ items, onDelete }) {
@@ -12,9 +8,9 @@ function ContactList({ items, onDelete }) {
   }
 
   return (
-    <List>
+    <ul>
       {items.map(item => <ContactListItem key={item.id} value={item} onDelete={value => handleDelete(value)}/>)}
-    </List>
+    </ul>
   )
 }
 
@@ -25,29 +21,24 @@ function ContactListItem({ value, onDelete }) {
   }
 
   return (
-    <ListItem alignItems="flex-start" secondaryAction={<IconButton edge="end" aria-label="delete">
-    <MoreVertIcon />
-  </IconButton>}>
-      <ListItemAvatar>
-        <Badge
-          overlap='circular'
-          anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-          badgeContent={<Icon component={StarIcon} color='warning' fontSize='small'/>}
+    <li> 
+      <NavLink 
+        to={`/contact/${value.id}`}
+        className="flex px-4"
+        >
+        <span 
+          className={`relative flex items-center justify-center w-12 h-12 
+            text-2xl rounded-full border-spacing-1 border-slate-500 border-2 mr-2`
+          }
           >
-          <Avatar 
-            src="https://xsgames.co/randomusers/assets/avatars/female/20.jpg"
-            />
-        </Badge>
-      </ListItemAvatar>
-      <ListItemButton component={NavLink}
-    to={`/edit/${value.id}`}>
-
-      <ListItemText
-        primary={value.name}
-        secondary={value.mobileNumber}
-        />
-        </ListItemButton>
-    </ListItem>
+          <UserIcon className="w-8 h-8 text-inherit" />
+        </span>
+        <div className='flex-1 px-2'>
+          <div className='text-md'>{value.name}</div>
+          <div className='text-sm text-gray-500'>{value.mobileNumber}</div>
+        </div>
+      </NavLink>
+    </li>
   )
 }
 
