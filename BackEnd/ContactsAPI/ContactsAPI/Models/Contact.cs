@@ -11,8 +11,10 @@ namespace ContactsAPI.Models
     {
         [Key()]
         public Guid ID { get; set; }
+        [Required]
         [StringLength(45)]
         public string LastName { get; set; }
+        [Required]
         [StringLength(45)]
         public string FirstName { get; set; }
         [EmailAddress]

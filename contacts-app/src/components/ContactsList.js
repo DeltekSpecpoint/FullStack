@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import webApi from '../utils/WebApi';
-import Grid from './Grid';
 import { Button } from '@mui/material';
-import ContactForm from './ContactForm';
 import { Add } from '@mui/icons-material';
+import webApi from '../utils/WebApi';
+import ContactForm from './ContactForm';
+import Grid from './Grid';
 
 const ContactsList = () => {
     const [contacts, setContacts] = useState([]);
@@ -16,20 +16,20 @@ const ContactsList = () => {
 
     const handleOpen = () => setOpen(true);
     const handleOpenUpdate = (id, contact) => { setContact(contact); setOpen(true); };
-    const handleClose = () => setOpen(false);
+    const handleClose = (event, reason) =>  {if (reason !== 'backdropClick') {setOpen(false);}}
 
 
     const handleSubmit = (contact) => {
         if (contact.id != null) updateData(contact.id, contact);
         else addData(contact);
         setOpen(false);
-setContact({});
+        setContact({});
     }
     const handleCancel = (e) => {
         e.preventDefault();
         setOpen(false);
-setContact({});
-}
+        setContact({});
+    }
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete?") == true)
             deleteData(id);
@@ -38,7 +38,7 @@ setContact({});
 
     async function fetchData() {
         try {
-            const response = await webApi.get();
+            const response = await webApi.get().catch(error => console.log(error.message));
             setContacts(response.data);
         } catch (error) {
             console.error('Error fetching contacts:', error);
@@ -46,7 +46,7 @@ setContact({});
     }
     async function addData(contact) {
         try {
-            const response = await webApi.post('/', contact);
+            const response = await webApi.post('/', contact).catch(error => console.log('Error adding contact: ' + error.message));
             if (response.data) alert("Added Succesfully");
             else alert("Error adding contact");
             fetchData();
@@ -56,7 +56,7 @@ setContact({});
     }
     async function updateData(id, contact) {
         try {
-            const response = await webApi.put(`/${id}`, contact);
+            const response = await webApi.put(`/${id}`, contact).catch(error => alert('Error updating contact: ' + error.message));
             if (response.data) alert("Updated Succesfully");
             else alert("Error updating contact");
             fetchData();
@@ -66,7 +66,7 @@ setContact({});
     }
     async function deleteData(id) {
         try {
-            const response = await webApi.delete(id);
+            const response = await webApi.delete(id).catch(error => alert('Error deleting contact: ' + error.message));
             if (response.data) alert("Deleted Succesfully");
             else alert("Error deleting contact");
             fetchData();

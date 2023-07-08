@@ -9,29 +9,29 @@ const Grid = ({ contacts, onDelete, onEdit }) => {
     {
       field: 'isStarred',
       headerName: 'Favorite',
-      flex: 0.25,
+      flex: 0.1,
       renderCell: (params) => (
         <Checkbox icon={<StarBorder />} checkedIcon={<Star />} checked={params.row.isStarred} />)
     },
 
-    { field: 'id', headerName: 'ID', flex: 0.25, },
+    { field: 'id', headerName: 'ID', flex: 0.1 },
     {
       field: 'firstName',
       headerName: 'First name',
       editable: false,
-      flex: 0.25,
+      flex: 0.15
     },
     {
       field: 'lastName',
       headerName: 'Last name',
       editable: false,
-      flex: 0.25,
+      flex: 0.15
     },
     {
       field: 'emailAddress',
       headerName: 'Email Address',
       editable: false,
-      flex: 0.25,
+      flex: 0.1
     },
     /* TODO: Add Country Code */
     {
@@ -39,14 +39,14 @@ const Grid = ({ contacts, onDelete, onEdit }) => {
       headerName: 'Mobile Number',
       sortable: true,
       editable: false,
-      flex: 0.25,
+      flex: 0.1
     },
     {
       field: 'createdOn',
       headerName: 'Created Date',
       sortable: true,
       editable: false,
-      flex: 0.25,
+      flex: 0.1,
       valueFormatter: params=> (new Date(params?.value)).toDateString()
     },
     {
@@ -54,13 +54,13 @@ const Grid = ({ contacts, onDelete, onEdit }) => {
       headerName: 'Modified Date',
       sortable: true,
       editable: false,
-      flex: 0.25,
+      flex: 0.1,
       valueFormatter: params=> (new Date(params?.value)).toDateString()
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      flex: 0.25,
+      flex: 0.1,
       renderCell: (params) => (
         <div>
           <IconButton aria-label="edit" onClick={(e) => { handleEdit(e, params.row); }}>
@@ -86,7 +86,7 @@ const Grid = ({ contacts, onDelete, onEdit }) => {
 
   return (
     <div className="App">
-      <Box sx={{ height: 400, width: '100%' }}>
+      <Box sx={{ height: 400, width: '100%', display: 'inline-flex' }}>
         <DataGrid
           rows={contacts}
           columns={columns}
