@@ -6,6 +6,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.4",
+    "@heroicons/react": "^2.0.18",
     "@mui/icons-material": "^5.13.7",
     "@mui/material": "^5.13.7",
     "@testing-library/jest-dom": "^5.16.5",
@@ -42,5 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.2"
   }
 }
