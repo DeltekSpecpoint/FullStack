@@ -45,7 +45,7 @@ const ContactForm = ({ onSubmit, onCancel, handleClose, open, data }) => {
         switch (name) {
             case "firstName":
             case "lastName": { return value.length > 0; break; }
-            case "emailAddress": { return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value); break; }
+            case "emailAddress": { return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/.test(value); break; }
             case "mobileNumber": { return /^[0-9]{11}$/.test(value); break; }
             default: return true;
         }

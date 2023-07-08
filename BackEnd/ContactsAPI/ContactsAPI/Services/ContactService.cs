@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ContactsAPI.Services
@@ -15,6 +16,9 @@ namespace ContactsAPI.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IContactRepository _contactRepository;
+        private Regex emailRegex = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
+        private Regex mobileRegex = new Regex(@"^[0-9]{11}$");
+
         public ContactService(IContactRepository contactRepository, IUnitOfWork unitOfWork)
         {
             _contactRepository = contactRepository;
@@ -59,7 +63,9 @@ namespace ContactsAPI.Services
         }
         public async Task<bool> Add(ContactDTO data)
         {
-            if (!string.IsNullOrEmpty(data.FirstName) && !string.IsNullOrEmpty(data.LastName))
+            if (!string.IsNullOrEmpty(data.FirstName) && !string.IsNullOrEmpty(data.LastName) &&
+                !string.IsNullOrEmpty(data.EmailAddress) && emailRegex.IsMatch(data.EmailAddress) &&
+                !string.IsNullOrEmpty(data.MobileNumber) && mobileRegex.IsMatch(data.MobileNumber))
             {
                 Contact contact = new Contact()
                 {
