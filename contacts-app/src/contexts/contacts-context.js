@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { createContext } from "react";
-import { deleteContact, getContacts, updateContact } from "../api";
+import { createContact, deleteContact, getContacts, updateContact } from "../api";
 
 export const ContactsContext = createContext()
 
@@ -30,6 +30,21 @@ export function ContactsProvider({ children }) {
         totalCount: d.totalRecordCount
       })
     })  
+  }
+
+  const create = (value) => {
+    return createContact(value)
+      .then(d => {
+        setData({
+          ...data,
+          items: {
+            ...data.items,
+            [d.id]: {
+              ...d
+            }
+          }
+        })
+      })
   }
 
   const update = (value) => {
@@ -64,7 +79,7 @@ export function ContactsProvider({ children }) {
   }
 
   return (
-    <ContactsContext.Provider value={{ state: data, loadContacts, update, remove }}>
+    <ContactsContext.Provider value={{ state: data, loadContacts, update, remove, create }}>
       {children}
     </ContactsContext.Provider>
   )

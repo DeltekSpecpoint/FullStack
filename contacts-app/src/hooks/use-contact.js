@@ -3,7 +3,7 @@ import { getContactById, updateContact, deleteContact } from "../api"
 import { useContactsContext } from "."
 
 function useContact(id) {
-  const { state: data, update, remove } = useContactsContext()
+  const { state: data, update, remove, create } = useContactsContext()
   const [contact, setContact] = useState()
   const [loading, setLoading] = useState(true)
 
@@ -18,7 +18,8 @@ function useContact(id) {
     loading,
     contact,
     update,
-    remove
+    remove,
+    create
   }
 }
 

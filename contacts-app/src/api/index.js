@@ -7,7 +7,6 @@ export async function getContacts() {
 
 export async function getContactById(id) {
   var results = await axios.get(`/contact/${id}`)
-  console.log(results)
   return results.data
 }
 
