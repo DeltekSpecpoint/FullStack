@@ -7,14 +7,12 @@ import {
   createBrowserRouter,
   RouterProvider
 } from 'react-router-dom'
-import ContactsAdd from './modules/contacts-add';
-import ContactsEdit, { loader as contactLoader } from './modules/contacts-edit';
-import ContactsMaintenance, { loader as contactListLoader } from './modules/contacts';
 import axios from 'axios'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import ContactView from './components/contact-view';
+import ContactList from './components/contact-list';
+import Page from './components/page';
+import contactViewPage from './pages/contact-view-page';
+import contactListPage from './pages/contact-list-page';
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
@@ -23,20 +21,8 @@ const router = createBrowserRouter([
     path: "/",
     element: <App/>,
     children: [
-      {
-        path: "/",
-        loader: contactListLoader,
-        element: <ContactsMaintenance/>
-      },
-      {
-        path: "/add",
-        element: <ContactsAdd/>
-      },
-      {
-        path: "/edit/:id",
-        loader: contactLoader,
-        element: <ContactsEdit/>
-      }
+      contactListPage,
+      contactViewPage
     ]
   }
 ])
