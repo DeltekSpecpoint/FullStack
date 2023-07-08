@@ -1,6 +1,6 @@
 function EmptyContact() {
   return (
-    <div>
+    <div className="hidden lg:block">
       Select a contact
     </div>
   )

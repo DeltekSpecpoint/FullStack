@@ -5,10 +5,12 @@ import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outlin
 import { NavBarButton } from "../components/navbar"
 import { Container } from "@mui/material"
 import ModalPage from "../components/modal-page"
+import useContact from "../hooks/use-contact"
 
 function ContactViewPage() {
   const navigate = useNavigate()
   const { contactId } = useParams()
+  const { loading, contact } = useContact(contactId)
 
   return (
     <ModalPage
@@ -19,13 +21,14 @@ function ContactViewPage() {
         <NavBarButton icon={TrashIcon} onClick={() => console.log('delete')} text="Delete"/>
       </span>}
       >
-        <Container>
-          <ContactView value={{
-            id: 1,
-            name: "Joel Manuel",
-            mobileNumber: "+639060586149"
-          }}/>
-        </Container>
+        { loading 
+          ? <span>Loading...</span>
+          : (
+            <Container>
+              <ContactView value={contact}/>
+            </Container>
+          )
+        }
     </ModalPage>
   )
 }
