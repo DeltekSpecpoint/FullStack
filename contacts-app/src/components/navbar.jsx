@@ -1,10 +1,10 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
 
-function Navbar({ children, title, leftButton }) {
+function Navbar({ children, title, leftButton, className }) {
   
   return (
-    <div className="flex items-center h-16 px-2 fixed top-0 inset-x-0 bg-slate-100/30 dark:bg-[#242424]/30 backdrop-blur z-10">
+    <div className={`flex items-center h-16 px-2 fixed top-0 inset-x-0 bg-slate-100/30 dark:bg-[#242424]/30 backdrop-blur z-10 ${className}`}>
       <NavBarButton {...leftButton}/>
       <div className="flex-1 mx-1 text-lg font-medium ">{title}</div>
       {children}
