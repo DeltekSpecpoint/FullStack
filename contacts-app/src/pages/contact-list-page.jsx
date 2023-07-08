@@ -4,10 +4,11 @@ import Page from "../components/page"
 import { Bars3Icon } from '@heroicons/react/24/outline'
 import useContacts from '../hooks/use-contacts'
 import { Outlet } from 'react-router-dom'
-import EmptyContactRoute from './contact-empty-page'
+import contactEmptyPage from './contact-empty-page'
 import contactViewPage from './contact-view-page'
 import contactEditPage from './contact-edit-page'
 import { ContactsProvider } from '../contexts/contacts-context'
+import contactAddPage from './contact-add-page'
 
 function ContactListPage() {
   const { data, loading } = useContacts()
@@ -40,9 +41,10 @@ const route = {
     </ContactsProvider>
   ),
   children: [
-    EmptyContactRoute,
+    contactEmptyPage,
     contactViewPage,
-    contactEditPage
+    contactEditPage,
+    contactAddPage
   ]  
 }
 

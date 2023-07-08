@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
 import ContactView from "../components/contact-view"
-import Page from "../components/page"
 import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { NavBarButton } from "../components/navbar"
 import { Container } from "@mui/material"

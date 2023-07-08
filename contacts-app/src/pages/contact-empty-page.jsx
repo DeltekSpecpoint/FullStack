@@ -6,9 +6,9 @@ function EmptyContact() {
   )
 }
 
-const EmptyContactRoute = {
+const contactEmptyPage = {
   path: '/',
   element: <EmptyContact/>
 }
 
-export default EmptyContactRoute
+export default contactEmptyPage
