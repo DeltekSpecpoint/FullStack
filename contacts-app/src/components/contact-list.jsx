@@ -8,7 +8,7 @@ function ContactList({ items, onDelete }) {
   }
 
   return (
-    <ul>
+    <ul className='space-y-3'>
       {items.map(item => <ContactListItem key={item.id} value={item} onDelete={value => handleDelete(value)}/>)}
     </ul>
   )

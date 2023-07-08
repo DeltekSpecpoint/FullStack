@@ -4,7 +4,7 @@ import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline'
 
 function ContactView({ value }) {
   return (
-    <article>
+    <div>
       <div className='lg:flex lg:items-center'>
         <div 
           className="h-48 w-48 rounded-full m-auto
@@ -32,7 +32,7 @@ function ContactView({ value }) {
           </li>
         </ul>
       </div>
-    </article>
+    </div>
   )
 }
 
