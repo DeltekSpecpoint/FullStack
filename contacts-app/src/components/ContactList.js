@@ -1,13 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import ContactForm from './ContactForm'
 import ContactItem from './ContactItem/ContactItem'
-import { Container, Typography, Box, TextField } from '@mui/material'
+import {
+  Container,
+  Typography,
+  Box,
+  TextField,
+  Table,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableFooter,
+  TablePagination,
+} from '@mui/material'
 import api from '../utils'
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([])
   const [selectedContact, setSelectedContact] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
   useEffect(() => {
     fetchContacts()
@@ -87,16 +110,45 @@ const ContactList = () => {
             label="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            maxWidth={50}
+            fullWidth
           />
-          {filteredContacts.map((contact) => (
-            <ContactItem
-              key={contact.id}
-              contact={contact}
-              onDelete={handleDeleteContact}
-              onEdit={() => setSelectedContact(contact)}
-            />
-          ))}
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Phone Number</TableCell>
+                <TableCell>Company</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Group</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredContacts
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((contact) => (
+                  <ContactItem
+                    key={contact.id}
+                    contact={contact}
+                    onDelete={handleDeleteContact}
+                    onEdit={() => setSelectedContact(contact)}
+                  />
+                ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  count={filteredContacts.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
         </Box>
       </Box>
     </Container>
