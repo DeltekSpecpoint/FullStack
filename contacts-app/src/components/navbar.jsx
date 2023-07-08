@@ -12,9 +12,9 @@ function Navbar({ children, title, leftButton }) {
   );
 }
 
-export function NavBarButton({ type = "button", icon, onClick, link, text }) {
+export function NavBarButton({ type = "button", icon, onClick, link, text, formId = "" }) {
   return type === "button" ? (
-    <button className="inline-flex p-2" onClick={onClick}>
+    <button className="inline-flex p-2" onClick={onClick} form={formId}>
       {React.createElement(icon, { className: "h-6 w-6 lg:mr-3" })}
       {text 
         ? (<span className='hidden lg:inline'>{text}</span>)

@@ -4,8 +4,9 @@ import Page from "../components/page"
 import { Bars3Icon } from '@heroicons/react/24/outline'
 import useContacts from '../hooks/use-contacts'
 import { Outlet } from 'react-router-dom'
-import EmptyContactRoute from './contact-empty'
+import EmptyContactRoute from './contact-empty-page'
 import contactViewPage from './contact-view-page'
+import contactEditPage from './contact-edit-page'
 
 function ContactListPage() {
   const { data, loading } = useContacts()
@@ -35,7 +36,8 @@ const route = {
   element: <ContactListPage/>,
   children: [
     EmptyContactRoute,
-    contactViewPage
+    contactViewPage,
+    contactEditPage
   ]  
 }
 

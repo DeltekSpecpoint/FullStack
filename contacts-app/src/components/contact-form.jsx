@@ -1,6 +1,6 @@
 import React from 'react'
 import usePersistForm from '../hooks/use-persist-form'
-import { TextField } from '@mui/material'
+import InputGroup from './input-group'
 
 function ContactForm({ value, onSubmit, children }) {
   const { values, onChange, handleSubmit } = usePersistForm({ formValues: value })
@@ -10,15 +10,15 @@ function ContactForm({ value, onSubmit, children }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)}>
-      <TextField 
-        label="Full Name"
+    <form id="frmContact" onSubmit={handleSubmit(onFormSubmit)}>
+      <InputGroup label="Full Name"
         value={values.name}
-        onChange={(e) => onChange('name', e.target.value)}/>
-      <TextField 
-        label="Mobile Number"
+        onChange={(e) => onChange('name', e.target.value)}
+        />
+      <InputGroup label="Mobile Number"
         value={values.mobileNumber}
-        onChange={(e) => onChange('mobileNumber', e.target.value)}/>
+        onChange={(e) => onChange('mobileNumber', e.target.value)}
+        />
       {children}
     </form>
   )
