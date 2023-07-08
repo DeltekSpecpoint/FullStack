@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import ContactView from "../components/contact-view"
 import Page from "../components/page"
 import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
@@ -8,12 +8,14 @@ import ModalPage from "../components/modal-page"
 
 function ContactViewPage() {
   const navigate = useNavigate()
+  const { contactId } = useParams()
+
   return (
     <ModalPage
       title={""} 
-      leftButton={{ icon: ArrowLeftIcon, onClick: () => navigate(-1) }}
+      leftButton={{ icon: ArrowLeftIcon, type: "link", link: "/" }}
       actions={<span className="space-x-2">
-        <NavBarButton icon={PencilIcon} onClick={() => console.log('edit')} text="Edit"/>
+        <NavBarButton icon={PencilIcon} type="link" link={`/contact/${contactId}/edit`} text="Edit"/>
         <NavBarButton icon={TrashIcon} onClick={() => console.log('delete')} text="Delete"/>
       </span>}
       >
