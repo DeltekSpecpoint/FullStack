@@ -17,6 +17,15 @@
     border-bottom: 1px solid black;
     font-size: calc(10px + 2vmin);
   }
+
+  .contact label {
+    font-size: 20px;
+  }
+
+  .contact .editField {
+    display: flex;
+    flex-direction: column;
+  }
   
   .contactDetails {
     display: flex;
@@ -33,6 +42,11 @@
 
   .contactInfo span {
     width: 300px;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
   }
   
   .contactInfo img {
