@@ -8,8 +8,11 @@ function usePersistForm({ formValues }) {
 
     localStorage.setItem(location.pathname, JSON.stringify(retVal))
 
-    return { ...prev, ...next }
+    return retVal
   }, { ...formValues })
+  const [errors, updateErrors] = React.useReducer((prev, next) => {
+    return { ...prev, ...next }
+  }, {  })
 
   useEffect(() => {
     const cache = localStorage.getItem(location.pathname)
@@ -36,16 +39,30 @@ function usePersistForm({ formValues }) {
     }
   }
 
-  const register = (name) => {
+  const register = (name, validations) => {
     return {
-      onChange: (e) => onChange(name, e.target.value),
+      onChange: (e) => {
+        console.log(e)
+        if (validations && validations.required) {
+          if (!e.target.value) {
+            const message = typeof validations.required === 'string'
+              ? validations.required
+              : `${name} is required`
+            updateErrors({ [name]: { message }})
+          } else {
+            updateErrors({ [name]: null})
+          }
+        }
+        onChange(name, e.target.value)
+      },
       value: event[name] ?? ""
     }
   }
 
   return {
     handleSubmit,
-    register
+    register,
+    errors
   }
 }
 
