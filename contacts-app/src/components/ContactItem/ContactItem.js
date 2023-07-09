@@ -1,11 +1,18 @@
 import React from 'react'
-import { IconButton, TableCell, TableRow } from '@mui/material'
+import { Checkbox, IconButton, TableCell, TableRow } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-const ContactItem = ({ contact, onDelete, onEdit }) => {
+const ContactItem = ({ contact, selected, onClick, onDelete, onEdit }) => {
   return (
     <TableRow>
+      <TableCell padding="checkbox">
+        <Checkbox
+          color="primary"
+          checked={selected}
+          onClick={(event) => onClick(event, contact.id)}
+        />
+      </TableCell>
       <TableCell>{contact.name}</TableCell>
       <TableCell>{contact.email}</TableCell>
       <TableCell>{contact.phoneNumber}</TableCell>

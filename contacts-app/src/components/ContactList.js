@@ -13,8 +13,22 @@ import {
   TableRow,
   TableFooter,
   TablePagination,
+  TableSortLabel,
+  Checkbox,
+  Button,
 } from '@mui/material'
 import api from '../utils'
+import { getComparator, stableSort } from '../sort'
+
+const headCells = [
+  { id: 'name', label: 'Name' },
+  { id: 'email', label: 'Email' },
+  { id: 'phoneNumber', label: 'Phone Number' },
+  { id: 'company', label: 'Company' },
+  { id: 'title', label: 'Title' },
+  { id: 'group', label: 'Group' },
+  { id: 'actions', label: 'Actions' },
+]
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([])
@@ -22,6 +36,57 @@ const ContactList = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [order, setOrder] = useState('asc')
+  const [orderBy, setOrderBy] = useState('name')
+  const [selected, setSelected] = useState([])
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = filteredContacts.map((contact) => contact.id)
+      setSelected(newSelecteds)
+      return
+    }
+    setSelected([])
+  }
+
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id)
+    let newSelected = []
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id)
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1))
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1))
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      )
+    }
+
+    setSelected(newSelected)
+  }
+
+  const handleDeleteSelected = async () => {
+    try {
+      await Promise.all(selected.map((id) => api.delete(`Contact/${id}`)))
+      const updatedContacts = contacts.filter(
+        (contact) => !selected.includes(contact.id)
+      )
+      setContacts(updatedContacts)
+      setSelected([])
+    } catch (error) {
+      console.error('Error deleting selected contacts:', error)
+    }
+  }
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -110,31 +175,73 @@ const ContactList = () => {
             label="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            fullWidth
+            maxWidth={50}
           />
+          <Box mt={2}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDeleteSelected}
+              disabled={selected.length === 0}
+            >
+              Delete Selected
+            </Button>
+          </Box>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone Number</TableCell>
-                <TableCell>Company</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Group</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    color="primary"
+                    indeterminate={
+                      selected.length > 0 &&
+                      selected.length < filteredContacts.length
+                    }
+                    checked={
+                      filteredContacts.length > 0 &&
+                      selected.length === filteredContacts.length
+                    }
+                    onChange={handleSelectAllClick}
+                  />
+                </TableCell>
+                {headCells.map((headCell) => (
+                  <TableCell
+                    key={headCell.id}
+                    sortDirection={orderBy === headCell.id ? order : false}
+                  >
+                    {headCell.id === 'actions' ? (
+                      headCell.label
+                    ) : (
+                      <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : 'asc'}
+                        onClick={(event) =>
+                          handleRequestSort(event, headCell.id)
+                        }
+                      >
+                        {headCell.label}
+                      </TableSortLabel>
+                    )}
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredContacts
+              {stableSort(filteredContacts, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((contact) => (
-                  <ContactItem
-                    key={contact.id}
-                    contact={contact}
-                    onDelete={handleDeleteContact}
-                    onEdit={() => setSelectedContact(contact)}
-                  />
-                ))}
+                .map((contact) => {
+                  const isItemSelected = selected.indexOf(contact.id) !== -1
+                  return (
+                    <ContactItem
+                      key={contact.id}
+                      contact={contact}
+                      selected={isItemSelected}
+                      onClick={(event) => handleClick(event, contact.id)}
+                      onDelete={handleDeleteContact}
+                      onEdit={() => setSelectedContact(contact)}
+                    />
+                  )
+                })}
             </TableBody>
             <TableFooter>
               <TableRow>
