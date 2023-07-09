@@ -1,0 +1,19 @@
+.addContactContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    position: relative;
+    padding: 0px 10px 0px 10px;
+}
+
+.addContactForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.addContactForm div {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px 10px 0px;
+}

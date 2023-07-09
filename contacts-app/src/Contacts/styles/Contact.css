@@ -1,0 +1,40 @@
+.contactName {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.contactName span {
+    width: 300px;
+}
+  
+  .contact {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 1px solid black;
+    font-size: calc(10px + 2vmin);
+  }
+  
+  .contactDetails {
+    display: flex;
+    flex-direction: column;
+    align-items: space-around;
+    justify-content: center;
+  }
+  
+  .contactInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .contactInfo span {
+    width: 300px;
+  }
+  
+  .contactInfo img {
+    margin: 0px 20px 0px 0px;
+  }
