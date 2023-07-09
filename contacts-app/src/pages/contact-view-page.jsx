@@ -39,7 +39,9 @@ function ContactViewPage() {
   )
 }
 
-export default {
+const contactViewPage = {
   path: '/contact/:contactId',
   element: <ContactViewPage/>
 }
+
+export default contactViewPage

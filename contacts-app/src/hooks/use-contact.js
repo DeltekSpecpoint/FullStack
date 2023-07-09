@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { getContactById, updateContact, deleteContact } from "../api"
 import { useContactsContext } from "."
 
 function useContact(id) {

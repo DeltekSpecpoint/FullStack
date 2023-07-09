@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { createContext } from "react";
 import { createContact, deleteContact, getContacts, updateContact } from "../api";
 

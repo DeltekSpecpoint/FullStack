@@ -48,7 +48,9 @@ function ContactEditPage() {
   )
 }
 
-export default {
+const contactEditPage = {
   path: '/contact/:contactId/edit',
   element: <ContactEditPage/>
 }
+
+export default contactEditPage

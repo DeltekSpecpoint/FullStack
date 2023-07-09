@@ -43,7 +43,9 @@ function ContactAddPage() {
   )
 }
 
-export default {
+const contactAddPage = {
   path: '/add',
   element: <ContactAddPage/>
 }
+
+export default contactAddPage

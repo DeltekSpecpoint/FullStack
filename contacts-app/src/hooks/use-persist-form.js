@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 function usePersistForm({ formValues }) {
@@ -16,7 +16,7 @@ function usePersistForm({ formValues }) {
     if (cache) {
       updateEvent(JSON.parse(cache))
     }
-  }, [])
+  }, [location])
 
   const onChange = (field, value) => {
     updateEvent({ [field]: value } )

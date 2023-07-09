@@ -9,7 +9,7 @@ function useContacts() {
     loadContacts().then(() => {
       setLoading(false)
     })
-  }, [])
+  }, [loadContacts])
 
   return {
     loading,

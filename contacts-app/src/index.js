@@ -8,10 +8,6 @@ import {
   RouterProvider
 } from 'react-router-dom'
 import axios from 'axios'
-import ContactView from './components/contact-view';
-import ContactList from './components/contact-list';
-import Page from './components/page';
-import contactViewPage from './pages/contact-view-page';
 import contactListPage from './pages/contact-list-page';
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
