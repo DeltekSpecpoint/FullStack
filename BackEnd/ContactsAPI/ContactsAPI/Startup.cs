@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ContactsAPI.Data;
+using ContactsAPI.Models;
 using ContactsAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +32,17 @@ namespace ContactsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ContactDbContext>(ctx => ctx.UseInMemoryDatabase(nameof(ContactDbContext)));
+            services.AddDbContext<ContactDbContext>(ctx =>
+            {
+                ctx.UseInMemoryDatabase(nameof(ContactDbContext));
+            });
+
+            services.AddGraphQLServer()
+                    .AddMutationType<CreateContactMutation>()
+                    .AddQueryType<Query>()
+                    .AddProjections()
+                    .AddFiltering()
+                    .AddSorting();
 
             services.AddScoped<IContactService, ContactService>();
 
@@ -71,6 +82,8 @@ namespace ContactsAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
             app.UseSwagger();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
@@ -89,11 +102,10 @@ namespace ContactsAPI
 
             app.UseAuthorization();
 
-            app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGraphQL();
             });
         }
     }
