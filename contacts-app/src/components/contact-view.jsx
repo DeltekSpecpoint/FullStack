@@ -1,18 +1,15 @@
 import React from 'react'
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline'
+import { UserIcon } from '@heroicons/react/24/solid'
 
 function ContactView({ value }) {
   return (
     <div>
       <div className='lg:flex lg:items-center'>
         <div 
-          className="h-48 w-48 rounded-full m-auto
-          bg-[url('https://img.freepik.com/free-photo/happy-asian-young-woman-face-portrait_53876-143108.jpg?w=996&t=st=1688796515~exp=1688797115~hmac=63a1713170cd149d1415f608327e9a84e76ae2d1ba72b0fb33b942eddca25f87')]
-          bg-center
-          bg-cover
-          lg:mr-12
-          "
+          className="flex items-center justify-center w-48 h-48 m-auto border border-gray-500 rounded-full lg:mr-12"
           >
+          <UserIcon className='w-24 h-24'/>
         </div>
         <div className='py-4 text-center lg:flex-1 lg:text-left'>
           <div className='py-2 text-2xl'>{value.name}</div>
