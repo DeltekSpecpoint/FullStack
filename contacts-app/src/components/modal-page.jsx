@@ -3,7 +3,7 @@ import Navbar from "./navbar"
 
 function ModalPage({ title, children, leftButton, actions = null }) {
   return (
-    <section className='bg-[#242424] fixed inset-0 lg:inset-auto z-10 lg:z-0 w-full'>
+    <section className='bg-[#f3f4f6] dark:bg-[#242424] fixed inset-0 lg:inset-auto z-10 lg:z-0 w-full'>
       <Navbar
         title={title}
         leftButton={leftButton}
