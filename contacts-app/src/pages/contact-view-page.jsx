@@ -13,6 +13,7 @@ function ContactViewPage() {
 
   const handleDelete = () => {
     remove(contactId).then(() => {
+      localStorage.removeItem(`/contact/${contactId}/edit`)
       navigate('/')
     })
   }

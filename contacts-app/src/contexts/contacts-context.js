@@ -50,7 +50,6 @@ export function ContactsProvider({ children }) {
   const update = (value) => {
     return updateContact(value.id, value)
       .then(d => {
-        console.log(d)
         setData({
           ...data,
           items: {
