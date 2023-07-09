@@ -36,9 +36,16 @@ function usePersistForm({ formValues }) {
     }
   }
 
+  const register = (name) => {
+    return {
+      onChange: (e) => onChange(name, e.target.value),
+      value: event[name]
+    }
+  }
+
   return {
     handleSubmit,
-    onChange, values: event
+    register
   }
 }
 

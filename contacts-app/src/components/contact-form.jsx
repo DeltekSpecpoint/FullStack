@@ -3,7 +3,7 @@ import usePersistForm from '../hooks/use-persist-form'
 import InputGroup from './input-group'
 
 function ContactForm({ value, onSubmit, children }) {
-  const { values, onChange, handleSubmit } = usePersistForm({ formValues: value })
+  const { handleSubmit, register } = usePersistForm({ formValues: value })
 
   const onFormSubmit = (data) => {
     if (onSubmit) onSubmit(data)
@@ -11,14 +11,8 @@ function ContactForm({ value, onSubmit, children }) {
 
   return (
     <form id="frmContact" onSubmit={handleSubmit(onFormSubmit)}>
-      <InputGroup label="Full Name"
-        value={values.name}
-        onChange={(e) => onChange('name', e.target.value)}
-        />
-      <InputGroup label="Mobile Number"
-        value={values.mobileNumber}
-        onChange={(e) => onChange('mobileNumber', e.target.value)}
-        />
+      <InputGroup label="Full Name" {...register('name')} />
+      <InputGroup label="Mobile Number" {...register('mobileNumber')} />
       {children}
     </form>
   )
