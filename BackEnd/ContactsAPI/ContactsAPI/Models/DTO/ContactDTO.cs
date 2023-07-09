@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace ContactsAPI.Models
+namespace ContactsAPI.Models.DTO
 {
-    public class Contact
+    [DataContract]
+    public class ContactDTO
     {
-        [Key()]
+        [DataMember]
         public Guid ID { get; set; }
-        [Required]
-        [StringLength(45)]
+        [DataMember]
         public string LastName { get; set; }
-        [Required]
-        [StringLength(45)]
+        [DataMember]
         public string FirstName { get; set; }
-        [EmailAddress]
+        [DataMember]
         public string EmailAddress { get; set; }
+        [DataMember]
         public string CountryCode { get; set; }
-        [StringLength(10)]
+        [DataMember]
         public string MobileNumber { get; set; }
+        [DataMember]
         public bool IsStarred { get; set; }
+        [DataMember]
         public DateTime CreatedOn { get; set; }
+        [DataMember]
         public DateTime ModifiedOn { get; set; }
     }
 }
