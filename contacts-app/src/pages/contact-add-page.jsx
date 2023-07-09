@@ -9,7 +9,7 @@ import Container from "../components/container"
 
 function ContactAddPage() {
   const navigate = useNavigate()
-  const create = useCreateContact()
+  const { create } = useCreateContact()
 
   const handleSubmit = (data) => {
     create(data)

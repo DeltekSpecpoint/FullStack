@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react"
 import { useContactsContext } from "."
+import { gql, useQuery } from "@apollo/client"
+
+export const GET_CONTACTS = gql`
+  query {
+    contact {
+      nodes {
+        id
+        name
+      }
+    }
+  }
+`
 
 function useContacts() {
-  const { state: data, loadContacts } = useContactsContext()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    loadContacts().then(() => {
-      setLoading(false)
-    })
-  }, [])
+  const { loading, error, data} = useQuery(GET_CONTACTS)
 
   return {
     loading,
-    data
+    data : {
+      items :data ? data.contact.nodes : []
+    }
   }
 }
 

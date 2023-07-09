@@ -37,14 +37,17 @@ namespace ContactsAPI
                 ctx.UseInMemoryDatabase(nameof(ContactDbContext));
             });
 
+
             services.AddGraphQLServer()
-                    .AddMutationType<CreateContactMutation>()
+                    .AddMutationConventions()
+                    .AddMutationType<Mutation>()
                     .AddQueryType<Query>()
                     .AddProjections()
                     .AddFiltering()
-                    .AddSorting();
+                    .AddSorting()
+                    .RegisterService<ContactService>();
 
-            services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<ContactService>();
 
             services.AddControllers()
                     .AddJsonOptions(opt =>

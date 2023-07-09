@@ -39,7 +39,7 @@ function usePersistForm({ formValues }) {
   const register = (name) => {
     return {
       onChange: (e) => onChange(name, e.target.value),
-      value: event[name]
+      value: event[name] ?? ""
     }
   }
 

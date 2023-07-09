@@ -5,11 +5,13 @@ import { NavBarButton } from "../components/navbar"
 import ModalPage from "../components/modal-page"
 import useContact from "../hooks/use-contact"
 import Container from "../components/container"
+import useRemoveContact from "../hooks/use-delete-contact"
 
 function ContactViewPage() {
   const navigate = useNavigate()
   const { contactId } = useParams()
-  const { loading, contact, remove } = useContact(contactId)
+  const { loading, contact } = useContact(contactId)
+  const { remove } = useRemoveContact()
 
   const handleDelete = () => {
     remove(contactId).then(() => {

@@ -28,7 +28,6 @@ function ContactListPage() {
                 <Outlet/>
               </div>
             </div>
-            {/* fixed flex items-center justify-center w-12 h-12 text-center bg-red-500 rounded-lg shadow-md bottom-15 */}
             <NavLink to={'/add'}
               className='fixed flex items-center justify-center w-12 h-12 rounded-lg shadow-md bg-sky-500 bottom-10 right-6 text-sky-950'>
               <PlusIcon className='w-6 h-6'/>

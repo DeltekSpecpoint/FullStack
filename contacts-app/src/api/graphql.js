@@ -1,26 +1,47 @@
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
+export const client = new ApolloClient({
+  uri: 'http://localhost:5000/graphql/',
+  cache: new InMemoryCache(),
+});
 
 export async function getContacts() {
-  var results = await axios.get('/contact')
-  return results.data
+  client
+    .query({
+      query: gql`
+        query {
+          contact {
+            nodes {
+              name
+            }
+          }
+        }
+      `
+    })
+    .then(response => {
+      console.log(response)
+    })
+  return {
+
+  }
 }
 
 export async function getContactById(id) {
-  var results = await axios.get(`/contact/${id}`)
-  return results.data
+  
+  return {}
 }
 
 export async function createContact(model) {
-  var response = await axios.post('/contact', model)
-  return response.data
+  
+  return {}
 }
 
 export async function updateContact(id, model) {
-  var response = await axios.put(`/contact/${id}`, model)
-  return response.data
+  
+  return {}
 }
 
 export async function deleteContact(id) {
-  var response = await axios.delete(`/contact/${id}`)
-  return response
+  
+  return {}
 }

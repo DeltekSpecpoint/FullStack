@@ -6,11 +6,13 @@ import useContact from "../hooks/use-contact"
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import ContactForm from "../components/contact-form"
 import Container from "../components/container"
+import useUpdateContact from "../hooks/use-update-contact"
 
 function ContactEditPage() {
   const navigate = useNavigate()
   const { contactId } = useParams()
-  const { loading, contact, update } = useContact(contactId)
+  const { update } = useUpdateContact()
+  const { loading, contact } = useContact(contactId)
 
   const handleSubmit = (data) => {
     update(data).then(() => navigate(`/contact/${contactId}`))
