@@ -2,9 +2,9 @@ import { useNavigate, useParams } from "react-router-dom"
 import ContactView from "../components/contact-view"
 import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { NavBarButton } from "../components/navbar"
-import { Container } from "@mui/material"
 import ModalPage from "../components/modal-page"
 import useContact from "../hooks/use-contact"
+import Container from "../components/container"
 
 function ContactViewPage() {
   const navigate = useNavigate()

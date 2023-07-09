@@ -11,7 +11,7 @@ function ModalPage({ title, children, leftButton, actions = null }) {
       >
         {actions}
       </Navbar>
-      <div className='hidden px-3 mb-5 lg:block'>
+      <div className='hidden mb-5 lg:block'>
         {actions}
       </div>
       <div className='pt-20 lg:pt-0'>

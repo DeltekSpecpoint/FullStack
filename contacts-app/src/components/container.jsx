@@ -1,6 +1,6 @@
 function Container({ children }) {
   return (
-    <div className="max-w-[900px] m-auto">
+    <div className="container px-4 mx-auto">
       {children}
     </div>
   )
