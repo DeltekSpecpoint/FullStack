@@ -16,7 +16,9 @@ import {
   TableSortLabel,
   Checkbox,
   Button,
+  Snackbar,
 } from '@mui/material'
+import Alert from '@mui/material/Alert'
 import api from '../utils'
 import { getComparator, stableSort } from '../sort'
 
@@ -39,6 +41,20 @@ const ContactList = () => {
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('name')
   const [selected, setSelected] = useState([])
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message)
+    setSnackbarOpen(true)
+  }
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setSnackbarOpen(false)
+  }
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -67,19 +83,6 @@ const ContactList = () => {
     }
 
     setSelected(newSelected)
-  }
-
-  const handleDeleteSelected = async () => {
-    try {
-      await Promise.all(selected.map((id) => api.delete(`Contact/${id}`)))
-      const updatedContacts = contacts.filter(
-        (contact) => !selected.includes(contact.id)
-      )
-      setContacts(updatedContacts)
-      setSelected([])
-    } catch (error) {
-      console.error('Error deleting selected contacts:', error)
-    }
   }
 
   const handleRequestSort = (event, property) => {
@@ -114,6 +117,7 @@ const ContactList = () => {
     try {
       const response = await api.post('Contact', contact)
       setContacts([...contacts, response.data])
+      handleSnackbarOpen('Contact added successfully!')
     } catch (error) {
       console.error('Error adding contact:', error)
     }
@@ -127,6 +131,7 @@ const ContactList = () => {
       )
       setContacts(updatedContacts)
       setSelectedContact(null)
+      handleSnackbarOpen('Contact updated successfully!')
     } catch (error) {
       console.error('Error updating contact:', error)
     }
@@ -137,8 +142,23 @@ const ContactList = () => {
       await api.delete(`Contact/${id}`)
       const updatedContacts = contacts.filter((contact) => contact.id !== id)
       setContacts(updatedContacts)
+      handleSnackbarOpen('Contact deleted successfully!')
     } catch (error) {
       console.error('Error deleting contact:', error)
+    }
+  }
+
+  const handleDeleteSelected = async () => {
+    try {
+      await Promise.all(selected.map((id) => api.delete(`Contact/${id}`)))
+      const updatedContacts = contacts.filter(
+        (contact) => !selected.includes(contact.id)
+      )
+      setContacts(updatedContacts)
+      handleSnackbarOpen('Contact deleted successfully!')
+      setSelected([])
+    } catch (error) {
+      console.error('Error deleting selected contacts:', error)
     }
   }
 
@@ -154,7 +174,6 @@ const ContactList = () => {
     )
   })
 
-  console.log('contacts', contacts)
   return (
     <Container maxWidth="md">
       <Box my={4}>
@@ -175,7 +194,7 @@ const ContactList = () => {
             label="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            maxWidth={50}
+            fullWidth
           />
           <Box mt={2}>
             <Button
@@ -258,6 +277,19 @@ const ContactList = () => {
           </Table>
         </Box>
       </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   )
 }
