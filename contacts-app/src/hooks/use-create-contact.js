@@ -1,5 +1,4 @@
-import { gql, useMutation } from "@apollo/client"
-import { useContactsContext } from "."
+import { useMutation } from "@apollo/client"
 import { CREATE_CONTACT, GET_CONTACTS } from "../api/graphql"
 
 function useCreateContact() {

@@ -1,4 +1,4 @@
-import { gql, useMutation } from "@apollo/client"
+import { useMutation } from "@apollo/client"
 import { GET_CONTACT, GET_CONTACTS, UPDATE_CONTACT } from "../api/graphql"
 
 function useUpdateContact() {

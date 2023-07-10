@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { useContactsContext } from "."
-import { gql, useQuery } from "@apollo/client"
+import { useQuery } from "@apollo/client"
 import { GET_CONTACTS } from "../api/graphql"
 
 function useContacts() {
-  const { loading, error, data} = useQuery(GET_CONTACTS)
+  const { loading, data} = useQuery(GET_CONTACTS)
 
   return {
     loading,
@@ -14,7 +14,7 @@ function useContacts() {
   }
 }
 
-function useContactsRest() {
+export function useContactsRest() {
   const { state: data, loadContacts } = useContactsContext()
   const [loading, setLoading] = useState(true)
 
