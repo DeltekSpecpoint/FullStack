@@ -18,6 +18,7 @@ const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
       propertyName === 'phoneNumber' ? parseInt(value, 10) : value
     setContact({ ...contact, [propertyName]: parsedValue })
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const validationErrors = validate(contact)
@@ -28,6 +29,8 @@ const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
         await onSubmit(contact, contact.id)
       } finally {
         setSubmitting(false)
+        setContact({})
+        setErrors({})
       }
     } else {
       setErrors(validationErrors)
@@ -44,6 +47,7 @@ const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
           onChange={handleChange}
           error={!!errors.name}
           helperText={errors.name}
+          required
         />
         <TextField
           name="phoneNumber"
@@ -52,6 +56,7 @@ const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
           onChange={handleChange}
           error={!!errors.phoneNumber}
           helperText={errors.phoneNumber}
+          required
         />
         <TextField
           name="email"
@@ -60,6 +65,7 @@ const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
           onChange={handleChange}
           error={!!errors.email}
           helperText={errors.email}
+          required
         />
         <TextField
           name="Company"
