@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import ContactForm from './ContactForm'
-import ContactItem from './ContactItem/ContactItem'
+import ContactForm from '../ContactForm'
+import ContactItem from '../ContactItem/ContactItem'
 import {
   Container,
   Typography,
@@ -17,10 +17,12 @@ import {
   Checkbox,
   Button,
   Snackbar,
+  CircularProgress,
 } from '@mui/material'
 import Alert from '@mui/material/Alert'
-import api from '../utils'
-import { getComparator, stableSort } from '../sort'
+import api from '../../api'
+import { getComparator, stableSort } from '../../sort'
+import './ContactList.css'
 
 const headCells = [
   { id: 'name', label: 'Name' },
@@ -43,6 +45,12 @@ const ContactList = () => {
   const [selected, setSelected] = useState([])
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [showStarred, setShowStarred] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
+  const toggleShowStarred = () => {
+    setShowStarred(!showStarred)
+  }
 
   const handleSnackbarOpen = (message) => {
     setSnackbarMessage(message)
@@ -149,6 +157,7 @@ const ContactList = () => {
   }
 
   const handleDeleteSelected = async () => {
+    setDeleting(true)
     try {
       await Promise.all(selected.map((id) => api.delete(`Contact/${id}`)))
       const updatedContacts = contacts.filter(
@@ -159,27 +168,44 @@ const ContactList = () => {
       setSelected([])
     } catch (error) {
       console.error('Error deleting selected contacts:', error)
+    } finally {
+      setDeleting(false)
     }
   }
 
-  const filteredContacts = contacts.filter((contact) => {
-    const searchValue = searchTerm.toLowerCase()
-    return (
-      (contact.name && contact.name.toLowerCase().includes(searchValue)) ||
-      (contact.email && contact.email.toLowerCase().includes(searchValue)) ||
-      (contact.company &&
-        contact.company.toLowerCase().includes(searchValue)) ||
-      (contact.title && contact.title.toLowerCase().includes(searchValue)) ||
-      (contact.group && contact.group.toLowerCase().includes(searchValue))
+  const handleToggleStarred = (id) => {
+    const updatedContacts = contacts.map((contact) =>
+      contact.id === id ? { ...contact, starred: !contact.starred } : contact
     )
-  })
+    setContacts(updatedContacts)
+  }
+
+  const filteredContacts = contacts
+    .filter((contact) => {
+      if (showStarred) {
+        return contact.starred
+      }
+      return true
+    })
+    .filter((contact) => {
+      const searchValue = searchTerm.toLowerCase()
+      return (
+        (contact.name && contact.name.toLowerCase().includes(searchValue)) ||
+        (contact.email && contact.email.toLowerCase().includes(searchValue)) ||
+        (contact.company &&
+          contact.company.toLowerCase().includes(searchValue)) ||
+        (contact.title && contact.title.toLowerCase().includes(searchValue)) ||
+        (contact.group && contact.group.toLowerCase().includes(searchValue))
+      )
+    })
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <Box my={4}>
         <Typography variant="h4" component="h1" gutterBottom>
           Contact List
         </Typography>
+
         <ContactForm
           onSubmit={(contact, id) =>
             selectedContact
@@ -196,14 +222,26 @@ const ContactList = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             fullWidth
           />
-          <Box mt={2}>
+          <Box mt={2} display="flex" justifyContent="space-between">
             <Button
               variant="contained"
               color="secondary"
               onClick={handleDeleteSelected}
-              disabled={selected.length === 0}
+              disabled={selected.length === 0 || deleting}
             >
-              Delete Selected
+              {deleting ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                'Delete Selected'
+              )}
+            </Button>
+            <Button
+              onClick={toggleShowStarred}
+              variant="outlined"
+              color="primary"
+              className="star-btn"
+            >
+              {showStarred ? 'Show All Contacts' : 'Show Starred Contacts'}
             </Button>
           </Box>
           <Table>
@@ -258,6 +296,7 @@ const ContactList = () => {
                       onClick={(event) => handleClick(event, contact.id)}
                       onDelete={handleDeleteContact}
                       onEdit={() => setSelectedContact(contact)}
+                      onToggleStarred={handleToggleStarred}
                     />
                   )
                 })}
