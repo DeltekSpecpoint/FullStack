@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 function usePersistForm({ formValues }) {
   const location = useLocation();
+  const [loaded, setLoaded] = useState(false)
   const [event, updateEvent] = React.useReducer((prev, next) => {
     var retVal = { ...prev, ...next}
 
@@ -18,6 +19,7 @@ function usePersistForm({ formValues }) {
     const cache = localStorage.getItem(location.pathname)
     if (cache) {
       updateEvent(JSON.parse(cache))
+      setLoaded(true)
     }
   }, [location])
 
@@ -82,7 +84,8 @@ function usePersistForm({ formValues }) {
   return {
     handleSubmit,
     register,
-    errors
+    errors,
+    loaded
   }
 }
 
