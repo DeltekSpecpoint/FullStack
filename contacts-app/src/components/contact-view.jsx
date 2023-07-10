@@ -1,5 +1,5 @@
 import React from 'react'
-import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline'
+import { PhoneIcon } from '@heroicons/react/24/outline'
 import { UserIcon } from '@heroicons/react/24/solid'
 
 function ContactView({ value }) {

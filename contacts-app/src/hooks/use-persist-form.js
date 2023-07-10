@@ -69,6 +69,7 @@ function usePersistForm({ formValues }) {
       let errorCount = 0
 
       // validations
+      // we only implemented required validation here but we could implement more
       Object.keys(inputValidations).forEach(name => {
         if (inputValidations[name](event[name])) {
           errorCount++
