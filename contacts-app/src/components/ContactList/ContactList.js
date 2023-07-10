@@ -28,6 +28,7 @@ import './ContactList.css'
 import {
   fetchContacts,
   handleAddContact,
+  handleDeleteContact,
   handleDeleteSelected,
   handleUpdateContact,
 } from '../../utils'
@@ -163,7 +164,7 @@ const ContactList = () => {
               ? handleUpdateContact(
                   api,
                   id,
-                  updatedContact,
+                  contact,
                   contacts,
                   setContacts,
                   setSelectedContact,
@@ -205,15 +206,17 @@ const ContactList = () => {
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={handleDeleteSelected(
-                  api,
-                  selected,
-                  contacts,
-                  setContacts,
-                  handleSnackbarOpen,
-                  setSelected,
-                  setDeleting
-                )}
+                onClick={() =>
+                  handleDeleteSelected(
+                    api,
+                    selected,
+                    contacts,
+                    setContacts,
+                    handleSnackbarOpen,
+                    setSelected,
+                    setDeleting
+                  )
+                }
                 disabled={selected.length === 0 || deleting}
               >
                 {deleting ? (
@@ -282,13 +285,15 @@ const ContactList = () => {
                       contact={contact}
                       selected={isItemSelected}
                       onClick={(event) => handleClick(event, contact.id)}
-                      onDelete={handleDeleteContact(
-                        api,
-                        id,
-                        contacts,
-                        setContacts,
-                        handleSnackbarOpen
-                      )}
+                      onDelete={() =>
+                        handleDeleteContact(
+                          api,
+                          contact.id,
+                          contacts,
+                          setContacts,
+                          handleSnackbarOpen
+                        )
+                      }
                       onEdit={() => setSelectedContact(contact)}
                       onToggleStarred={handleToggleStarred}
                     />
