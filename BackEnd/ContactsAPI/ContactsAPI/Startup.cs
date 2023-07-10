@@ -1,11 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using ContactsAPI.Data;
+using ContactsAPI.Models;
+using ContactsAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,7 +32,31 @@ namespace ContactsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddDbContext<ContactDbContext>(ctx =>
+            {
+                ctx.UseInMemoryDatabase(nameof(ContactDbContext));
+            });
+
+
+            services.AddGraphQLServer()
+                    .AddMutationConventions()
+                    .AddMutationType<Mutation>()
+                    .AddQueryType<Query>()
+                    .AddProjections()
+                    .AddFiltering()
+                    .AddSorting()
+                    .RegisterService<ContactService>();
+
+            services.AddScoped<ContactService>();
+
+            services.AddControllers()
+                    .AddJsonOptions(opt =>
+                    {
+                        opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                        opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    });
+
+            services.AddCors();
 
             services.AddSwaggerGen(c =>
             {
@@ -43,6 +73,8 @@ namespace ContactsAPI
                     },
                 });
             });
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +84,8 @@ namespace ContactsAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseSwagger();
 
@@ -74,6 +108,7 @@ namespace ContactsAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGraphQL();
             });
         }
     }

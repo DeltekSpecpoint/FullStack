@@ -1,0 +1,58 @@
+import { useNavigate, useParams } from "react-router-dom"
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import { NavBarButton } from "../components/navbar"
+import ModalPage from "../components/modal-page"
+import useContact from "../hooks/use-contact"
+import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import ContactForm from "../components/contact-form"
+import Container from "../components/container"
+import useUpdateContact from "../hooks/use-update-contact"
+
+function ContactEditPage() {
+  const navigate = useNavigate()
+  const { contactId } = useParams()
+  const { update } = useUpdateContact()
+  const { loading, contact } = useContact(contactId)
+
+  const handleSubmit = (data) => {
+    update(data).then(() => navigate(`/contact/${contactId}`))
+  }
+
+  return (
+    <ModalPage
+      title="Edit Contact"
+      leftButton={{ icon: ArrowLeftIcon, type: "link", link: `/contact/${contactId}` }}
+      actions={<span className="space-x-2">
+        <NavBarButton 
+          icon={CheckIcon} 
+          text="Save"
+          formId="frmContact"
+        />
+        <NavBarButton 
+          type='link'
+          icon={XMarkIcon} 
+          text="Cancel"
+          link={`/contact/${contactId}`}
+        />
+      </span>}
+      >
+        { loading 
+          ? <span>Loading...</span>
+          : (
+            <Container>
+              <div className="w-full lg:w-96">
+                <ContactForm value={contact} onSubmit={handleSubmit}/>
+              </div>
+            </Container>
+          )
+        }
+    </ModalPage>
+  )
+}
+
+const contactEditPage = {
+  path: '/contact/:contactId/edit',
+  element: <ContactEditPage/>
+}
+
+export default contactEditPage
