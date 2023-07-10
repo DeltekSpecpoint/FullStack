@@ -24,3 +24,28 @@ export const validate = (formData) => {
 
   return newErrors
 }
+
+export const fetchContacts = async (api, setContacts) => {
+  try {
+    const response = await api.get('Contact')
+    setContacts(response.data)
+  } catch (error) {
+    console.error('Error fetching contacts:', error)
+  }
+}
+
+export const handleAddContact = async (
+  api,
+  contact,
+  contacts,
+  setContacts,
+  handleSnackbarOpen
+) => {
+  try {
+    const response = await api.post('Contact', contact)
+    setContacts([...contacts, response.data])
+    handleSnackbarOpen('Contact added successfully!')
+  } catch (error) {
+    console.error('Error adding contact:', error)
+  }
+}

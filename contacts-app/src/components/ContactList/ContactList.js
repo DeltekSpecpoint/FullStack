@@ -25,6 +25,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import api from '../../api'
 import { getComparator, stableSort } from '../../sort'
 import './ContactList.css'
+import { fetchContacts, handleAddContact } from '../../utils'
 
 const headCells = [
   { id: 'name', label: 'Name' },
@@ -111,27 +112,8 @@ const ContactList = () => {
   }
 
   useEffect(() => {
-    fetchContacts()
+    fetchContacts(api, setContacts)
   }, [])
-
-  const fetchContacts = async () => {
-    try {
-      const response = await api.get('Contact')
-      setContacts(response.data)
-    } catch (error) {
-      console.error('Error fetching contacts:', error)
-    }
-  }
-
-  const handleAddContact = async (contact) => {
-    try {
-      const response = await api.post('Contact', contact)
-      setContacts([...contacts, response.data])
-      handleSnackbarOpen('Contact added successfully!')
-    } catch (error) {
-      console.error('Error adding contact:', error)
-    }
-  }
 
   const handleUpdateContact = async (id, updatedContact) => {
     try {
@@ -216,7 +198,13 @@ const ContactList = () => {
           onSubmit={(contact, id) =>
             selectedContact
               ? handleUpdateContact(id, contact)
-              : handleAddContact(contact)
+              : handleAddContact(
+                  api,
+                  contact,
+                  contacts,
+                  setContacts,
+                  handleSnackbarOpen
+                )
           }
           initialValues={selectedContact}
           onCancel={() => setSelectedContact(null)}
