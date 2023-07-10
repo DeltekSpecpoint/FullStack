@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { NavLink, redirect, useNavigate, useParams } from "react-router-dom"
 import ContactView from "../components/contact-view"
 import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { NavBarButton } from "../components/navbar"
@@ -18,6 +18,15 @@ function ContactViewPage() {
       localStorage.removeItem(`/contact/${contactId}/edit`)
       navigate('/')
     })
+  }
+
+  if (!loading && !contact) {
+    return (
+      <div>
+        <div>Contact Not Found</div>
+        <NavLink to={'/'}>Go back to list</NavLink>
+      </div>
+    )
   }
 
   return (
