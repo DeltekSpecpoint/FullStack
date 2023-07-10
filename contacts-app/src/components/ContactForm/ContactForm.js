@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { TextField, Button, Box, CircularProgress } from '@mui/material'
-import { validate } from '../utils'
+import { validate } from '../../utils'
+import './ContactForm.css'
 
 const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
   const [contact, setContact] = useState(initialValues || {})
@@ -39,7 +40,13 @@ const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box display="flex" flexDirection="column" gap={2}>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(2, 1fr)"
+        gridColumnGap={2}
+        gridRowGap={2}
+        className="form-container"
+      >
         <TextField
           name="name"
           label="Name"
@@ -66,6 +73,7 @@ const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
           error={!!errors.email}
           helperText={errors.email}
           required
+          style={{ gridColumn: '1 / -1' }}
         />
         <TextField
           name="Company"
@@ -84,26 +92,32 @@ const ContactForm = ({ onSubmit, initialValues, onCancel }) => {
           label="Group"
           value={contact.group || ''}
           onChange={handleChange}
+          style={{ gridColumn: '1 / -1' }}
         />
-        <Box mt={2}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={submitting}
-          >
-            {submitting ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              `${contact.id ? 'Update' : 'Add'} Contact`
-            )}
-          </Button>
-          {contact.id && (
-            <Button onClick={onCancel} variant="outlined" color="secondary">
-              Cancel
-            </Button>
+      </Box>
+      <Box mt={2}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={submitting}
+        >
+          {submitting ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            `${contact.id ? 'Update' : 'Add new'} Contact`
           )}
-        </Box>
+        </Button>
+        {contact.id && (
+          <Button
+            onClick={onCancel}
+            variant="outlined"
+            color="secondary"
+            className="cancel-btn"
+          >
+            Cancel
+          </Button>
+        )}
       </Box>
     </form>
   )

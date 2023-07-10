@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import ContactForm from '../ContactForm'
 import ContactItem from '../ContactItem/ContactItem'
 import {
@@ -18,8 +18,10 @@ import {
   Button,
   Snackbar,
   CircularProgress,
+  InputAdornment,
 } from '@mui/material'
 import Alert from '@mui/material/Alert'
+import SearchIcon from '@mui/icons-material/Search'
 import api from '../../api'
 import { getComparator, stableSort } from '../../sort'
 import './ContactList.css'
@@ -180,30 +182,34 @@ const ContactList = () => {
     setContacts(updatedContacts)
   }
 
-  const filteredContacts = contacts
-    .filter((contact) => {
-      if (showStarred) {
-        return contact.starred
-      }
-      return true
-    })
-    .filter((contact) => {
-      const searchValue = searchTerm.toLowerCase()
-      return (
-        (contact.name && contact.name.toLowerCase().includes(searchValue)) ||
-        (contact.email && contact.email.toLowerCase().includes(searchValue)) ||
-        (contact.company &&
-          contact.company.toLowerCase().includes(searchValue)) ||
-        (contact.title && contact.title.toLowerCase().includes(searchValue)) ||
-        (contact.group && contact.group.toLowerCase().includes(searchValue))
-      )
-    })
+  const filteredContacts = useMemo(() => {
+    return contacts
+      .filter((contact) => {
+        if (showStarred) {
+          return contact.starred
+        }
+        return true
+      })
+      .filter((contact) => {
+        const searchValue = searchTerm.toLowerCase()
+        return (
+          (contact.name && contact.name.toLowerCase().includes(searchValue)) ||
+          (contact.email &&
+            contact.email.toLowerCase().includes(searchValue)) ||
+          (contact.company &&
+            contact.company.toLowerCase().includes(searchValue)) ||
+          (contact.title &&
+            contact.title.toLowerCase().includes(searchValue)) ||
+          (contact.group && contact.group.toLowerCase().includes(searchValue))
+        )
+      })
+  }, [contacts, searchTerm, showStarred])
 
   return (
     <Container maxWidth="lg">
       <Box my={4}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Contact List
+          Let's add or update your contacts!
         </Typography>
 
         <ContactForm
@@ -216,33 +222,48 @@ const ContactList = () => {
           onCancel={() => setSelectedContact(null)}
         />
         <Box mt={4}>
-          <TextField
-            label="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            fullWidth
-          />
-          <Box mt={2} display="flex" justifyContent="space-between">
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleDeleteSelected}
-              disabled={selected.length === 0 || deleting}
-            >
-              {deleting ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                'Delete Selected'
-              )}
-            </Button>
-            <Button
-              onClick={toggleShowStarred}
-              variant="outlined"
-              color="primary"
-              className="star-btn"
-            >
-              {showStarred ? 'Show All Contacts' : 'Show Starred Contacts'}
-            </Button>
+          <Box
+            mt={2}
+            display="flex"
+            justifyContent="space-between"
+            paddingBottom={'20px'}
+            paddingTop={'20px'}
+          >
+            <TextField
+              label="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              width="50%"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Box mt={2}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleDeleteSelected}
+                disabled={selected.length === 0 || deleting}
+              >
+                {deleting ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  'Delete Selected'
+                )}
+              </Button>
+              <Button
+                onClick={toggleShowStarred}
+                variant="outlined"
+                color="primary"
+                className="star-btn"
+              >
+                {showStarred ? 'Show All Contacts' : 'Show Starred Contacts'}
+              </Button>
+            </Box>
           </Box>
           <Table>
             <TableHead>

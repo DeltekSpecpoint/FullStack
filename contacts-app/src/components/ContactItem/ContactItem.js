@@ -22,12 +22,12 @@ const ContactItem = ({
           onClick={(event) => onClick(event, contact.id)}
         />
       </TableCell>
-      <TableCell>{contact.name}</TableCell>
-      <TableCell>{contact.email}</TableCell>
-      <TableCell>{contact.phoneNumber}</TableCell>
-      <TableCell>{contact.company}</TableCell>
-      <TableCell>{contact.title}</TableCell>
-      <TableCell>{contact.group}</TableCell>
+      <TableCell style={{ minWidth: '150px' }}>{contact.name}</TableCell>
+      <TableCell style={{ minWidth: '200px' }}>{contact.email}</TableCell>
+      <TableCell style={{ minWidth: '150px' }}>{contact.phoneNumber}</TableCell>
+      <TableCell style={{ minWidth: '100px' }}>{contact.company}</TableCell>
+      <TableCell style={{ minWidth: '100px' }}>{contact.title}</TableCell>
+      <TableCell style={{ minWidth: '100px' }}>{contact.group}</TableCell>
       <TableCell>
         <IconButton aria-label="edit" onClick={() => onEdit(contact)}>
           <EditIcon />

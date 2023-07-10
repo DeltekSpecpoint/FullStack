@@ -1,0 +1,10 @@
+.form-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+}
+
+.cancel-btn {
+  margin-left: 1.5rem !important;
+}
