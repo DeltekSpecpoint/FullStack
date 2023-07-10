@@ -49,3 +49,67 @@ export const handleAddContact = async (
     console.error('Error adding contact:', error)
   }
 }
+
+export const handleUpdateContact = async (
+  api,
+  id,
+  updatedContact,
+  contacts,
+  setContacts,
+  setSelectedContact,
+  handleSnackbarOpen
+) => {
+  try {
+    await api.put(`contact/${id}`, updatedContact)
+    const updatedContacts = contacts.map((contact) =>
+      contact.id === id ? updatedContact : contact
+    )
+    setContacts(updatedContacts)
+    setSelectedContact(null)
+    handleSnackbarOpen('Contact updated successfully!')
+  } catch (error) {
+    console.error('Error updating contact:', error)
+  }
+}
+
+export const handleDeleteContact = async (
+  api,
+  id,
+  contacts,
+  setContacts,
+  handleSnackbarOpen
+) => {
+  try {
+    await api.delete(`Contact/${id}`)
+    const updatedContacts = contacts.filter((contact) => contact.id !== id)
+    setContacts(updatedContacts)
+    handleSnackbarOpen('Contact deleted successfully!')
+  } catch (error) {
+    console.error('Error deleting contact:', error)
+  }
+}
+
+export const handleDeleteSelected = async (
+  api,
+  selected,
+  contacts,
+  setContacts,
+  handleSnackbarOpen,
+  setSelected,
+  setDeleting
+) => {
+  setDeleting(true)
+  try {
+    await Promise.all(selected.map((id) => api.delete(`Contact/${id}`)))
+    const updatedContacts = contacts.filter(
+      (contact) => !selected.includes(contact.id)
+    )
+    setContacts(updatedContacts)
+    handleSnackbarOpen('Contact deleted successfully!')
+    setSelected([])
+  } catch (error) {
+    console.error('Error deleting selected contacts:', error)
+  } finally {
+    setDeleting(false)
+  }
+}

@@ -25,7 +25,12 @@ import SearchIcon from '@mui/icons-material/Search'
 import api from '../../api'
 import { getComparator, stableSort } from '../../sort'
 import './ContactList.css'
-import { fetchContacts, handleAddContact } from '../../utils'
+import {
+  fetchContacts,
+  handleAddContact,
+  handleDeleteSelected,
+  handleUpdateContact,
+} from '../../utils'
 
 const headCells = [
   { id: 'name', label: 'Name' },
@@ -115,48 +120,6 @@ const ContactList = () => {
     fetchContacts(api, setContacts)
   }, [])
 
-  const handleUpdateContact = async (id, updatedContact) => {
-    try {
-      await api.put(`contact/${id}`, updatedContact)
-      const updatedContacts = contacts.map((contact) =>
-        contact.id === id ? updatedContact : contact
-      )
-      setContacts(updatedContacts)
-      setSelectedContact(null)
-      handleSnackbarOpen('Contact updated successfully!')
-    } catch (error) {
-      console.error('Error updating contact:', error)
-    }
-  }
-
-  const handleDeleteContact = async (id) => {
-    try {
-      await api.delete(`Contact/${id}`)
-      const updatedContacts = contacts.filter((contact) => contact.id !== id)
-      setContacts(updatedContacts)
-      handleSnackbarOpen('Contact deleted successfully!')
-    } catch (error) {
-      console.error('Error deleting contact:', error)
-    }
-  }
-
-  const handleDeleteSelected = async () => {
-    setDeleting(true)
-    try {
-      await Promise.all(selected.map((id) => api.delete(`Contact/${id}`)))
-      const updatedContacts = contacts.filter(
-        (contact) => !selected.includes(contact.id)
-      )
-      setContacts(updatedContacts)
-      handleSnackbarOpen('Contact deleted successfully!')
-      setSelected([])
-    } catch (error) {
-      console.error('Error deleting selected contacts:', error)
-    } finally {
-      setDeleting(false)
-    }
-  }
-
   const handleToggleStarred = (id) => {
     const updatedContacts = contacts.map((contact) =>
       contact.id === id ? { ...contact, starred: !contact.starred } : contact
@@ -197,7 +160,15 @@ const ContactList = () => {
         <ContactForm
           onSubmit={(contact, id) =>
             selectedContact
-              ? handleUpdateContact(id, contact)
+              ? handleUpdateContact(
+                  api,
+                  id,
+                  updatedContact,
+                  contacts,
+                  setContacts,
+                  setSelectedContact,
+                  handleSnackbarOpen
+                )
               : handleAddContact(
                   api,
                   contact,
@@ -234,7 +205,15 @@ const ContactList = () => {
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={handleDeleteSelected}
+                onClick={handleDeleteSelected(
+                  api,
+                  selected,
+                  contacts,
+                  setContacts,
+                  handleSnackbarOpen,
+                  setSelected,
+                  setDeleting
+                )}
                 disabled={selected.length === 0 || deleting}
               >
                 {deleting ? (
@@ -303,7 +282,13 @@ const ContactList = () => {
                       contact={contact}
                       selected={isItemSelected}
                       onClick={(event) => handleClick(event, contact.id)}
-                      onDelete={handleDeleteContact}
+                      onDelete={handleDeleteContact(
+                        api,
+                        id,
+                        contacts,
+                        setContacts,
+                        handleSnackbarOpen
+                      )}
                       onEdit={() => setSelectedContact(contact)}
                       onToggleStarred={handleToggleStarred}
                     />
