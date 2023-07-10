@@ -28,6 +28,17 @@ namespace ContactsAPI
         {
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "AllowOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:3000")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -68,6 +79,9 @@ namespace ContactsAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+
+            app.UseCors("AllowOrigin");
 
             app.UseAuthorization();
 

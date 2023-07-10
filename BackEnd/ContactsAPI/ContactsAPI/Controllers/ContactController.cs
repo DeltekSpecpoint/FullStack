@@ -10,7 +10,7 @@ using ContactsAPI.Models;
 namespace ContactsAPI.Controllers
 {
     [ApiController]
-    [Route("api/contacts")]
+    [Route("api/[controller]")]
     public class ContactController : Controller
     {
 
@@ -19,9 +19,8 @@ namespace ContactsAPI.Controllers
             new Contact{Id=2, Name="Name 2", ContactNo="+1 111 1111", Email="name2@gmail.com"},
             new Contact{Id=3, Name="Name 3", ContactNo="+3 333 3333", Email="name3@gmail.com"},
         };
-
+        [Microsoft.AspNetCore.Cors.EnableCors("AllowOrigin")]
         [HttpGet]
-        [Route("/contactList")]
         public Contact[] Get(){
             Contact[] contacts = Contacts.ToArray();
             return contacts;
