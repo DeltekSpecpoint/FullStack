@@ -21,6 +21,23 @@ function usePersistForm({ formValues }) {
     }
   }, [location])
 
+  const inputValidations = { }
+
+  const addRequiredValidation = (name, required) => {
+    inputValidations[name] = (value) => {
+      if (!value) {
+        const message = typeof required === 'string'
+          ? required
+          : `${name} is required`
+        updateErrors({ [name]: { message }})
+        return true
+      } else {
+        updateErrors({ [name]: null})
+        return false
+      }
+    }
+  }
+
   const onChange = (field, value) => {
     updateEvent({ [field]: value } )
   }
@@ -28,10 +45,18 @@ function usePersistForm({ formValues }) {
   const handleSubmit = (formSubmitHandler) => {
     return (e) => {
       e.preventDefault()
+      let errorCount = 0
 
       // validations
+      Object.keys(inputValidations).forEach(name => {
+        if (inputValidations[name](event[name])) {
+          errorCount++
+        }
+      })
+      
+      if (errorCount > 0) return
 
-      // submit the form if all ok
+      // submit the form if all are valid 
       formSubmitHandler(event)
 
       // delete from localstorage
@@ -40,18 +65,13 @@ function usePersistForm({ formValues }) {
   }
 
   const register = (name, validations) => {
+    if (validations && validations.required) {
+      addRequiredValidation(name, validations.required)
+    }
     return {
       onChange: (e) => {
-        console.log(e)
-        if (validations && validations.required) {
-          if (!e.target.value) {
-            const message = typeof validations.required === 'string'
-              ? validations.required
-              : `${name} is required`
-            updateErrors({ [name]: { message }})
-          } else {
-            updateErrors({ [name]: null})
-          }
+        if (inputValidations[name]) {
+          inputValidations[name](e.target.value)
         }
         onChange(name, e.target.value)
       },
