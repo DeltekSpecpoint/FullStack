@@ -1,13 +1,5 @@
-import { gql, useMutation } from "@apollo/client"
-import { GET_CONTACTS } from "./use-contacts"
-
-const DELETE_CONTACT = gql`
-  mutation deleteContact($id: Int!){
-    deleteContact(input: { id: $id }) {
-      id
-    }
-  }
-`
+import { useMutation } from "@apollo/client"
+import { DELETE_CONTACT, GET_CONTACTS } from "../api/graphql"
 
 function useRemoveContact() {
   const [remove, { data, loading, error }] = useMutation(DELETE_CONTACT, {

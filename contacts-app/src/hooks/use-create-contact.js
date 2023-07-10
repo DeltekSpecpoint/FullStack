@@ -1,16 +1,6 @@
 import { gql, useMutation } from "@apollo/client"
 import { useContactsContext } from "."
-import { GET_CONTACTS } from "./use-contacts"
-
-const CREATE_CONTACT = gql`
-  mutation createContact($name: String!, $mobileNumber: String!){
-    createContact(input: { name: $name, mobileNumber: $mobileNumber }) {
-      id
-      name
-      mobileNumber
-    }
-  }
-`
+import { CREATE_CONTACT, GET_CONTACTS } from "../api/graphql"
 
 function useCreateContact() {
   const [create, { data, loading, error }] = useMutation(CREATE_CONTACT, {

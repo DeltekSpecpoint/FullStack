@@ -5,43 +5,53 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export async function getContacts() {
-  client
-    .query({
-      query: gql`
-        query {
-          contact {
-            nodes {
-              name
-            }
-          }
-        }
-      `
-    })
-    .then(response => {
-      console.log(response)
-    })
-  return {
-
+export const GET_CONTACTS = gql`
+  query {
+    contact {
+      nodes {
+        id
+        name
+      }
+    }
   }
-}
+`
 
-export async function getContactById(id) {
-  
-  return {}
-}
+export const GET_CONTACT = gql`
+  query getContactById($contactId: Int){
+    contact(where: { id: { eq: $contactId }}) {
+      nodes {
+        id
+        name
+        mobileNumber
+      }
+    }
+  }
+`
 
-export async function createContact(model) {
-  
-  return {}
-}
+export const CREATE_CONTACT = gql`
+  mutation createContact($name: String!, $mobileNumber: String!){
+    createContact(input: { name: $name, mobileNumber: $mobileNumber }) {
+      id
+      name
+      mobileNumber
+    }
+  }
+`
 
-export async function updateContact(id, model) {
-  
-  return {}
-}
+export const DELETE_CONTACT = gql`
+  mutation deleteContact($id: Int!){
+    deleteContact(input: { id: $id }) {
+      id
+    }
+  }
+`
 
-export async function deleteContact(id) {
-  
-  return {}
-}
+export const UPDATE_CONTACT = gql`
+  mutation updateContact($id: Int!, $name: String!, $mobileNumber: String){
+    updateContact(input: { id: $id, name: $name, mobileNumber: $mobileNumber }) {
+      id
+      name
+      mobileNumber
+    }
+  }
+`

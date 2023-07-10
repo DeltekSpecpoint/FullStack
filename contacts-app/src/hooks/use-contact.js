@@ -1,20 +1,7 @@
 import { useEffect, useState } from "react"
 import { useContactsContext } from "."
 import { gql, useQuery } from "@apollo/client"
-
-export const GET_CONTACT = gql`
-  query getContactById($contactId: Int){
-    contact(where: { id: { eq: $contactId }}) {
-      nodes {
-        id
-        name
-        mobileNumber
-      }
-    }
-  }
-`
-
-
+import { GET_CONTACT } from "../api/graphql"
 
 function useContact(contactId) {
   const { loading, error, data} = useQuery(GET_CONTACT, { variables: { contactId: Number(contactId) }})
@@ -25,25 +12,25 @@ function useContact(contactId) {
   }
 }
 
-// function useContact(id) {
-//   const { state: data, update, remove, create } = useContactsContext()
-//   const [contact, setContact] = useState()
-//   const [loading, setLoading] = useState(true)
+function useContactRest(id) {
+  const { state: data, update, remove, create } = useContactsContext()
+  const [contact, setContact] = useState()
+  const [loading, setLoading] = useState(true)
 
-//   useEffect(() => {
-//     if (data.items[id]) {
-//       setContact(data.items[id])
-//       setLoading(false)
-//     }
-//   }, [id, data])
+  useEffect(() => {
+    if (data.items[id]) {
+      setContact(data.items[id])
+      setLoading(false)
+    }
+  }, [id, data])
 
-//   return {
-//     loading,
-//     contact,
-//     update,
-//     remove,
-//     create
-//   }
-// }
+  return {
+    loading,
+    contact,
+    update,
+    remove,
+    create
+  }
+}
 
 export default useContact
