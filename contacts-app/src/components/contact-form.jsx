@@ -13,7 +13,7 @@ function ContactForm({ value, onSubmit, children }) {
 
   return (
     <form id="frmContact" onSubmit={handleSubmit(onFormSubmit)}>
-      {loaded 
+      {loaded
         ? (
           <Alert 
             icon={InformationCircleIcon} 

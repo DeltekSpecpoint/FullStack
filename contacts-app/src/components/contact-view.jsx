@@ -22,10 +22,10 @@ function ContactView({ value }) {
             <PhoneIcon className='inline w-6 h-6 mr-3 text-inherit'/>
             <span className='text-sm font-medium'>{value.mobileNumber}</span>
           </li>
-          <li>
+          {/* <li>
             <EnvelopeIcon className='inline w-6 h-6 mr-3 text-inherit'/>
             <span className='text-sm font-medium'>devjoelmanuel@gmail.com</span>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>

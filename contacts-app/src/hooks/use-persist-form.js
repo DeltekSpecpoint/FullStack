@@ -18,8 +18,27 @@ function usePersistForm({ formValues }) {
   useEffect(() => {
     const cache = localStorage.getItem(location.pathname)
     if (cache) {
-      updateEvent(JSON.parse(cache))
-      setLoaded(true)
+      var savedValues = JSON.parse(cache)
+      var hasChanges = false;
+
+      // check if there are really changes in the form
+      for (const key in savedValues) {
+        if (savedValues[key]) {
+          if ((!formValues[key] && savedValues[key])
+            || (savedValues[key] !== formValues[key])){
+            hasChanges = true
+            break
+          } else {
+            // delete the saved session if all are the same
+            localStorage.removeItem(location.pathname)
+          }
+        }
+      }
+
+      if (hasChanges) {
+        updateEvent(savedValues)
+        setLoaded(true)
+      }
     }
   }, [location])
 
