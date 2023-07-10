@@ -268,3 +268,4 @@ pipeline/locust/.env
 
 # Ignore auto-generated minified JS
 js/*.min.js
+node_modules/

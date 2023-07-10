@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using System.IO;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace ContactsAPI
 {
@@ -28,6 +32,15 @@ namespace ContactsAPI
         {
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", new CorsPolicyBuilder()
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .Build());
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -42,6 +55,16 @@ namespace ContactsAPI
                         Url = new Uri("https://coderjony.com/"),
                     },
                 });
+            });
+
+            // Set GOOGLE_APPLICATION_CREDENTIALS environment variable
+            string firebaseServiceAccountPath = "FirebaseCredentials/react-firebase-37768-firebase-adminsdk-44o03-5c975e74d1.json";
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", Path.GetFullPath(firebaseServiceAccountPath));
+
+            // Initialize Firebase Admin SDK
+            FirebaseApp.Create(new AppOptions
+            {
+                Credential = GoogleCredential.GetApplicationDefault(),
             });
         }
 
@@ -68,6 +91,8 @@ namespace ContactsAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("AllowAll");
 
             app.UseAuthorization();
 
