@@ -1,7 +1,7 @@
 import useContacts from "../hooks/use-contacts"
 
 function EmptyContact() {
-  const { data: { items }, loading } = useContacts()
+  const { data: { items } } = useContacts()
 
   if (items.length === 0) {
     return (

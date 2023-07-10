@@ -3,7 +3,7 @@ import ContactList from "../components/contact-list"
 import Page from "../components/page"
 import { Bars3Icon, PlusIcon } from '@heroicons/react/24/outline'
 import useContacts from '../hooks/use-contacts'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useMatch } from 'react-router-dom'
 import contactEmptyPage from './contact-empty-page'
 import contactViewPage from './contact-view-page'
 import contactEditPage from './contact-edit-page'
@@ -11,8 +11,10 @@ import { ContactsProvider } from '../contexts/contacts-context'
 import contactAddPage from './contact-add-page'
 
 function ContactListPage() {
+  
+  const match = useMatch('/')
   const { data, loading } = useContacts()
-
+  
   return (
     <Page 
       title={"Contacts"} 
@@ -28,10 +30,13 @@ function ContactListPage() {
                 <Outlet/>
               </div>
             </div>
-            <NavLink to={'/add'}
-              className='fixed flex items-center justify-center w-12 h-12 rounded-lg shadow-md bg-sky-500 bottom-10 right-6 text-sky-950'>
-              <PlusIcon className='w-6 h-6'/>
-            </NavLink>
+            
+            {match ? (
+              <NavLink to={'/add'}
+                className='fixed flex items-center justify-center w-12 h-12 rounded-lg shadow-md bg-sky-500 bottom-10 right-6 text-sky-950'>
+                <PlusIcon className='w-6 h-6'/>
+              </NavLink>
+            ) : null}
           </>
         )
       }
