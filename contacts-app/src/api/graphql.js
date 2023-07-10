@@ -6,24 +6,8 @@ export const client = new ApolloClient({
 });
 
 export const GET_CONTACTS = gql`
-  query {
-    contact {
-      nodes {
-        id
-        name
-        mobileNumber
-      },
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-    }
-  }
-`
-
-export const GET_CONTACTS_PAGE = gql`
   query GetContacts($cursor: String) {
-    contact(first:5, after: $cursor) {
+    contact(after: $cursor) {
       nodes {
         id
         name

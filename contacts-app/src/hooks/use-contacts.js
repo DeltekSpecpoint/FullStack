@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { useContactsContext } from "."
 import { useQuery } from "@apollo/client"
-import { GET_CONTACTS_PAGE } from "../api/graphql"
+import { GET_CONTACTS } from "../api/graphql"
 
 function useContacts() {
-  const { loading, data, fetchMore, } = useQuery(GET_CONTACTS_PAGE)
+  const { loading, data, fetchMore, } = useQuery(GET_CONTACTS)
   
   const handleFetchMore = () => {
     if (data) {
