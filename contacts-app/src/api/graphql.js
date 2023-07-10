@@ -11,6 +11,7 @@ export const GET_CONTACTS = gql`
       nodes {
         id
         name
+        mobileNumber
       }
     }
   }
