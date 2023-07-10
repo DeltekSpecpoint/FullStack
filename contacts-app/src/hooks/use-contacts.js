@@ -1,16 +1,36 @@
 import { useEffect, useState } from "react"
 import { useContactsContext } from "."
 import { useQuery } from "@apollo/client"
-import { GET_CONTACTS } from "../api/graphql"
+import { GET_CONTACTS_PAGE } from "../api/graphql"
 
 function useContacts() {
-  const { loading, data} = useQuery(GET_CONTACTS)
-
+  const { loading, data, fetchMore, } = useQuery(GET_CONTACTS_PAGE)
+  
+  const handleFetchMore = () => {
+    if (data) {
+      const endCursor = data.contact.pageInfo.endCursor
+      
+      fetchMore({
+        variables: {
+          cursor: endCursor,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          fetchMoreResult.contact.nodes = [
+            ...prev.contact.nodes,
+            ...fetchMoreResult.contact.nodes
+          ]
+          return fetchMoreResult
+        }
+      });
+    }
+  }
   return {
     loading,
     data : {
-      items :data ? data.contact.nodes : []
-    }
+      items :data ? data.contact.nodes : [],
+      hasNextPage: data ? data.contact.pageInfo.hasNextPage : false
+    },
+    fetchMore : handleFetchMore
   }
 }
 

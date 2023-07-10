@@ -12,6 +12,26 @@ export const GET_CONTACTS = gql`
         id
         name
         mobileNumber
+      },
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+`
+
+export const GET_CONTACTS_PAGE = gql`
+  query GetContacts($cursor: String) {
+    contact(first:5, after: $cursor) {
+      nodes {
+        id
+        name
+        mobileNumber
+      },
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }

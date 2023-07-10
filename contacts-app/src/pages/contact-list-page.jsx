@@ -13,7 +13,7 @@ import contactAddPage from './contact-add-page'
 function ContactListPage() {
   
   const match = useMatch('/')
-  const { data, loading } = useContacts()
+  const { data, loading, fetchMore } = useContacts()
   
   return (
     <Page 
@@ -26,6 +26,7 @@ function ContactListPage() {
           <>
             <div className='lg:flex'>
               <ContactList items={Object.values(data.items)}/>
+              {data.hasNextPage ? <button onClick={fetchMore}>Load More</button> : null}
               <div className='px-6 lg:flex-1'>
                 <Outlet/>
               </div>
