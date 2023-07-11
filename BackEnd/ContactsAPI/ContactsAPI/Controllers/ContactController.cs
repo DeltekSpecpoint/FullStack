@@ -1,46 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ContactsAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.EntityFrameworkCore;
 
 namespace ContactsAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class ContactController : Controller
+    [ApiController]
+    public class ContactController : ControllerBase
     {
-        // GET: api/<controller>
+        private readonly ContactDbContext _contactDbContext;
+
+        public ContactController(ContactDbContext contactDbContext)
+        {
+            _contactDbContext = contactDbContext;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("GetContact")]
+        public async Task<IEnumerable<Contact>> GetContacts()
         {
-            return new string[] { "value1", "value2" };
+            return await _contactDbContext.Contacts.ToListAsync();
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        [Route("AddContact")]
+        public async Task<Contact> AddContact(Contact objContact)
         {
+            _contactDbContext.Contacts.Add(objContact);
+            await _contactDbContext.SaveChangesAsync();
+            return objContact;
         }
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPatch]
+        [Route("UpdateContact/{id}")]
+        public async Task<Contact> UpdateContact(Contact objContact)
         {
+            _contactDbContext.Entry(objContact).State= EntityState.Modified;
+            await _contactDbContext.SaveChangesAsync();
+            return objContact;
         }
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete]
+        [Route("DeleteContact/{id}")]
+        public bool DeleteContact(int id)
         {
+            bool a = false;
+            var contact = _contactDbContext.Contacts.Find(id);
+            if (contact != null)
+            {
+                a = true;
+                _contactDbContext.Entry(contact).State= EntityState.Deleted;
+                _contactDbContext.SaveChanges();
+            }
+            else
+            {
+                a= false;
+            }
+
+            return a;
         }
     }
+
+
+
 }
