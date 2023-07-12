@@ -60,8 +60,11 @@ namespace ContactsAPI.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public Contact[] Delete(int id)
         {
+            Contacts = Contacts.Where(c => c.Id != id).ToList();
+            Contact[] contacts = Contacts.ToArray();
+            return contacts;
         }
     }
 }

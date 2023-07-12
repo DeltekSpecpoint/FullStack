@@ -5,7 +5,7 @@ import './App.css';
 
 function App() {
 
-  const contactList = [
+  /*const contactList = [
     {
       id: 1,
       name: 'John Doe',
@@ -18,10 +18,17 @@ function App() {
       phone: '+1 552 2222',
       email: 'janedoe@gmail.com'
     },
-  ]
+  ]*/
 
+  const [contacts, setContacts] = useState([]);
 
-  const [contacts, setContacts] = useState([...contactList]);
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/Contact`).then(results => {
+      return results.json();
+    }).then(data => {
+      setContacts(data);
+    })
+  }, []);
 
   const handleAddContacts = (contact) => {
     console.log('contact', contact)
@@ -32,8 +39,13 @@ function App() {
   const handleDelete = (contact) => {
     console.log('deleting', contact)
 
-    const newList = contacts.filter(c => c.id !== contact.id);
-    setContacts([...newList]);
+    fetch(`http://localhost:5000/api/Contact/${contact.id}`, { method: 'DELETE' }).then(results => {
+      return results.json();
+    }).then(data => {
+      
+      setContacts(data);
+    });
+
   }
   
 
