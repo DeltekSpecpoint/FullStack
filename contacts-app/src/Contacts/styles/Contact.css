@@ -52,3 +52,47 @@
   .contactInfo img {
     margin: 0px 20px 0px 0px;
   }
+
+
+  .contact .saveButton,  .contact .editButton{
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .contact .saveButton:hover, .contact .editButton:hover {
+    background-color: #45a049;
+  }
+
+
+  .contact .cancelButton {
+    width: 100%;
+    background-color: #737071;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .contact .cancelButton:hover {
+    background-color: #5c5b5b;
+  }
+
+  .contact .deleteButton {
+    width: 100%;
+    background-color: #eb5074;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .contact .deleteButton:hover {
+    background-color: #c73c5c;
+  }

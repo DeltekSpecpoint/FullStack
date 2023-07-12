@@ -25,7 +25,7 @@ function AddContact(props) {
 
   return (
     <div className="addContactContainer">
-      <h1>Add Contact</h1>
+      <h1 aria-label="Add Contact Form">Add Contact</h1>
       <form className="addContactForm">
         <div>
           <label for="name">Name:</label>
@@ -33,6 +33,7 @@ function AddContact(props) {
             type="text" 
             id="name" 
             name="name"
+            aria-label="Contact Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -43,6 +44,7 @@ function AddContact(props) {
             type="text" 
             id="contactNo" 
             name="contactNo"
+            aria-label="Phone Number"
             value={contactNo}
             onChange={(e) => setContactNo(e.target.value)}
           />
@@ -53,12 +55,13 @@ function AddContact(props) {
             type="text" 
             id="email" 
             name="email"
+            aria-label="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div>
-          <button onClick={handleSubmit}>Submit</button>
+          <button aria-label="Add Contact" className="submitButton" onClick={handleSubmit}>Submit</button>
         </div> 
       </form>
     </div>

@@ -72,6 +72,7 @@ function Contact(props) {
                     name="editContactNo"
                     value={editContactNo}
                     onChange={(e) => setEditContactNo(e.target.value)}
+                    
                   />
                 </div> : 
                 <span>{contact.phone}</span>
@@ -96,9 +97,9 @@ function Contact(props) {
           </div>      
       </div>
       <div className="actions">
-          {editMode ? <button onClick={handleCancelSetEdit}>Cancel</button> : <button onClick={handleSetEdit}>Edit</button>} 
-          {editMode && <button onClick={handleSaveChanges}>Save</button>}
-          <button onClick={handleDelete}>Delete</button>  
+          {editMode ? <button className="cancelButton" onClick={handleCancelSetEdit}>Cancel</button> : <button className="editButton" onClick={handleSetEdit}>Edit</button>} 
+          {editMode && <button className="saveButton" onClick={handleSaveChanges}>Save</button>}
+          <button className="deleteButton" onClick={handleDelete}>Delete</button>  
       </div>
     </div>
   );
