@@ -24,7 +24,7 @@ function AddContact(props) {
   }
 
   return (
-    <div className="addContactContainer">
+    <form className="addContactContainer">
       <h1 aria-label="Add Contact Form">Add Contact</h1>
       <form className="addContactForm">
         <div>
@@ -64,7 +64,7 @@ function AddContact(props) {
           <button aria-label="Add Contact" className="submitButton" onClick={handleSubmit}>Submit</button>
         </div> 
       </form>
-    </div>
+    </form>
   );
 }
 

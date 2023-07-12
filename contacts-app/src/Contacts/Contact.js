@@ -56,7 +56,7 @@ function Contact(props) {
                 onChange={(e) => setEditName(e.target.value)}
               />
             </div> : 
-            <span>{contact.name}</span>
+            <span aria-label={`Contact Name: ${contact.name}`}>{contact.name}</span>
           }
       </div>
       <div className="contactDetails">
@@ -75,7 +75,7 @@ function Contact(props) {
                     
                   />
                 </div> : 
-                <span>{contact.phone}</span>
+                <span aria-label={`Contact Phone Number: ${contact.phone}`}>{contact.phone}</span>
               }
           </div>
           <div className="contactInfo">
@@ -92,7 +92,7 @@ function Contact(props) {
                     onChange={(e) => setEditEmail(e.target.value)}
                   />
                 </div> : 
-                <span>{contact.email}</span>
+                <span aria-label={`Contact Email: ${contact.email}`}>{contact.email}</span>
               }
           </div>      
       </div>
