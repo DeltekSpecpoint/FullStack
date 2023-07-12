@@ -6,7 +6,7 @@ import Contact from './Contact';
 
 function ContactList(props) {
 
-  const {contactList, handleDelete} = props;
+  const {contactList, handleDelete, handleUpdate} = props;
 
   return (
     <div className="contactList">
@@ -17,7 +17,9 @@ function ContactList(props) {
               <Contact
                 key={contact.id} 
                 contact={contact}
-                onHandleDelete={handleDelete}>
+                onHandleDelete={handleDelete}
+                onHandleUpdate={handleUpdate}
+              >
               </Contact>
             )
           })

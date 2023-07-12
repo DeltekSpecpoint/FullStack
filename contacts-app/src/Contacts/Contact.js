@@ -9,7 +9,7 @@ function Contact(props) {
 
   
 
-  const {contact, onHandleDelete} = props;
+  const {contact, onHandleDelete, onHandleUpdate} = props;
   const [editMode, setEditMode] = useState(false);
   const [editName, setEditName] = useState(contact.name);
   const [editContactNo, setEditContactNo] = useState(contact.phone);
@@ -28,7 +28,14 @@ function Contact(props) {
   }
 
   const handleSaveChanges = () => {
+    onHandleUpdate({
+      id: contact.id,
+      name: editName,
+      phone: editContactNo,
+      email: editEmail,
+    });
 
+    setEditMode(false);
   }
  
   

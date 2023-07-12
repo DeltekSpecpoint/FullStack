@@ -48,13 +48,34 @@ function App() {
     });
 
   }
+
+  const handleUpdate = (contact) => {
+    console.log('update', contact)
+
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          Id: contact.id,
+          Name: contact.name,
+          Phone: contact.phone,
+          Email: contact.email
+        })
+    };
+    fetch('http://localhost:5000/api/Contact/', requestOptions).then(results => {
+      return results.json();
+    }).then(data => {
+      setContacts(data);
+    });
+
+  }
   
 
 
   return (
     <div className="App">
       <AddContact handleAddContacts={handleAddContacts}></AddContact>
-      <ContactList contactList={contacts} handleDelete={handleDelete}></ContactList>
+      <ContactList contactList={contacts} handleDelete={handleDelete} handleUpdate={handleUpdate}></ContactList>
     </div>
   );
 }

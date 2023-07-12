@@ -58,9 +58,19 @@ namespace ContactsAPI.Controllers
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut]
+        public Contact[] Put([FromBody] Contact contact)
         {
+            List<Contact> contacts = Contacts.ToList();
+            var result = from r in contacts where r.Id == contact.Id select r;
+
+            result.First().Name = contact.Name;
+            result.First().Phone = contact.Phone;
+            result.First().Email = contact.Email;
+
+            Contact[] updatedContacts = contacts.ToArray();
+
+            return updatedContacts;
         }
 
         // DELETE api/<controller>/5
