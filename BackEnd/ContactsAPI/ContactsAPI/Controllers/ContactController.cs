@@ -14,10 +14,10 @@ namespace ContactsAPI.Controllers
     public class ContactController : Controller
     {
 
-        private static IEnumerable<Contact> Contacts = new[]{
-            new Contact{Id=1, Name="Name 1", Phone="+2 222 2222", Email="name1@gmail.com"},
-            new Contact{Id=2, Name="Name 2", Phone="+1 111 1111", Email="name2@gmail.com"},
-            new Contact{Id=3, Name="Name 3", Phone="+3 333 3333", Email="name3@gmail.com"},
+        private IEnumerable<Contact> Contacts = new[]{
+            new Contact{Id="1", Name="Name 1", Phone="+2 222 2222", Email="name1@gmail.com"},
+            new Contact{Id="2", Name="Name 2", Phone="+1 111 1111", Email="name2@gmail.com"},
+            new Contact{Id="3", Name="Name 3", Phone="+3 333 3333", Email="name3@gmail.com"},
         };
 
         [HttpGet]
@@ -27,7 +27,7 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public Contact[] Get(int id){
+        public Contact[] Get(String id){
             Contact[] contacts = Contacts.Where(c => c.Id == id).ToArray();
             return contacts;
         }
@@ -48,8 +48,13 @@ namespace ContactsAPI.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public Contact[] Post([FromBody] Contact contact)
         {
+            Contact c = new Contact { Id = contact.Id, Name = contact.Name, Phone = contact.Phone, Email = contact.Email };
+            Contacts = Contacts.Append(c);
+
+            Contact[] contacts = Contacts.ToArray();
+            return contacts;
         }
 
         // PUT api/<controller>/5
@@ -60,7 +65,7 @@ namespace ContactsAPI.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public Contact[] Delete(int id)
+        public Contact[] Delete(String id)
         {
             Contacts = Contacts.Where(c => c.Id != id).ToList();
             Contact[] contacts = Contacts.ToArray();

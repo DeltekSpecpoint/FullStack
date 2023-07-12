@@ -5,21 +5,6 @@ import './App.css';
 
 function App() {
 
-  /*const contactList = [
-    {
-      id: 1,
-      name: 'John Doe',
-      phone: '+1 222 2222',
-      email: 'johndoe@gmail.com'
-    },
-    {
-      id: 2,
-      name: 'Jane Doe',
-      phone: '+1 552 2222',
-      email: 'janedoe@gmail.com'
-    },
-  ]*/
-
   const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
@@ -31,9 +16,25 @@ function App() {
   }, []);
 
   const handleAddContacts = (contact) => {
-    console.log('contact', contact)
-    setContacts([...contacts, {id: contacts.length+1, ...contact}]);
-    console.log('contacts', contacts)
+    console.log('contact to add', contact)
+    //setContacts([...contacts, {id: contacts.length+1, ...contact}]);
+    //console.log('contacts', contacts)
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          Id: `${contacts.length + 1}`,
+          Name: contact.name,
+          Phone: contact.phone,
+          Email: contact.email
+        })
+    };
+    fetch('http://localhost:5000/api/Contact/', requestOptions).then(results => {
+      return results.json();
+    }).then(data => {
+      setContacts(data);
+    });
   }
 
   const handleDelete = (contact) => {
