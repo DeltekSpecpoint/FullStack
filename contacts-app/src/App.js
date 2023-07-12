@@ -76,6 +76,7 @@ function App() {
     <div className="App">
       <AddContact handleAddContacts={handleAddContacts}></AddContact>
       <ContactList contactList={contacts} handleDelete={handleDelete} handleUpdate={handleUpdate}></ContactList>
+ 
     </div>
   );
 }

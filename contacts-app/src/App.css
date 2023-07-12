@@ -40,3 +40,8 @@
     transform: rotate(360deg);
   }
 }
+
+.contactListDiv {
+  display: flex;
+  flex-direction: column;
+}

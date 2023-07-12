@@ -8,6 +8,21 @@
   padding: 0px 10px 0px 10px;
 }
 
+.contactListControls {
+  display: flex;
+  flex-direction: row;
+}
+
+.contactListControls:first-child {
+  display:flex;
+  flex-grow: 2;
+}
+
+.contactListControls:last-child {
+  display:flex;
+  flex-grow: 1;
+}
+
 
 
 
