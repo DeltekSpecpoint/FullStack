@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace ContactsAPI
 {
@@ -27,6 +28,24 @@ namespace ContactsAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            /*services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", new CorsPolicyBuilder()
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .Build());
+            });*/
+
+            /*services.AddCors(options => options.AddPolicy("Default", x =>
+            {
+                x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            })); */
+
+            services.AddCors(options => options.AddPolicy(name: "AllowOrigin", builder => {
+                builder.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+            }));
 
             services.AddSwaggerGen(c =>
             {
@@ -68,6 +87,9 @@ namespace ContactsAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+
+            app.UseCors("AllowOrigin");
 
             app.UseAuthorization();
 

@@ -1,0 +1,70 @@
+.addContactContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    position: relative;
+    padding: 0px 10px 0px 10px;
+}
+
+.addContactForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.addContactForm div {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px 10px 0px;
+}
+
+input[type=text], input[type=email], input[type=tel], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+
+  input:invalid {
+      background-color: ivory;
+      border: none;
+      outline: 2px solid red;
+      border-radius: 5px;
+  }
+
+  .errorMessage {
+    color: red;
+    width: 300px;
+    font-size: 15px;
+  }
+
+  .addContactContainer .submitButton {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .addContactContainer .submitButton:hover {
+    background-color: #45a049;
+  }
+
+
+  .addContactContainer .submitButton:disabled,
+  .addContactContainer .submitButton[disabled]{
+    width: 100%;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: initial;
+}
