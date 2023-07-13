@@ -17,15 +17,28 @@ function AddContact(props) {
     setButtonDisabled(isContactNoError||isEmailError);
   }, [isEmailError, isContactNoError]);
 
+  const clearForm = () => {
+    setName("")
+    setContactNo("")
+    setEmail("")
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     handleAddContacts({
-      name: name,
-      phone: contactNo,
-      email: email
+      contact: {
+        name: name,
+        phone: contactNo,
+        email: email
+      },
+      clearFormCallback: clearForm
     })
+
+    
   }
+
+  
 
 
 

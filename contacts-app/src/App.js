@@ -15,11 +15,9 @@ function App() {
     })
   }, []);
 
-  const handleAddContacts = (contact) => {
-    console.log('contact to add', contact)
-    //setContacts([...contacts, {id: contacts.length+1, ...contact}]);
-    //console.log('contacts', contacts)
+  const handleAddContacts = (data) => {
 
+    const {contact, clearFormCallback} = data;
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -34,11 +32,11 @@ function App() {
       return results.json();
     }).then(data => {
       setContacts(data);
+      clearFormCallback();
     });
   }
 
   const handleDelete = (contact) => {
-    console.log('deleting', contact)
 
     fetch(`http://localhost:5000/api/Contact/${contact.id}`, { method: 'DELETE' }).then(results => {
       return results.json();
@@ -50,7 +48,6 @@ function App() {
   }
 
   const handleUpdate = (contact) => {
-    console.log('update', contact)
 
     const requestOptions = {
         method: 'PUT',

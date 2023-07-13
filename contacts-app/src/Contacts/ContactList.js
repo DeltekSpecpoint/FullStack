@@ -8,6 +8,7 @@ function ContactList(props) {
 
   const {contactList, handleDelete, handleUpdate} = props;
 
+
   return (
     <div className="contactList">
       <h1>Contact List</h1>  
