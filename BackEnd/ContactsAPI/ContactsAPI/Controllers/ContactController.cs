@@ -1,46 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ContactsAPI.DTO;
+using ContactsAPI.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ContactsAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class ContactController : Controller
+    public class ContactController : ControllerBase
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IContactService _contactService;
+
+        public ContactController(IContactService contactService)
         {
-            return new string[] { "value1", "value2" };
+            _contactService = contactService;
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet(Name = nameof(GetContacts))]
+        public async Task<ActionResult<IEnumerable<GetContact>>> GetContacts()
         {
-            return "value";
+            var result = await _contactService.GetContactsAsync();
+
+            return Ok(result);
         }
 
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [HttpGet("{id}", Name = nameof(GetContactById))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<GetContact>> GetContactById([FromRoute] int id)
         {
+            var result = await _contactService.GetContactsByIdAsync(id);
+
+            return Ok(result);
         }
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPost(Name = nameof(CreateContact))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult<GetContact>> CreateContact([FromBody] CreateContact contact)
         {
+            var result = await _contactService.CreateContactAsync(contact);
+
+            return CreatedAtAction(nameof(GetContactById), new { id = result.Id }, result);
         }
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPut("{id}", Name = nameof(UpdateContact))]
+        public async Task<ActionResult<GetContact>> UpdateContact([FromRoute] int id, [FromBody] UpdateContact contact)
         {
+            var result = await _contactService.UpdateContactAsync(id, contact);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}", Name = nameof(DeleteContact))]
+        public async Task DeleteContact(int id)
+        {
+            await _contactService.DeleteContactByIdAsync(id);
         }
     }
 }
