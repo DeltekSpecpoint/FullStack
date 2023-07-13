@@ -18,7 +18,7 @@
     padding: 10px 0px 10px 0px;
 }
 
-input[type=text], select {
+input[type=text], input[type=email], input[type=tel], select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -26,6 +26,20 @@ input[type=text], select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+  }
+
+
+  input:invalid {
+      background-color: ivory;
+      border: none;
+      outline: 2px solid red;
+      border-radius: 5px;
+  }
+
+  .errorMessage {
+    color: red;
+    width: 300px;
+    font-size: 15px;
   }
 
   .addContactContainer .submitButton {
@@ -41,3 +55,16 @@ input[type=text], select {
   .addContactContainer .submitButton:hover {
     background-color: #45a049;
   }
+
+
+  .addContactContainer .submitButton:disabled,
+  .addContactContainer .submitButton[disabled]{
+    width: 100%;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: initial;
+}

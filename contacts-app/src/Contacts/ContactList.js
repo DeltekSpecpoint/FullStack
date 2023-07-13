@@ -10,25 +10,7 @@ function ContactList(props) {
 
   return (
     <div className="contactList">
-      <h1>Contact List</h1>
-      <form className="contactListControls">
-        <div>
-          <label for="Search">Search:</label>
-          <input 
-                type="text" 
-                id="name" 
-                name="search"
-                aria-label="Search Input"
-          />
-        </div>
-        <div>
-          <label for="sort">Sort by:</label>
-          <select id="sort" name="sort">
-            <option value="ascending">Ascending</option>
-            <option value="descending">Descending</option>
-          </select>
-        </div>
-      </form>  
+      <h1>Contact List</h1>  
         {
           contactList.map(contact=> {
             return (
