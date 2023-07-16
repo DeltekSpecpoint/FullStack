@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContactsAPI.Data;
+using ContactsAPI.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +29,11 @@ namespace ContactsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ContactContext>(options =>
+            {
+                options.UseInMemoryDatabase("ContactDB");
+            });
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -39,10 +47,22 @@ namespace ContactsAPI
                     {
                         Name = "Deltek Specpoint Developer",
                         Email = string.Empty,
-                        Url = new Uri("https://coderjony.com/"),
+                        Url = new Uri("http://localhost:3000"),
                     },
                 });
             });
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder
+                        .WithOrigins(Configuration.GetSection("AllowedOrigins").Get<string[]>())
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,10 +91,33 @@ namespace ContactsAPI
 
             app.UseAuthorization();
 
+            app.UseCors();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            var scope = app.ApplicationServices.CreateScope();
+            var contactContext = scope.ServiceProvider.GetService<ContactContext>();
+            SeedData(contactContext);
+        }
+
+        public static void SeedData(ContactContext contactContex)
+        {
+            Contact contact1 = new Contact()
+            {
+                Id = 1,
+                FirstName = "John Carlo",
+                MiddleName = "",
+                LastName = "Guiab",
+                Phone = "+639559337759",
+                Email = "guiab.johncarlo@gmail.com",
+                IsStarred = false
+            };
+
+            contactContex.Add(contact1);
+            contactContex.SaveChanges();
         }
     }
 }
