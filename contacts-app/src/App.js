@@ -1,9 +1,11 @@
-import './App.css';
+import NavBar from "./components/nav-bar/NavBar";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-    </div>
+    <BrowserRouter>
+      <NavBar />
+    </BrowserRouter>
   );
 }
 
