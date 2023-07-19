@@ -1,0 +1,10 @@
+.tbl {
+    width: 95% !important;
+    margin: 100px 50px 0 50px;
+}
+
+.tbl-cell {
+    font-size: 20px;
+    background: #111111 !important;
+    color: #FFF !important;
+}
