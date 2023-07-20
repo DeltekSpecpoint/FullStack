@@ -1,49 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import "./ContactList.css";
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Delete, Edit } from '@mui/icons-material';
-
-// use mock data initially
-const contactList = [
-  {
-    id: 1,
-    fullName: "Jon Snow",
-    number: +639154985517,
-    emailAddress: "Jon@gmail.com",
-  },
-  {
-    id: 2,
-    fullName: "Arya Stark",
-    number: +639154985517,
-    emailAddress: "Cersei@gmail.com",
-  }
-];
+import { deleteContact, getContactList } from '../../service/Api';
 
 const ContactList = () => {
+  const [contacts, setContacts] = useState([]);
 
+  useEffect(() => {
+    getAllContacts();
+  }, []);
+  
   const handleDelete = async (id) => {
-    alert("Contact deleted successfully!");
+    await deleteContact(id);
+    getAllContacts();
   }
   
+  const getAllContacts = async () => {
+    let response = await getContactList();
+    setContacts(response.data);
+  }
   return (
     <Table className='tbl'>
       <TableHead>
         <TableRow>
-          <TableCell className='tbl-cell'>Id</TableCell>
           <TableCell className='tbl-cell'>Contact Name</TableCell>
           <TableCell className='tbl-cell'>Contact Number</TableCell>
           <TableCell className='tbl-cell'>Email Address</TableCell>
+          <TableCell className='tbl-cell'>Home Address</TableCell>
           <TableCell className='tbl-cell'></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {contactList.map((contact) => (
+        {contacts.map((contact) => (
           <TableRow key={contact.id}>
-            <TableCell>{contact.id}</TableCell>
-            <TableCell>{contact.fullName}</TableCell>
+            <TableCell>{contact.name}</TableCell>
             <TableCell>{contact.number}</TableCell>
-            <TableCell>{contact.emailAddress}</TableCell>
+            <TableCell>{contact.email}</TableCell>
+            <TableCell>{contact.address}</TableCell>
             <TableCell>
               <Button 
                 color='primary'

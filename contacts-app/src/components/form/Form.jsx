@@ -11,9 +11,9 @@ const Form = (props) => {
         <InputLabel htmlFor="name-input">Contact Name</InputLabel>
         <Input 
         onChange={props.onChange}
-        name={props.fullName}
+        name="name"
         value={
-          (props.fullName ? props.fullName : null)
+          (props.name ? props.name : null)
         }
         id='name-input'
         />
@@ -22,7 +22,7 @@ const Form = (props) => {
         <InputLabel htmlFor="number-input">Contact Number</InputLabel>
         <Input 
         onChange={props.onChange}
-        name={props.number}
+        name="number"
         value={
           (props.number ? props.number : null)
         }
@@ -33,16 +33,27 @@ const Form = (props) => {
         <InputLabel htmlFor="email-input">Email Address</InputLabel>
         <Input 
         onChange={props.onChange}
-        name={props.emailAddress}
+        name="email"
         value={
-          (props.emailAddress ? props.emailAddress : null)
+          (props.email ? props.email : null)
         }
         id='email-input'
         />
       </FormControl>
       <FormControl className='form-ctrl'>
+        <InputLabel htmlFor="address-input">Home Address</InputLabel>
+        <Input 
+        onChange={props.onChange}
+        name="address"
+        value={
+          (props.address ? props.address : null)
+        }
+        id='address-input'
+        />
+      </FormControl>
+      <FormControl className='form-ctrl'>
         <Button variant='contained' color='primary' onClick={props.onClick}>
-          {props.buttonName}
+          Submit
         </Button>
       </FormControl>
     </FormGroup>

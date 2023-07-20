@@ -2,35 +2,39 @@ import React from 'react'
 import Form from '../form/Form'
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { addContact } from '../../service/Api';
 
 const initialValue = {
-  fullname: "",
-  number: "",
-  emailAddress: ""
+  name: "",
+  number: 0,
+  email: "",
+  address: ""
 }
 
 const CreateNewContact = () => {
   const [contact, setContact] = useState(initialValue);
-  const { fullName, number, emailAddress } = contact;
+  const { name, number, email, address } = contact;
 
   let navigate = useNavigate();
 
   const onValueChange = (e) => {
-    setContact({...contact, [e.target.name]: e.target.value});
+    e.preventDefault();
+    setContact({...contact, [e.target.name]: e.target.value}); 
   };
-
+  
   const addNewContact = async() => {
+    await addContact(contact);
     navigate('/');
   }
   return (
     <Form
       title="Create New Contact"
       onChange={(e) => onValueChange(e)}
-      fullName={fullName}
+      name={name}
       number={number}
-      emailAddress={emailAddress}
+      email={email}
+      address={address}
       onClick={() => addNewContact()}
-      buttonName='Submit'
     />
   )
 }
