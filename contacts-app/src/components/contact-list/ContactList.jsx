@@ -21,27 +21,28 @@ const ContactList = () => {
     let response = await getContactList();
     setContacts(response.data);
   }
+
   return (
     <Table className='tbl'>
       <TableHead>
         <TableRow>
-          <TableCell className='tbl-cell'>Contact Name</TableCell>
-          <TableCell className='tbl-cell'>Contact Number</TableCell>
-          <TableCell className='tbl-cell'>Email Address</TableCell>
-          <TableCell className='tbl-cell'>Home Address</TableCell>
-          <TableCell className='tbl-cell'></TableCell>
+          <TableCell className='tc-head'>Contact Name</TableCell>
+          <TableCell className='tc-head'>Contact Number</TableCell>
+          <TableCell className='tc-head'>Email Address</TableCell>
+          <TableCell className='tc-head'>Home Address</TableCell>
+          <TableCell className='tc-head'></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {contacts.map((contact) => (
           <TableRow key={contact.id}>
-            <TableCell>{contact.name}</TableCell>
-            <TableCell>{contact.number}</TableCell>
-            <TableCell>{contact.email}</TableCell>
-            <TableCell>{contact.address}</TableCell>
-            <TableCell>
+            <TableCell className='tbl-cell'>{contact.name}</TableCell>
+            <TableCell className='tbl-cell'>{contact.number}</TableCell>
+            <TableCell className='tbl-cell'>{contact.email}</TableCell>
+            <TableCell className='tbl-cell'>{contact.address}</TableCell>
+            <TableCell className='tbl-cell'>
               <Button 
-                color='primary'
+                className='edit-btn'
                 variant='contained'
                 style={{marginRight: 10}}
                 startIcon={<Edit />}
@@ -51,7 +52,7 @@ const ContactList = () => {
                 Edit
               </Button>
               <Button 
-                color='primary'
+                className='delete-btn'
                 variant='contained'
                 style={{marginRight: 10}}
                 startIcon={<Delete />}
