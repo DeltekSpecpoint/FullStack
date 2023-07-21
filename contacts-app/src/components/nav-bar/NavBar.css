@@ -1,0 +1,16 @@
+.app-bar {
+    position: static;
+    background: #111 !important;
+    height: 70px !important;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tab {
+    font-size: 35px;
+    color: #FFF;
+    text-decoration: none;
+}

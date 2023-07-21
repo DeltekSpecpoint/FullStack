@@ -1,0 +1,33 @@
+@media only screen and (max-width: 880px) {
+    .edit-btn {
+      /* background-color: lightblue; */
+      margin-bottom: 10px !important;
+    }
+  }
+
+.tbl {
+    width: 95% !important;
+    margin: 100px 0 10px 25px;
+}
+
+.tc-head {
+    font-size: 25px;
+    background: #7B7474 !important;
+    color: #FFF !important;
+    text-align: center !important;
+}
+
+.tbl-cell {
+    font-size: 20px;
+    background: #FFF !important;
+    color: #000 !important;
+    text-align: center !important;
+}
+
+.edit-btn {
+    background: #0C7D3A !important;
+}
+
+.delete-btn {
+    background: #E51010 !important;
+}
