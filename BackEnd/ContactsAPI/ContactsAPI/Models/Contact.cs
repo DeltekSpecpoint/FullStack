@@ -7,6 +7,10 @@ namespace ContactsAPI.Models
 {
     public class Contact
     {
-        // Insert Contact Fields Here
+        public int ID { get; set; }
+        public string name { get; set; }
+        public string phone { get; set; }
+        public string email { get; set; }
+        public string avatar { get; set; }
     }
 }

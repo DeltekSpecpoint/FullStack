@@ -1,0 +1,256 @@
+body {
+  background: #eee;
+  background-image: url("https://www.transparenttextures.com/patterns/brushed-alum.png");
+  padding: 0 16px;
+}
+
+header {
+  background-color: #007FFF;
+  margin: auto -16px;
+  padding: 16px 32px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  margin-bottom: 1rem;
+}
+
+header h1 {
+  color: #fff;
+  font-family: "McLaren", cursive;
+  font-weight: 200;
+}
+
+.contactlist-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.contactlist-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.avatar {
+  position: relative;
+}
+
+.deleteIcon {
+  position:absolute;
+  right: 0px;
+}
+
+.avatar-img {
+  border-radius: 50%;
+  border: 7px solid #fff;
+  width: 120px;
+  height: 120px;
+}
+
+.contactlist-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contactlist-card p {
+  text-decoration: none;
+  color: #000;
+  font-size: 16px;
+  margin: 0 5px;
+}
+
+.contactlist-add-card {
+  background-color: #eee;
+  border-radius: 50%;
+  border: 7px solid #fff;
+  min-width: 120px;
+  height: 120px;
+}
+
+.contactlist-add-icon {
+  height: auto;
+  width: 150px;
+}
+
+.contact-form-container, .contact-details-container {
+  display: flex;
+  justify-content: center;
+}
+
+.contact-details, .contact-details .info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info h2 {
+  color: #d9e7e8;
+  margin: 10px 0;
+}
+
+.info h3 {
+  color: #d9e7e8;
+  margin: 0;
+}
+
+.contact-form, .contact-details {
+  background-color: #1D5D9B;
+  border-radius: 20px;
+  box-sizing: border-box;
+  height: 500px;
+  padding: 20px;
+  width: 320px;
+}
+
+.contact-form-title {
+  color: #d9e7e8;
+  font-size: 2rem;
+}
+
+.input-container {
+  height: 50px;
+  position: relative;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.input {
+  background-color: #91C8E4;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  font-size: 18px;
+  height: 100%;
+  outline: 0;
+  padding: 4px 20px 0;
+  width: 100%;
+}
+
+.cut {
+  background-color: #1D5D9B;
+  border-radius: 10px;
+  height: 20px;
+  left: 20px;
+  position: absolute;
+  top: -20px;
+  transform: translateY(0);
+  transition: transform 200ms;
+  width: 76px;
+}
+
+.cut-short {
+  width: 50px;
+}
+
+.input:focus ~ .cut,
+.input:not(:placeholder-shown) ~ .cut {
+  transform: translateY(8px);
+}
+
+.placeholder {
+  color: #FBEEAC;
+  font-family: sans-serif;
+  left: 20px;
+  line-height: 14px;
+  pointer-events: none;
+  position: absolute;
+  transform-origin: 0 50%;
+  transition: transform 200ms, color 200ms;
+  top: 20px;
+}
+
+.input:focus ~ .placeholder,
+.input:not(:placeholder-shown) ~ .placeholder {
+  transform: translateY(-30px) translateX(10px) scale(0.75);
+}
+
+.input:not(:placeholder-shown) ~ .placeholder {
+  color: #A0BFE0;
+}
+
+.input:focus ~ .placeholder {
+  color: #48a8e8;
+}
+
+.submit {
+  background-color: #068FFF;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  cursor: pointer;
+  font-size: 18px;
+  height: 50px;
+  margin-top: 38px;
+  outline: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.submit:active {
+  background-color: #06b;
+}
+
+a:link { text-decoration: none; }
+
+
+a:visited { text-decoration: none; }
+
+
+a:hover { text-decoration: none; }
+
+
+a:active { text-decoration: none; }
+
+/* .card {
+  border-radius: 25px;
+  position: relative;
+  padding: 25px 15px;
+  background-color: #81ecec;
+  margin: 50px 0;
+  height: 200px;
+  box-shadow: 0 2px 5px #ccc;
+  text-align: left;
+}
+
+.top {
+  border-radius: 25px 25px 0 0;
+  height: 100px;
+  width: 100%;
+  background-color: #00cec9;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+}
+
+.name {
+  font-size: 2em;
+  color: #2d3436;
+  display: flex;
+  flex: 1;
+  margin: 10% 20px 0;
+}
+
+.card img {
+  margin: 30px 20px 0 0;
+}
+
+.circle-img {
+  border-radius: 50%;
+  border: 7px solid #fff;
+  width: 120px;
+  height: 120px;
+}
+
+.bottom {
+  margin-top: 120px;
+}
+
+.info {
+  margin: 20px 0;
+  color: #1a7e76;
+} */
