@@ -1,46 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ContactsAPI.Models;
+using ContactsAPI.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ContactsAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class ContactController : Controller
+    public class ContactsController : Controller
     {
+        private readonly IContactService _contactService;
+
+        public ContactsController(IContactService contactService)
+        {
+            _contactService = contactService;
+        }
+
         // GET: api/<controller>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<Contact>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_contactService.GetContacts().Result);
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Contact> Get(Guid id)
         {
-            return "value";
+            var result = _contactService.GetContactById(id).Result;
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
         }
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public ActionResult<Contact> Post([FromBody] Contact newContact)
         {
+            var result = _contactService.CreateContact(newContact).Result;
+
+            if (result == null)
+                return NoContent();
+
+            return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + result.Id, result);
+
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPatch("{id}")]
+        public ActionResult<Contact> Patch(Guid id, [FromBody] Contact updatedContact)
         {
+            var result = _contactService.UpdateContact(id, updatedContact).Result;
+
+            if (result == null)
+                return NotFound($"Contact with Id: {id} was not found");
+
+            return Ok(result);
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Contact> Delete(Guid id)
         {
+            var result = _contactService.DeleteContact(id).Result;
+
+            if (result == null)
+                return NotFound($"Contact with Id: {id} was not found");
+
+            return Ok(result);
         }
     }
 }

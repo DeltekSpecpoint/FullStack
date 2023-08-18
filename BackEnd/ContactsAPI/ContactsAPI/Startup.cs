@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using ContactsAPI.Services;
+using ContactsAPI.DataAccess;
 
 namespace ContactsAPI
 {
@@ -26,6 +23,16 @@ namespace ContactsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
+            // inject option to use in-memory db.
+            services.AddDbContext<ContactContext>(options =>
+            {
+                options.UseInMemoryDatabase("ContactsDB");
+            });
+
+            services.AddScoped<IContactService, ContactService>();
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -52,6 +59,9 @@ namespace ContactsAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Register CORS
+            app.UseCors(options => options.WithOrigins("*").AllowAnyHeader().AllowAnyMethod());
 
             app.UseSwagger();
 
