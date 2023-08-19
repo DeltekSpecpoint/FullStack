@@ -31,6 +31,9 @@ namespace ContactsAPI
                 options.UseInMemoryDatabase("ContactsDB");
             });
 
+            // register in-memory db seeding service: (generate default 1000 Contacts)
+            services.AddHostedService<DbSeedingService>();
+
             services.AddScoped<IContactService, ContactService>();
 
             services.AddControllers();
@@ -60,7 +63,7 @@ namespace ContactsAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            // Register CORS
+            // configure CORS
             app.UseCors(options => options.WithOrigins("*").AllowAnyHeader().AllowAnyMethod());
 
             app.UseSwagger();

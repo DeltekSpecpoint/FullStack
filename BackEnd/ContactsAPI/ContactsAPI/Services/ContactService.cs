@@ -16,17 +16,26 @@ namespace ContactsAPI.Services
             _dbContext = context;
         }
 
-        public async Task<Contact> CreateContact(Contact newContact)
+        public async Task<Contact> CreateContact(ContactInfo newContact)
         {
             try
             {
-                // assign guid to new contact
-                newContact.Id = Guid.NewGuid();
+                var addContact = new Contact()
+                {
+                    // assign guid to new contact
+                    Id = Guid.NewGuid(),
+                    FirstName = newContact.FirstName,
+                    LastName = newContact.LastName,
+                    Mobile = newContact.Mobile,
+                    Email = newContact.Email,
+                    Address = newContact.Address,
+                    IsStarred = newContact.IsStarred,
+                };
 
-                await _dbContext.ContactList.AddAsync(newContact);
+                await _dbContext.ContactList.AddAsync(addContact);
                 await _dbContext.SaveChangesAsync();
 
-                return newContact;
+                return addContact;
             }
             catch
             {
@@ -44,19 +53,19 @@ namespace ContactsAPI.Services
             return await GetContactAsync(id);
         }
 
-        public async Task<Contact> UpdateContact(Guid id, Contact contact)
+        public async Task<Contact> UpdateContact(Guid id, ContactInfo updateContact)
         {
             var existingContact = await GetContactAsync(id);
 
             if (existingContact == null)
                 return null;
 
-            existingContact.FirstName = contact.FirstName;
-            existingContact.LastName = contact.LastName;
-            existingContact.Mobile = contact.Mobile;
-            existingContact.Email = contact.Email;
-            existingContact.Address = contact.Address;
-            existingContact.IsStarred = contact.IsStarred;
+            existingContact.FirstName = updateContact.FirstName;
+            existingContact.LastName = updateContact.LastName;
+            existingContact.Mobile = updateContact.Mobile;
+            existingContact.Email = updateContact.Email;
+            existingContact.Address = updateContact.Address;
+            existingContact.IsStarred = updateContact.IsStarred;
 
             await _dbContext.SaveChangesAsync();
 

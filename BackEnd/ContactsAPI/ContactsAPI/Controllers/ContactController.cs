@@ -8,7 +8,7 @@ using ContactsAPI.Services;
 
 namespace ContactsAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class ContactsController : Controller
     {
         private readonly IContactService _contactService;
@@ -18,14 +18,14 @@ namespace ContactsAPI.Controllers
             _contactService = contactService;
         }
 
-        // GET: api/<controller>
+        // GET: api/v1/<controller>
         [HttpGet]
         public ActionResult<IEnumerable<Contact>> Get()
         {
             return Ok(_contactService.GetContacts().Result);
         }
 
-        // GET api/<controller>/5
+        // GET api/v1/<controller>/5
         [HttpGet("{id}")]
         public ActionResult<Contact> Get(Guid id)
         {
@@ -37,22 +37,25 @@ namespace ContactsAPI.Controllers
             return Ok(result);
         }
 
-        // POST api/<controller>
+        // POST api/v1/<controller>
         [HttpPost]
-        public ActionResult<Contact> Post([FromBody] Contact newContact)
+        public ActionResult<Contact> Post([FromBody] ContactInfo newContact)
         {
             var result = _contactService.CreateContact(newContact).Result;
 
             if (result == null)
                 return NoContent();
 
-            return Created(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path + "/" + result.Id, result);
+            var req = HttpContext.Request;
+            var uri = $"{req.Scheme}://{req.Host}{req.Path}/{result.Id}";
+
+            return Created(uri, result);
 
         }
 
-        // PUT api/<controller>/5
-        [HttpPatch("{id}")]
-        public ActionResult<Contact> Patch(Guid id, [FromBody] Contact updatedContact)
+        // PUT api/v1/<controller>/5
+        [HttpPut("{id}")]
+        public ActionResult<Contact> Put(Guid id, [FromBody] ContactInfo updatedContact)
         {
             var result = _contactService.UpdateContact(id, updatedContact).Result;
 
@@ -62,7 +65,7 @@ namespace ContactsAPI.Controllers
             return Ok(result);
         }
 
-        // DELETE api/<controller>/5
+        // DELETE api/v1/<controller>/5
         [HttpDelete("{id}")]
         public ActionResult<Contact> Delete(Guid id)
         {

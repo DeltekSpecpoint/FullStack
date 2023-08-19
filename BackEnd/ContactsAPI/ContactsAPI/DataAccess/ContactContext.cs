@@ -10,7 +10,7 @@ namespace ContactsAPI.DataAccess
         //    builder.UseInMemoryDatabase("ContactsDB");
         //}
 
-        public ContactContext(DbContextOptions options) : base(options) { }
+        public ContactContext(DbContextOptions<ContactContext> options) : base(options) { }
 
         public DbSet<Contact> ContactList { get; set; }
     }
