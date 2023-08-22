@@ -1,0 +1,50 @@
+.background {
+	width: 430px;
+	height: 520px;
+	position: absolute;
+	animation: rotate 60s linear infinite;
+}
+.background .shape {
+	position: absolute;
+	border-radius: 50%;
+}
+
+.shape.lg {
+	height: 200px;
+	width: 200px;
+}
+.shape.md {
+	height: 150px;
+	width: 150px;
+}
+.shape.sm {
+	height: 100px;
+	width: 100px;
+}
+
+.shape:first-child {
+	background: linear-gradient(#1845ad, #23a2f6);
+	left: -30px;
+	bottom: -40px;
+	animation: blobs 10s infinite alternate linear;
+}
+.shape:last-child {
+	background: linear-gradient(to right, #ff512f, #f09819);
+	top: 30px;
+	bottom: -40px;
+	animation: blobs 5s infinite alternate linear;
+}
+@keyframes blobs {
+	100% {
+		translate: 50%;
+	}
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
