@@ -1,0 +1,9 @@
+.contact-list {
+    display: flex;
+    width: 640px;
+    height: 70px;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 0px;
+}

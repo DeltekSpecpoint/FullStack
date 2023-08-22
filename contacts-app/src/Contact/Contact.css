@@ -1,0 +1,124 @@
+/* This is my personal css code I used it on my ongoing resume website */
+/* Donn Darryl Dimayuga */
+
+@media (max-width: 1300px) {
+  .contact-details-button {
+      display: flex;
+      height: 80px;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+      margin: 0px 0px;
+  }
+
+  .contact-details {
+    display: contents !important;
+}
+  
+}
+
+.contact-details {
+  display: flex;
+  justify-content: space-between; /* Distributes items evenly along the main axis */
+  align-items: center; /* Aligns items along the cross axis */
+}
+
+.contact-details-buttons {
+  display: flex;
+  width: 640px;
+  height: 80px;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  margin: 0px 0px;
+}
+
+.contact-div {
+  flex: 1; /* Distribute available space evenly among the items */
+  padding: 20px;
+  border: 1px solid #333;
+}
+
+
+button {
+  background: rgba(0,0,0,.3);
+  width: 160px;
+  height: 50px;
+  border-radius: 5px;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  margin: 15px;
+}
+
+button:focus {
+  border: none;
+  box-shadow: none;
+}
+
+span {
+  color: #fff;
+  font-size: 11px;
+  text-transform: uppercase;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+.framed-top::before,
+.framed-top::after,
+.framed-bottom::before,
+.framed-bottom::after {
+  content: " ";
+  background: #00edff;
+  position: absolute;
+  -webkit-box-shadow: 0 0 7px 0 #00edff;
+  box-shadow: 0 0 7px 0 #00edff;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+.framed-top::before {
+  top: 0px;
+  left: 15px;
+  width: 1px;
+  height: 0px;
+}
+.framed-top::after {
+  top: 15px;
+  right: 0px;
+  width: 0px;
+  height: 1px;
+}
+.framed-bottom::before {
+  bottom: 15px;
+  left: 0px;
+  width: 0px;
+  height: 1px;
+}
+.framed-bottom::after {
+  bottom: 0px;
+  right: 15px;
+  width: 1px;
+  height: 0px;
+}
+
+button:hover
+.framed-top::before {
+  height: 44px;
+}
+button:hover
+.framed-top::after {
+  width: 150px;
+}
+button:hover
+.framed-bottom::before {
+  width: 150px;
+}
+button:hover
+.framed-bottom::after {
+  height: 44px;
+}
