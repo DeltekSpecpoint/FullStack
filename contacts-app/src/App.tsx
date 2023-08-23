@@ -1,4 +1,4 @@
-import { RotatingBackdrop, Contact } from "@/components"
+import { RotatingBackdrop, Contact } from '@/components'
 
 function App() {
 	return (

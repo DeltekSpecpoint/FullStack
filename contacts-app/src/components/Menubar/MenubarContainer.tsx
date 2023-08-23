@@ -1,5 +1,5 @@
-import React, { ComponentProps } from "react"
-import { Menubar } from "@/components"
+import React, { ComponentProps } from 'react'
+import { Menubar } from '@/components'
 
 interface IMenubarContainer {
 	menus: Partial<ComponentProps<typeof Menubar.Item>>[]
@@ -9,14 +9,15 @@ export function MenubarContainer({ menus }: IMenubarContainer) {
 	return (
 		<aside>
 			<Menubar>
-				{menus.map(({ name, iconName, animation, onClick }, idx) => (
+				{menus.map(({ title, iconName, animation, animateOnLoad, onClick }, idx) => (
 					<div key={idx}>
-						{name && (
+						{title && (
 							<Menubar.Item
 								{...{
-									name,
+									title,
 									iconName,
 									animation,
+									animateOnLoad,
 									onClick,
 								}}
 							/>

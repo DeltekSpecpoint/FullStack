@@ -1,11 +1,8 @@
-import { ComponentProps } from "react"
-import { Header, Title } from "./Header"
-import { AnimatedIcon } from "./AnimatedIcon"
+import { ComponentProps } from 'react'
+import { Header, Title } from './Header'
+import { AnimatedIcon } from './AnimatedIcon'
 
-export function BusyIndicator({
-	title,
-	subTitle,
-}: ComponentProps<typeof Title>) {
+export function BusyIndicator({ title, subTitle }: ComponentProps<typeof Title>) {
 	return (
 		<div className="form-container">
 			<Header>

@@ -14,11 +14,7 @@
 	left: 0;
 	right: 0;
 	z-index: 100;
-	background: linear-gradient(
-		to right bottom,
-		rgba(0, 0, 0, 0.5),
-		rgba(0, 0, 0, 0.5)
-	);
+	background: linear-gradient(to right bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 	backdrop-filter: blur(0.5rem);
 }
 .modal-container {
@@ -35,7 +31,6 @@
 	padding: 5px 8px;
 	border-radius: 50%;
 	background-color: hsla(0, 0%, 100%, 0.1);
-	z-index: 1;
 	transition: var(--transition);
 }
 .modal-close i {

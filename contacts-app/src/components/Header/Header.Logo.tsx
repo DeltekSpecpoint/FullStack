@@ -1,5 +1,5 @@
-import type { IChildren } from "@/types"
-import { AnimatedIcon } from "@/components"
+import type { IChildren } from '@/types'
+import { AnimatedIcon } from '@/components'
 
 export function Logo({ children }: IChildren) {
 	return (

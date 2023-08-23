@@ -4,23 +4,23 @@
 	place-items: start;
 	gap: 15px;
 }
-
 .contact-list {
 	flex-direction: column;
 	max-height: 433px;
 	overflow: scroll;
-	padding-right: 8px;
 	scroll-behavior: smooth;
 }
 .form-container {
-	padding: 32px;
 	width: 400px;
 	max-width: 400px;
+	background-color: rgba(255, 255, 255, 0.13);
 	border-radius: 32px;
 	backdrop-filter: blur(70px);
 	-webkit-backdrop-filter: blur(70px);
 	border: 2px solid rgba(255, 255, 255, 0.1);
 	box-shadow: 0px 0px 20px 1px #ffbb763f;
+	padding: 32px;
+	margin: 10px 0;
 }
 
 .contact-menu {
@@ -39,6 +39,47 @@
 	height: 35px !important;
 	border-radius: 50% !important;
 	font-size: 15px !important;
+}
+
+.action-button {
+	padding: 10px;
+	text-align: center;
+	opacity: 0.4;
+	color: currentColor;
+	transition: var(--transition);
+}
+
+.rounded-right {
+	border-top-right-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+}
+
+.action-button.active {
+	cursor: pointer;
+	opacity: 1;
+}
+.action-button:hover:not(:disabled) {
+	border-color: currentColor;
+	background-color: var(--background-color);
+}
+.form-container > div {
+	opacity: 0;
+	animation: descend-opacity 0.5s forwards;
+}
+.form-container > div:nth-child(1) {
+	animation-delay: 0.1s;
+}
+.form-container > div:nth-child(2) {
+	animation-delay: 0.2s;
+}
+.form-container > div:nth-child(3) {
+	animation-delay: 0.3s;
+}
+.form-container > div:nth-child(4) {
+	animation-delay: 0.4s;
+}
+.form-container > div:nth-child(5) {
+	animation-delay: 0.5s;
 }
 
 .contact-list > * {
@@ -76,33 +117,10 @@
 	animation-delay: 1s;
 }
 
-.action-button {
-	padding: 10px;
-	text-align: center;
-	opacity: 0.4;
-	color: currentColor;
-	transition: var(--transition);
-}
-
-.rounded-right {
-	border-top-right-radius: 0.25rem;
-	border-bottom-right-radius: 0.25rem;
-}
-
-.action-button.active {
-	cursor: pointer;
-	opacity: 1;
-}
-
-.action-button:hover:not(:disabled) {
-	border-color: currentColor;
-	background-color: var(--background-color);
-}
-
 @media (max-width: 500px) {
 	.contact-container {
 		display: grid;
-		gap: 10px;
+		gap: 0px;
 	}
 	.contact-menu {
 		display: flex;

@@ -1,21 +1,19 @@
-import { AnimatedIcon } from "@/components"
-import { ComponentProps } from "react"
+import { AnimatedIcon } from '@/components'
+import { ComponentProps } from 'react'
 
 export function CloseIcon({
-	className = "",
-	iconName = "",
+	className = '',
+	iconName = '',
 	onClick = () => null,
-}: Pick<
-	ComponentProps<typeof AnimatedIcon>,
-	"className" | "iconName" | "onClick"
->) {
+}: Pick<ComponentProps<typeof AnimatedIcon>, 'className' | 'iconName' | 'onClick'>) {
 	return (
 		<a
 			className={`modal-close ${className}`}
-			onClick={onClick}>
+			onClick={onClick}
+		>
 			<AnimatedIcon
 				animation="spins"
-				iconName={`${iconName ? iconName : "fa fa-close"}`}
+				iconName={`${iconName ? iconName : 'fa fa-close'}`}
 			/>
 		</a>
 	)

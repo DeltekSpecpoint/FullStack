@@ -1,29 +1,20 @@
-import { AnimatedIcon } from "@/components"
-import type { TFunction } from "@/types"
+import { ComponentProps } from 'react'
+import { AnimatedIcon } from '@/components'
 
-interface IMenuItem {
-	onClick: TFunction
-	name: string
-	iconName: string
-	animation: string
-}
+interface IMenuItem extends Omit<ComponentProps<typeof AnimatedIcon>, 'children'> {}
 export function Item({
-	name,
+	title,
 	onClick,
-	iconName = "fa fa-bars",
-	animation = "",
+	iconName = 'fa fa-bars',
+	animation = '',
+	animateOnLoad = false,
 }: Partial<IMenuItem>) {
 	return (
 		<a
-			title={name}
 			className="button-style menu descend"
-			onClick={onClick}>
-			<AnimatedIcon
-				title={name}
-				className={iconName}
-				iconName={iconName}
-				animation={animation}
-			/>
+			{...{ title, onClick }}
+		>
+			<AnimatedIcon {...{ title, iconName, animation, animateOnLoad }} />
 		</a>
 	)
 }

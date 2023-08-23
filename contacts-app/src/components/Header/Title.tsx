@@ -1,4 +1,4 @@
-import type { IChildren } from "@/types"
+import type { IChildren } from '@/types'
 
 interface ITitle extends IChildren {
 	title?: string
