@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { IChildren, TFunction } from '@/types'
 import { CloseIcon } from '@/components'
 
@@ -14,20 +14,18 @@ export function SearchBar({ children, searchCallback: searchCb }: ISearchBar) {
 	const [search, setSearch] = useState('')
 	const [{ message, resultCount }, setSearchStatus] = useState(STATUS)
 
-	const executeSearch = useCallback(
-		(searchKey: string) => {
-			// trigger search callbackfn from subscriber
-			const resultCount = searchCb(searchKey)
-			// create message base on the resultCount
-			const message = resultCount
-				? `${resultCount} Contact(s) found`
-				: `No Results for "${searchKey}"`
+	const executeSearch = (searchKey: string) => {
+		// trigger search handler callbackFn
+		const resultCount = searchCb(searchKey)
+		// create message base on the resultCount
+		const message = resultCount
+			? `${resultCount} Contact(s) found`
+			: `No Results for "${searchKey}"`
 
-			// update status of search action
-			setSearchStatus({ message, resultCount })
-		},
-		[searchCb]
-	)
+		// update status for search
+		setSearchStatus({ message, resultCount })
+	}
+	const executeSearchRef = useRef(executeSearch)
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const searchValue = event.target.value
@@ -43,8 +41,12 @@ export function SearchBar({ children, searchCallback: searchCb }: ISearchBar) {
 	}
 
 	useEffect(() => {
-		// persis cached searchKey
-		setSearch(localStorage.getItem('contact_searchkey') || '')
+		// persist cached searchKey
+		const cachedKey = localStorage.getItem('contact_searchkey') || ''
+		if (cachedKey) {
+			executeSearchRef.current(cachedKey)
+			setSearch(cachedKey)
+		}
 	}, [])
 
 	return (
@@ -52,7 +54,7 @@ export function SearchBar({ children, searchCallback: searchCb }: ISearchBar) {
 			<input
 				id="search"
 				type="text"
-				inputMode="url"
+				inputMode="search"
 				placeholder="Search"
 				value={search}
 				onChange={handleChange}

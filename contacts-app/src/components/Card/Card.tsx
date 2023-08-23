@@ -1,15 +1,16 @@
-import '@/assets/modules/ContactCard.css'
+import '@/assets/modules/Card.css'
 import { IChildren, TContact, TFunction } from '@/types'
 import { AnchorWrapper, AnimatedIcon } from '@/components'
 
-interface IContactCard extends IChildren, TContact {
+interface ICard extends IChildren, TContact {
 	className?: string
 	iconName?: string
-	onOpen: TFunction<string>
-	onBookMark: TFunction<string>
+	subText?: string
+	onOpen: TFunction<[id: string]>
+	onBookMark: TFunction<[id: string]>
 }
 
-export function ContactCard({
+export function Card({
 	children,
 	className = 'contact-item',
 	iconName = 'fa fa-chevron-left',
@@ -19,9 +20,10 @@ export function ContactCard({
 	mobile,
 	email,
 	isStarred,
+	subText,
 	onOpen,
 	onBookMark,
-}: IContactCard) {
+}: ICard) {
 	const contactLogo = `${firstName ? firstName[0] : ''}${lastName ? lastName[0] : ''}`
 
 	return (
@@ -46,13 +48,14 @@ export function ContactCard({
 						{firstName} {lastName}
 					</p>
 				)}
-				<p className="small">{email ? mobile : mobile}</p>
+				<p className="small">{subText ? subText : email ? mobile : mobile}</p>
 			</div>
 
 			<AnchorWrapper>
 				<AnimatedIcon
+					className={`card-bookmark ${isStarred ? 'lit-bookmark' : ''}`}
 					iconName={`fa-${isStarred ? 'solid enabled' : 'regular disabled'} fa-bookmark`}
-					animation="fa-beat-fade"
+					animation={isStarred ? 'fa-bounce' : 'pulse'}
 					onClick={() => onBookMark(id)}
 				/>
 			</AnchorWrapper>

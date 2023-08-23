@@ -1,10 +1,19 @@
-import { ComponentProps, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { ComponentProps, useEffect, useRef, useState } from 'react'
 import '@/assets/modules/Contact.css'
 import { TContact, TStatus } from '@/types'
-import { BusyIndicator, Header, Item, MenubarContainer, Modal, SearchBar } from '@/components'
+import {
+	BusyIndicator,
+	ContactCard,
+	Header,
+	Item,
+	MenubarContainer,
+	Modal,
+	SearchBar,
+} from '@/components'
 import { getContactsService, updateContactService } from '@/services/api'
-import { ContactCardContainer } from './ContactCard'
+import { CardListContainer } from './Card'
 import { CreateError, FilterContacts } from '@/utils'
+import { CONTACT_CONST } from '@/constants'
 
 export function Contact() {
 	const [contacts, setContacts] = useState<TContact[]>([])
@@ -16,16 +25,31 @@ export function Contact() {
 		message: '',
 	})
 	const contactsCountRef = useRef(0)
-	const [openContact, setOpenContact] = useState<TContact>()
+	const [openContact, setOpenContact] = useState<TContact>(CONTACT_CONST.INIT_CONTACT)
+
+	// update Contacts state
+	// set cache to local storage
+	const hydrateLocalStates = (contactsUpdate: TContact[]) => {
+		setContacts(contactsUpdate)
+		setCachedContacts(contactsUpdate)
+		// track record count
+		contactsCountRef.current = contactsUpdate.length
+		localStorage.setItem('contacts', JSON.stringify(contactsUpdate))
+	}
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// open: Modal form for Add/Edit/Delete function or View Card with contact info
+	// close: close state, clear the current selected Contact
+	// sync: fetch Contacts from Cloud and update localStorage/cache, then hydrate
 	const modalActions = {
-		// open Modal form with contact info
-		open: (id: string) => {
+		open: (id?: string) => {
 			const selectedContact = cachedContacts.find(selected => selected.id === id)
-			if (selectedContact) setOpenContact(selectedContact)
-
-			setIsOpenModalForm(true)
+			if (id && selectedContact) {
+				setOpenContact(selectedContact)
+			} else {
+				// TODO: implement Add/Edit modal form here
+				setIsOpenModalForm(true)
+			}
 		},
 		close: () => {
 			setIsOpenModalForm(false)
@@ -47,7 +71,8 @@ export function Contact() {
 		},
 	}
 
-	const getCachedContacts = useCallback(() => {
+	// get cached Contacts if there's any, fetch to the cloud otherwise
+	const getCachedContacts = () => {
 		if (contactsCountRef.current > 0) return cachedContacts
 
 		let cachedList: TContact[] = []
@@ -69,12 +94,15 @@ export function Contact() {
 		}
 
 		return cachedList
-	}, [cachedContacts, modalActions])
+	}
+	const getCachedContactsRef = useRef(getCachedContacts)
 
-	useLayoutEffect(() => {
-		getCachedContacts()
-	}, [getCachedContacts])
+	// side-effect to fetch Contacts from Cached or to Cloud
+	useEffect(() => {
+		getCachedContactsRef.current()
+	}, [])
 
+	// side-effect to reset/clear status notification
 	useEffect(() => {
 		setTimeout(() => {
 			setStatus({ success: false, message: '' })
@@ -88,24 +116,27 @@ export function Contact() {
 		})
 	}
 
-	const hydrateLocalStates = (contactsUpdate: TContact[]) => {
-		// update local states
-		setContacts(contactsUpdate)
-		setCachedContacts(contactsUpdate)
-		// track record count
-		contactsCountRef.current = contactsUpdate.length
-		// sync to local storage
-		localStorage.setItem('contacts', JSON.stringify(contactsUpdate))
+	// filter Contact list using Cached (session storage) data
+	const handleSearch = (searchKey = '') => {
+		const searchResult = searchKey
+			? FilterContacts({ searchKey, contacts: cachedContacts })
+			: getCachedContacts()
+		setContacts(searchResult)
+
+		return searchResult.length
 	}
 
+	// toggle bookmark (isStarred)
 	const bookMarkAction = async (id: string) => {
 		try {
 			const starredContact = contacts.find(contact => contact.id === id)
 			if (starredContact) {
-				// toggle bookmark (isStarred)
 				starredContact.isStarred = !starredContact.isStarred
-
 				hydrateLocalStates(applyUpdates([starredContact]))
+				// to update the ContactList view
+				handleSearch(localStorage.getItem('contact_searchkey') ?? '')
+
+				// commit changes to cloud
 				await updateContactService(starredContact)
 			}
 		} catch (error) {
@@ -115,16 +146,6 @@ export function Contact() {
 				message: 'Something went wrong persist to cloud update.',
 			})
 		}
-	}
-
-	// filter Contact list using Cached (session storage) data
-	const getSearchResult = (searchKey = '') => {
-		const searchResult = searchKey
-			? FilterContacts({ searchKey, contacts: cachedContacts })
-			: getCachedContacts()
-		setContacts(searchResult)
-
-		return searchResult.length
 	}
 
 	// process indicator
@@ -137,7 +158,7 @@ export function Contact() {
 			iconName: 'fa fa-plus',
 			animation: 'fa fa-beat-fade',
 			animateOnLoad: contactsCountRef.current > 0 ? false : true,
-			onClick: () => modalActions.open,
+			onClick: () => modalActions.open(),
 		},
 		{
 			title: 'Sync Contacts',
@@ -183,16 +204,24 @@ export function Contact() {
 					</Header>
 				)}
 
-				<>
-					{contactsCountRef.current > 0 && <SearchBar searchCallback={getSearchResult} />}
-					<ContactCardContainer
-						contacts={contacts}
-						actionHandler={{
-							bookMark: bookMarkAction,
-							openCard: modalActions.open,
-						}}
+				{openContact && openContact.id ? (
+					<ContactCard
+						onOpen={() => setOpenContact(CONTACT_CONST.INIT_CONTACT)}
+						onBookMark={bookMarkAction}
+						{...openContact}
 					/>
-				</>
+				) : (
+					<>
+						{contactsCountRef.current > 0 && <SearchBar searchCallback={handleSearch} />}
+						<CardListContainer
+							contacts={contacts}
+							actionHandler={{
+								onBookMark: bookMarkAction,
+								onOpen: modalActions.open,
+							}}
+						/>
+					</>
+				)}
 			</section>
 		</div>
 	)
