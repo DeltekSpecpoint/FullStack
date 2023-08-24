@@ -12,7 +12,7 @@ import {
 } from '@/components'
 import { getContactsService, updateContactService } from '@/services/api'
 import { CardListContainer } from './Card'
-import { CreateError, FilterContacts } from '@/utils'
+import { CreateError, FilterContacts, IsEmpty } from '@/utils'
 import { CONTACT_CONST } from '@/constants'
 
 export function Contact() {
@@ -58,35 +58,38 @@ export function Contact() {
 			setLoading(true)
 
 			try {
-				const contactsFromCloud = await getContactsService()
-				hydrateLocalStates(contactsFromCloud)
+				hydrateLocalStates(await getContactsService())
+				setLoading(false)
+
+				setStatus({
+					success: true,
+					message: 'Contacts are now up to date.',
+				})
 			} catch (error) {
+				setLoading(false)
+
 				setStatus({
 					success: false,
 					message: CreateError(error).message,
 				})
-			} finally {
-				setLoading(false)
 			}
 		},
 	}
 
 	// get cached Contacts if there's any, fetch to the cloud otherwise
-	const getCachedContacts = () => {
-		if (contactsCountRef.current > 0) return cachedContacts
-
+	const getLocalStorageContacts = () => {
 		let cachedList: TContact[] = []
-		const tempContacts = localStorage.getItem('contacts')
+		const localStorageContacts = localStorage.getItem('contacts')
 
-		if (tempContacts) {
+		if (localStorageContacts) {
 			try {
-				cachedList = JSON.parse(tempContacts)
+				cachedList = JSON.parse(localStorageContacts)
 				hydrateLocalStates(cachedList)
 			} catch (error) {
 				console.error(CreateError(error).message)
 				setStatus({
 					success: false,
-					message: "We can't access your local copy of Contacts right now. Try the Sync button.",
+					message: "We can't access offline copy of your Contacts right now. Try the Sync button.",
 				})
 			}
 		} else {
@@ -95,11 +98,11 @@ export function Contact() {
 
 		return cachedList
 	}
-	const getCachedContactsRef = useRef(getCachedContacts)
+	const getLocalStorageContactsRef = useRef(getLocalStorageContacts)
 
 	// side-effect to fetch Contacts from Cached or to Cloud
 	useEffect(() => {
-		getCachedContactsRef.current()
+		getLocalStorageContactsRef.current()
 	}, [])
 
 	// side-effect to reset/clear status notification
@@ -116,11 +119,13 @@ export function Contact() {
 		})
 	}
 
-	// filter Contact list using Cached (session storage) data
+	// filter Contact list using Cached memory or local storage
 	const handleSearch = (searchKey = '') => {
-		const searchResult = searchKey
-			? FilterContacts({ searchKey, contacts: cachedContacts })
-			: getCachedContacts()
+		const isCached = !IsEmpty(searchKey) && !IsEmpty(cachedContacts)
+		const searchResult = FilterContacts({
+			searchKey,
+			contacts: isCached ? cachedContacts : getLocalStorageContacts(),
+		})
 		setContacts(searchResult)
 
 		return searchResult.length
@@ -204,7 +209,7 @@ export function Contact() {
 					</Header>
 				)}
 
-				{openContact && openContact.id ? (
+				{!IsEmpty(openContact) ? (
 					<ContactCard
 						onOpen={() => setOpenContact(CONTACT_CONST.INIT_CONTACT)}
 						onBookMark={bookMarkAction}

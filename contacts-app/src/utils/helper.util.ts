@@ -71,6 +71,7 @@ export function FilterContacts({
 	contacts,
 	ignoredProps = ['id'],
 }: IFilterContacts): TContact[] {
+	if (IsEmpty(contacts)) return []
 	return contacts.filter(filterItem => {
 		return Object.keys(filterItem).some(key => {
 			const props = key as TContactKey
@@ -107,5 +108,34 @@ export function TimeAgo(date: Date): string {
 			hour: 'numeric',
 			minute: 'numeric',
 		})
+	}
+}
+
+export function IsEmpty<T>(value: T) {
+	const isEmptyObject = (obj: object) => {
+		const noObjKeys = Object.keys(obj).length === 0
+		const emptyPropValues = !Object.values(obj).every(item => {
+			if (typeof item === 'boolean') return true
+			return Boolean(item)
+		})
+		return noObjKeys || emptyPropValues
+	}
+
+	switch (typeof value) {
+		case 'undefined':
+			return true
+		case 'string':
+			return value.trim().length <= 0
+		case 'object':
+			return isEmptyObject(value as object)
+		case 'boolean':
+			return value
+		default: {
+			if (Array.isArray(value)) {
+				const noContent = value.length <= 0
+				const emptyArrObj = value.every(obj => isEmptyObject(obj))
+				return noContent || emptyArrObj
+			}
+		}
 	}
 }

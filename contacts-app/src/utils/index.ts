@@ -1,2 +1,2 @@
 export * from './axios.util'
-export * from './helper'
+export * from './helper.util'
