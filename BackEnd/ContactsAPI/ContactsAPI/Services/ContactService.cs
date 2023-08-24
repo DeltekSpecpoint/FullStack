@@ -1,93 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using ContactsAPI.DataAccess;
-using ContactsAPI.Models;
+using ContactsAPI.BusinessLogic.Models;
+using ContactsAPI.Services.Repositories;
 
 namespace ContactsAPI.Services
 {
     public class ContactService : IContactService
     {
-        private readonly ContactContext _dbContext;
-
-        public ContactService(ContactContext context)
+        private readonly IContactRepository _contactRepo;
+        
+        public ContactService(IContactRepository contactRepo)
         {
-            _dbContext = context;
+            _contactRepo = contactRepo;
         }
 
-        public async Task<Contact> CreateContact(ContactInfo newContact)
+        public async Task<Contact> Add(ContactAdd newContact)
         {
-            try
-            {
-                var addContact = new Contact()
-                {
-                    // assign guid to new contact
-                    Id = Guid.NewGuid(),
-                    FirstName = newContact.FirstName,
-                    LastName = newContact.LastName,
-                    Mobile = newContact.Mobile,
-                    Email = newContact.Email,
-                    Address = newContact.Address,
-                    IsStarred = newContact.IsStarred,
-                };
-
-                await _dbContext.ContactList.AddAsync(addContact);
-                await _dbContext.SaveChangesAsync();
-
-                return addContact;
-            }
-            catch
-            {
-                return null;
-            }
+            return await _contactRepo.AddAsync(newContact);
         }
 
-        public async Task<IEnumerable<Contact>> GetContacts()
+        public async Task<Contact> Delete(Guid id)
         {
-            return await _dbContext.ContactList.ToListAsync();
+            return await _contactRepo.Delete(id);
         }
 
-        public async Task<Contact> GetContactById(Guid id)
+        public async Task<Contact> GetById(Guid id)
         {
-            return await GetContactAsync(id);
+            return await _contactRepo.GetAsync(id);
         }
 
-        public async Task<Contact> UpdateContact(Guid id, ContactInfo updateContact)
+        public async Task<IEnumerable<Contact>> GetAll()
         {
-            var existingContact = await GetContactAsync(id);
-
-            if (existingContact == null)
-                return null;
-
-            existingContact.FirstName = updateContact.FirstName;
-            existingContact.LastName = updateContact.LastName;
-            existingContact.Mobile = updateContact.Mobile;
-            existingContact.Email = updateContact.Email;
-            existingContact.Address = updateContact.Address;
-            existingContact.IsStarred = updateContact.IsStarred;
-
-            await _dbContext.SaveChangesAsync();
-
-            return existingContact;
+            return await _contactRepo.GetAllAsync();
         }
 
-        public async Task<Contact> DeleteContact(Guid id)
+        public async Task<Contact> Update(ContactUpdate updateContact)
         {
-            var contact = await GetContactAsync(id);
-
-            if (contact == null)
-                return null;
-
-            _dbContext.ContactList.Remove(contact);
-            await _dbContext.SaveChangesAsync();
-
-            return contact;
-        }
-
-        private async Task<Contact> GetContactAsync(Guid id)
-        {
-            return await _dbContext.ContactList.FindAsync(id);
+            return await _contactRepo.Update(updateContact);
         }
     }
 }

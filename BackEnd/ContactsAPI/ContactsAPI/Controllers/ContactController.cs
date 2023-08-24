@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ContactsAPI.Models;
+using ContactsAPI.BusinessLogic.Models;
 using ContactsAPI.Services;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ContactsAPI.Controllers
 {
+    [ApiController]
     [Route("api/v1/[controller]")]
     public class ContactsController : Controller
     {
@@ -18,63 +18,62 @@ namespace ContactsAPI.Controllers
             _contactService = contactService;
         }
 
-        // GET: api/v1/<controller>
         [HttpGet]
-        public ActionResult<IEnumerable<Contact>> Get()
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
         {
-            return Ok(_contactService.GetContacts().Result);
+            return Ok(await _contactService.GetAll());
         }
 
-        // GET api/v1/<controller>/5
         [HttpGet("{id}")]
-        public ActionResult<Contact> Get(Guid id)
+        public async Task<ActionResult<Contact>> GetContact(Guid id)
         {
-            var result = _contactService.GetContactById(id).Result;
+            var contact = await _contactService.GetById(id);
 
-            if (result == null)
-                return NotFound();
+            if (contact == null)
+                return new JsonResult(new { message = "Contact could not be found.", ErrorCode = "NOTFOUND" });
 
-            return Ok(result);
+            return Ok(contact);
         }
 
-        // POST api/v1/<controller>
         [HttpPost]
-        public ActionResult<Contact> Post([FromBody] ContactInfo newContact)
+        public async Task<ActionResult<Contact>> CreateContact([FromBody] ContactAdd addContact)
         {
-            var result = _contactService.CreateContact(newContact).Result;
+            /* TODO: validate if newContact already exist by First and Last name */
+            var newContact = await _contactService.Add(addContact);
 
-            if (result == null)
-                return NoContent();
+            if (newContact == null)
+                return new JsonResult(new { message = "Contact could not be created.", ErrorCode = "CREATE_FAILED"});
 
             var req = HttpContext.Request;
-            var uri = $"{req.Scheme}://{req.Host}{req.Path}/{result.Id}";
 
-            return Created(uri, result);
+            return Created($"{req.Scheme}://{req.Host}{req.Path}/{newContact.Id}", newContact);
 
         }
 
-        // PUT api/v1/<controller>/5
         [HttpPut("{id}")]
-        public ActionResult<Contact> Put(Guid id, [FromBody] ContactInfo updatedContact)
+        public async Task<ActionResult<Contact>> UpdateContact(Guid id, [FromBody] ContactUpdate updateContact)
         {
-            var result = _contactService.UpdateContact(id, updatedContact).Result;
+            if (updateContact.Id != id)
+                // Guid search conflict
+                return new JsonResult(new { message = $"You're trying to update with conflicting Ids.", ErrorCode = "BAD_REQUEST_UPDATE" });
 
-            if (result == null)
-                return NotFound($"Contact with Id: {id} was not found");
+            var updatedContact = await _contactService.Update(updateContact);
 
-            return Ok(result);
+            if (updatedContact == null)
+                return new JsonResult(new { message = $"Contact with Id: {id} could not be found/updated.", ErrorCode = "UPDATE_FAILED" });
+
+            return Ok(updatedContact);
         }
 
-        // DELETE api/v1/<controller>/5
         [HttpDelete("{id}")]
-        public ActionResult<Contact> Delete(Guid id)
+        public async Task<ActionResult<Contact>> DeleteContact(Guid id)
         {
-            var result = _contactService.DeleteContact(id).Result;
+            var deletedContact = await _contactService.Delete(id);
 
-            if (result == null)
-                return NotFound($"Contact with Id: {id} was not found");
+            if (deletedContact == null)
+                return new JsonResult(new { message = $"Contact with Id: {id} could not be found/deleted.", ErrorCode = "DELETE_FAILED" });
 
-            return Ok(result);
+            return Ok(deletedContact);
         }
     }
 }

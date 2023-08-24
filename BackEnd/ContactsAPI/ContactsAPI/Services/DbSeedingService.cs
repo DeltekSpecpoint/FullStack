@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ContactsAPI.DataAccess;
-using ContactsAPI.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ContactsAPI.BusinessLogic.Models;
+using ContactsAPI.DataAccess;
 
 namespace ContactsAPI.Services
 {
@@ -19,20 +19,20 @@ namespace ContactsAPI.Services
             _serviceProvider = serviceProvider;
 		}
 
-        private List<Contact> CreateRandomContacts()
+        private static List<Contact> CreateRandomContacts()
         {
-            List<Contact> newContacts = new List<Contact>();
+            var newContacts = new List<Contact>();
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 1; i < 1001; i++)
             {
+                var randItem = i.ToString("D4");
                 newContacts.Add(new Contact()
                 {
-                    Id = Guid.NewGuid(),
-                    FirstName = $"First Name {i}",
-                    LastName = $"Last Name {i}",
-                    Mobile = $"123456789{i}",
-                    Email = $"email{i}@gmail.com",
-                    Address = $"Address {i}",
+                    FirstName = $"First Name {randItem}",
+                    LastName = $"Last Name {randItem}",
+                    Mobile = $"63921123{randItem}",
+                    Email = $"email{randItem}@domain.com",
+                    Address = $"Address {randItem}",
                     IsStarred = false
                 });
             }
@@ -42,19 +42,16 @@ namespace ContactsAPI.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            using var scope = _serviceProvider.CreateScope();
+            using var dbContext = scope.ServiceProvider.GetRequiredService<ContactContext>();
+
+            if (!dbContext.ContactList.Any())
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<ContactContext>();
-                var haveContactList = await dbContext.ContactList.AnyAsync();
+                var newContactList = CreateRandomContacts();
+                await dbContext.AddRangeAsync(newContactList, cancellationToken);
 
-                if (!haveContactList)
-                {
-                    var newContactList = CreateRandomContacts();
-                    await dbContext.AddRangeAsync(newContactList);
-
-                    // save changes to db
-                    await dbContext.SaveChangesAsync();
-                }
+                // save changes to db
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
         }
 

@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ContactsAPI.Models;
+using ContactsAPI.BusinessLogic.Models;
 
 namespace ContactsAPI.Services
 {
     public interface IContactService
     {
-        Task<Contact> CreateContact(ContactInfo newContact);
+        Task<IEnumerable<Contact>> GetAll();
 
-        Task<IEnumerable<Contact>> GetContacts();
+        Task<Contact> GetById(Guid id);
 
-        Task<Contact> GetContactById(Guid id);
+        Task<Contact> Add(ContactAdd addContact);
 
-        Task<Contact> UpdateContact(Guid id, ContactInfo updateContact);
-        
-        Task<Contact> DeleteContact(Guid id);
+        Task<Contact> Update(ContactUpdate updateContact);
+
+        Task<Contact> Delete(Guid id);
     }
 }

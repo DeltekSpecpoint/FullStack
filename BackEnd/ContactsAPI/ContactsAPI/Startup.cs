@@ -6,8 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-using ContactsAPI.Services;
+using ContactsAPI.BusinessLogic;
 using ContactsAPI.DataAccess;
+using ContactsAPI.Services;
 
 namespace ContactsAPI
 {
@@ -23,18 +24,17 @@ namespace ContactsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
-
             // inject option to use in-memory db.
             services.AddDbContext<ContactContext>(options =>
             {
-                options.UseInMemoryDatabase("ContactsDB");
+                var databaseName = Configuration.GetConnectionString("DbName");
+                options.UseInMemoryDatabase(databaseName);
             });
 
-            // register in-memory db seeding service: (generate default 1000 Contacts)
+            // in-memory db seeding service: (generate 1000 random Contacts)
             services.AddHostedService<DbSeedingService>();
-
-            services.AddScoped<IContactService, ContactService>();
+            
+            RegisterBusinessLogic.Inject(services);
 
             services.AddControllers();
 
@@ -63,8 +63,14 @@ namespace ContactsAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            // configure CORS
-            app.UseCors(options => options.WithOrigins("*").AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(options =>
+            {
+                var allowedOrigins = Configuration.GetSection("AllowedOrigins").Get<string[]>();
+                options
+                    .WithOrigins(allowedOrigins)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
 
             app.UseSwagger();
 
