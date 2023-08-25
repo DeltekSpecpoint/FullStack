@@ -30,7 +30,7 @@ namespace ContactsAPI.Controllers
             var contact = await _contactService.GetById(id);
 
             if (contact == null)
-                return new JsonResult(new { message = "Contact could not be found.", ErrorCode = "NOTFOUND" });
+                return NotFound(new { message = "Contact could not be found.", ErrorCode = "NOTFOUND" });
 
             return Ok(contact);
         }
@@ -42,7 +42,7 @@ namespace ContactsAPI.Controllers
             var newContact = await _contactService.Add(addContact);
 
             if (newContact == null)
-                return new JsonResult(new { message = "Contact could not be created.", ErrorCode = "CREATE_FAILED"});
+                return NotFound(new { message = "Contact could not be created.", ErrorCode = "CREATE_FAILED"});
 
             var req = HttpContext.Request;
 
@@ -55,12 +55,12 @@ namespace ContactsAPI.Controllers
         {
             if (updateContact.Id != id)
                 // Guid search conflict
-                return new JsonResult(new { message = $"You're trying to update with conflicting Ids.", ErrorCode = "BAD_REQUEST_UPDATE" });
+                return Conflict(new { message = $"You're trying to update with conflicting Ids.", ErrorCode = "BAD_REQUEST_UPDATE" });
 
             var updatedContact = await _contactService.Update(updateContact);
 
             if (updatedContact == null)
-                return new JsonResult(new { message = $"Contact with Id: {id} could not be found/updated.", ErrorCode = "UPDATE_FAILED" });
+                return NotFound(new { message = $"Contact with Id: {id} could not be found/updated.", ErrorCode = "UPDATE_FAILED" });
 
             return Ok(updatedContact);
         }
@@ -71,7 +71,7 @@ namespace ContactsAPI.Controllers
             var deletedContact = await _contactService.Delete(id);
 
             if (deletedContact == null)
-                return new JsonResult(new { message = $"Contact with Id: {id} could not be found/deleted.", ErrorCode = "DELETE_FAILED" });
+                return NotFound(new { message = $"Contact with Id: {id} could not be found/deleted.", ErrorCode = "DELETE_FAILED" });
 
             return Ok(deletedContact);
         }

@@ -1,53 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
 import type { IChildren, TFunction } from '@/types'
 import { CloseIcon } from '@/components'
+import { useSearchBar } from '@/hooks'
+import { IsEmpty } from '@/utils'
 
-const STATUS = {
-	message: '',
-	resultCount: 0,
-}
 interface ISearchBar extends IChildren {
 	searchCallback: TFunction<[searchKey?: string], number>
 }
 
-export function SearchBar({ children, searchCallback: searchCb }: ISearchBar) {
-	const [search, setSearch] = useState('')
-	const [{ message, resultCount }, setSearchStatus] = useState(STATUS)
-
-	const executeSearch = (searchKey: string) => {
-		// trigger search handler callbackFn
-		const resultCount = searchCb(searchKey)
-		// create message base on the resultCount
-		const message = resultCount
-			? `${resultCount} Contact(s) found`
-			: `No Results for "${searchKey}"`
-
-		// update status for search
-		setSearchStatus({ message, resultCount })
-	}
-	const executeSearchRef = useRef(executeSearch)
-
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const searchValue = event.target.value
-		setSearch(searchValue)
-		executeSearch(searchValue)
-	}
-
-	const handleClear = () => {
-		setSearch('')
-		setSearchStatus(STATUS)
-		searchCb()
-		localStorage.setItem('contact_searchkey', '')
-	}
-
-	useEffect(() => {
-		// persist cached searchKey
-		const cachedKey = localStorage.getItem('contact_searchkey') || ''
-		if (cachedKey) {
-			executeSearchRef.current(cachedKey)
-			setSearch(cachedKey)
-		}
-	}, [])
+export function SearchBar({ children, searchCallback }: ISearchBar) {
+	const { searchKeyword, status, handlers } = useSearchBar({ searchCallback })
+	const { message, resultCount } = status
+	const { handleChange, handleClear } = handlers
 
 	return (
 		<div className="fdc">
@@ -56,17 +19,17 @@ export function SearchBar({ children, searchCallback: searchCb }: ISearchBar) {
 				type="text"
 				inputMode="search"
 				placeholder="Search"
-				value={search}
+				value={searchKeyword}
 				onChange={handleChange}
-				onBlur={() => localStorage.setItem('contact_searchkey', search)}
+				onBlur={() => localStorage.setItem('contact_searchkey', searchKeyword)}
 			/>
 			<div className="fdc">
-				<label className="small center">{search && message}</label>
-				{search && resultCount <= 0 && (
+				<label className="small center">{searchKeyword && message}</label>
+				{!IsEmpty(searchKeyword) && resultCount <= 0 && (
 					<label className="x-small center disabled">Check the spelling or try a new search.</label>
 				)}
 			</div>
-			{search && <CloseIcon onClick={handleClear} />}
+			{searchKeyword && <CloseIcon onClick={handleClear} />}
 			{children}
 		</div>
 	)

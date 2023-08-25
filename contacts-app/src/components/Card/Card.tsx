@@ -1,13 +1,14 @@
 import '@/assets/modules/Card.css'
 import { IChildren, TContact, TFunction } from '@/types'
 import { AnchorWrapper, AnimatedIcon } from '@/components'
+import { IsEmpty } from '@/utils'
 
 interface ICard extends IChildren, TContact {
 	className?: string
 	iconName?: string
 	subText?: string
-	onOpen: TFunction<[id: string]>
-	onBookMark: TFunction<[id: string]>
+	onOpen?: TFunction<[id: string]>
+	toggleBookmark: TFunction<[id: string]>
 }
 
 export function Card({
@@ -22,24 +23,28 @@ export function Card({
 	isStarred,
 	subText,
 	onOpen,
-	onBookMark,
+	toggleBookmark,
 }: ICard) {
 	const contactLogo = `${firstName ? firstName[0] : ''}${lastName ? lastName[0] : ''}`
+	const isCardHeader = !className.includes('card-header')
 
 	return (
 		<div className={className}>
 			<AnchorWrapper>
 				<AnimatedIcon
 					className="card-icon"
-					animation="fa-beat-fade"
-					onClick={() => onOpen(id)}
+					animation={isCardHeader ? 'fa-beat-fade' : ''}
+					onClick={() => (isCardHeader ? onOpen && onOpen(id) : null)}
 				>
 					{contactLogo.toUpperCase()}
 				</AnimatedIcon>
 			</AnchorWrapper>
 
-			<div className="contact-card-details">
-				{email ? (
+			<div
+				className="contact-card-details"
+				onClick={() => (isCardHeader ? onOpen && onOpen(id) : null)}
+			>
+				{email && isCardHeader ? (
 					<AnchorWrapper href={`mailto:${email}`}>
 						{firstName} {lastName}
 					</AnchorWrapper>
@@ -48,21 +53,28 @@ export function Card({
 						{firstName} {lastName}
 					</p>
 				)}
-				<p className="small">{subText ? subText : email ? mobile : mobile}</p>
+				<p className="small disabled">{subText ? subText : email ? mobile : mobile}</p>
 			</div>
 
 			<AnchorWrapper>
 				<AnimatedIcon
-					className={`card-bookmark ${isStarred ? 'lit-bookmark' : ''}`}
-					iconName={`fa-${isStarred ? 'solid enabled' : 'regular disabled'} fa-bookmark`}
-					animation={isStarred ? 'fa-bounce' : 'pulse'}
-					onClick={() => onBookMark(id)}
+					className={`card-bookmark ${isStarred && !IsEmpty(contactLogo) ? 'lit-bookmark' : ''}`}
+					iconName={`fa-${
+						isStarred && !IsEmpty(contactLogo) ? 'solid enabled' : 'regular disabled'
+					} fa-bookmark`}
+					animation={
+						isStarred && !IsEmpty(contactLogo) ? 'fa-bounce' : !IsEmpty(contactLogo) ? 'pulse' : ''
+					}
+					onClick={() => toggleBookmark(id)}
 				/>
 			</AnchorWrapper>
+
 			{onOpen && (
 				<a
 					className="menu descend"
-					onClick={() => onOpen(id)}
+					onClick={() => {
+						onOpen(id)
+					}}
 				>
 					<AnimatedIcon
 						className="x-small"

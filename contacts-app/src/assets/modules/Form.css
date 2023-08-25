@@ -1,0 +1,9 @@
+.field-container > input {
+	height: 25px;
+	background-color: transparent;
+	border: none;
+	border-radius: 2px;
+	outline: none;
+	padding: unset;
+	margin: 0px 5px;
+}

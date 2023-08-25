@@ -69,9 +69,11 @@ AND using "ignoredProps" to ignore further matching
 export function FilterContacts({
 	searchKey,
 	contacts,
-	ignoredProps = ['id'],
+	ignoredProps = ['id', 'modified', 'isStarred'],
 }: IFilterContacts): TContact[] {
 	if (IsEmpty(contacts)) return []
+	if (IsEmpty(searchKey)) return contacts
+
 	return contacts.filter(filterItem => {
 		return Object.keys(filterItem).some(key => {
 			const props = key as TContactKey
@@ -80,7 +82,7 @@ export function FilterContacts({
 
 			// look on "string" types, and skip filter using "ignoredProps"
 			if (isStringType && !ignoredProps.includes(props))
-				return obj.toLowerCase().includes(searchKey.toLowerCase())
+				return obj.toLowerCase().includes(searchKey.trim().toLowerCase())
 		})
 	})
 }

@@ -46,17 +46,17 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	color: currentColor;
 }
 
 .card-icon {
 	display: flex;
-	width: 35px;
-	height: 35px;
+	width: 50px;
+	height: 50px;
 	justify-content: center;
 	align-items: center;
 
 	font-size: 25px;
-	font-weight: bolder;
 	padding: 2px 8px;
 	margin: 0 5px 0 10px;
 	border-radius: 20px;
@@ -67,16 +67,23 @@
 
 .card-header {
 	padding: 10px;
+	margin-bottom: 20px;
 	border-radius: 10px;
 	font-size: 17px;
-	font-weight: bold;
 	cursor: default !important;
+}
+p.regular.enabled {
+	font-weight: bold;
+}
+div.contact-item.card-header {
+	background-color: rgba(255, 255, 255, 0.2);
 }
 
 .card-header > a > i {
 	font-size: 14px;
 }
 .card-header > a > .card-icon {
+	cursor: default;
 	font-size: 30px;
 	border-radius: 50%;
 	width: 50px !important;
@@ -85,8 +92,9 @@
 }
 .contact-item > a > .card-bookmark {
 	position: absolute;
-	top: 20px;
+	top: 35%;
 	right: 47px;
+	font-size: 15px;
 }
 .card-header > a > .card-bookmark {
 	position: absolute;

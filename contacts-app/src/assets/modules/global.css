@@ -72,6 +72,9 @@ h1 {
 a {
 	text-decoration: none;
 }
+a > i {
+	border-radius: 50% !important;
+}
 a:hover,
 a:focus {
 	cursor: pointer;
@@ -104,6 +107,51 @@ label {
 	font-weight: 500;
 }
 
+.field-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 5px 0px;
+	padding: 4px 15px;
+	border-radius: 5px;
+	background-color: rgba(255, 255, 255, 0.07);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition: var(--transition);
+}
+
+.field-container > i {
+	font-size: 14px;
+	padding: 7px;
+	border-radius: 20px;
+}
+.contact-label {
+	font-weight: bold !important;
+	margin: initial;
+	text-align: initial;
+	font-size: 11px;
+	color: var(--background-color);
+}
+.contact-detail {
+	margin-top: 0;
+	margin-bottom: 5px;
+	text-align: right;
+}
+
+.action-container {
+	position: absolute;
+	right: 7px;
+	top: 43px;
+	display: flex;
+	justify-content: space-around;
+	margin: 0 7px;
+}
+
+.action-container i {
+	font-size: 14px;
+	padding: 10px;
+	border-radius: 20px;
+}
+
 input {
 	display: block;
 	height: 45px;
@@ -131,8 +179,14 @@ input {
 }
 
 .lit-bookmark {
-	filter: drop-shadow(1px 2px 3px var(--lit-color));
-	box-shadow: 0 0 10px 1px var(--lit-color);
+	color: var(--lit-color);
+	filter: drop-shadow(1px 1px 2px var(var(--accent-color)));
+	box-shadow: 0 0 12px 1px var(--accent-color);
+}
+
+.lit-info {
+	background-color: rgb(191, 126, 22);
+	box-shadow: 0px 0px 10px 1px rgb(191, 126, 22);
 }
 
 .lit-error {
@@ -170,7 +224,6 @@ input {
 }
 .enabled {
 	opacity: 1;
-	color: currentColor !important;
 }
 
 .regular {
@@ -301,4 +354,7 @@ input {
 .form-container,
 input {
 	transition: var(--transition);
+}
+.vr {
+	margin-bottom: 34px;
 }

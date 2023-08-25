@@ -6,7 +6,7 @@
 }
 .contact-list {
 	flex-direction: column;
-	max-height: 433px;
+	max-height: 443px;
 	overflow: scroll;
 	scroll-behavior: smooth;
 }
@@ -32,6 +32,7 @@
 }
 .menu {
 	display: flex;
+	color: currentColor !important;
 	text-decoration: none !important;
 	align-items: center;
 	justify-content: center;
@@ -40,6 +41,23 @@
 	border-radius: 50% !important;
 	font-size: 15px !important;
 }
+.clipboard-status {
+	position: absolute;
+	width: 84%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.clipboard-status p {
+	color: currentColor;
+	padding: 0 5px !important;
+	margin-left: 5px;
+	border-radius: 10px;
+	background-color: rgba(255, 255, 255, 0.07);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	gap: 5px;
+}
 
 .action-button {
 	padding: 10px;
@@ -47,11 +65,6 @@
 	opacity: 0.4;
 	color: currentColor;
 	transition: var(--transition);
-}
-
-.rounded-right {
-	border-top-right-radius: 0.25rem;
-	border-bottom-right-radius: 0.25rem;
 }
 
 .action-button.active {

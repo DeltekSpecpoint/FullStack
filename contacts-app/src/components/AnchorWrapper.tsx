@@ -10,7 +10,7 @@ export function AnchorWrapper({ href = '', children }: Partial<IAnchorWrapper>) 
 
 	return (
 		<a
-			style={{ textDecoration: isNode ? 'none' : '' }}
+			style={{ textDecoration: isNode ? 'none' : '', color: 'currentcolor' }}
 			href={href ? href : undefined}
 			rel="noreferrer"
 			target="_blank"

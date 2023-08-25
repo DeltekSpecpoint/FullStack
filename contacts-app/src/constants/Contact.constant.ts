@@ -1,6 +1,10 @@
-import { TContact } from '@/types'
+import { TContact, TStatus } from '@/types'
 
 export const CONTACT_CONST = {
+	STATUS: {
+		success: false,
+		message: '',
+	},
 	INIT_CONTACT: {
 		id: '',
 		firstName: '',
@@ -13,4 +17,5 @@ export const CONTACT_CONST = {
 	},
 } satisfies {
 	INIT_CONTACT: TContact
+	STATUS: TStatus
 }

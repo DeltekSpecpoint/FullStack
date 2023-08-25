@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { CreateError } from './helper.util'
 
 // extract api config from environment vars
 export const { VITE_PUBLIC_API_BASEURL: host, VITE_PUBLIC_API_ENDPOINT: endPoint } = import.meta.env
@@ -10,7 +11,11 @@ export const axiosBaseConfig: AxiosRequestConfig = {
 }
 
 export const AxiosInstance = axios.create(axiosBaseConfig)
+
 AxiosInstance.interceptors.response.use(
 	(res: AxiosResponse) => res.data,
-	(err: unknown) => Promise.reject(err)
+	(err: unknown) => {
+		console.error(`[ContactAPI]: ${CreateError(err).message}}`)
+		throw err
+	}
 )

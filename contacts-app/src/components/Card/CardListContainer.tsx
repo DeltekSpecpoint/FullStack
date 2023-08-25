@@ -1,10 +1,10 @@
 import { ComponentProps } from 'react'
 import { TContact } from '@/types'
-import { Card } from '@/components/Card'
+import { Card } from '@/components'
 import { IsEmpty } from '@/utils'
 
 interface IContactCardContainer {
-	actionHandler: Pick<ComponentProps<typeof Card>, 'onOpen' | 'onBookMark'>
+	actionHandler: Pick<ComponentProps<typeof Card>, 'onOpen' | 'toggleBookmark'>
 	contacts: TContact[]
 }
 
@@ -19,7 +19,7 @@ export function CardListContainer({ contacts, actionHandler }: IContactCardConta
 					key={id}
 					iconName="fa fa-chevron-right"
 					onOpen={actionHandler.onOpen}
-					onBookMark={actionHandler.onBookMark}
+					toggleBookmark={actionHandler.toggleBookmark}
 					{...props}
 				/>
 			))}
