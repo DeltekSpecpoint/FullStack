@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react'
-import { CreateError } from '@/utils'
+import { CreateError, IsEmpty } from '@/utils'
 import { TContact, TStatus } from '@/types'
 
 export function useCopyClipboard() {
+	const timerId = useRef<NodeJS.Timeout>()
 	const [clipboardStatus, setClipboardStatus] = useState<TStatus>({
 		success: false,
 		message: '',
 	})
-	const timerId = useRef<NodeJS.Timeout>()
 
 	// reset/clear status notification
 	const startCountdown = () => {
@@ -22,6 +22,7 @@ export function useCopyClipboard() {
 
 	async function copyClipboard(value: string, key: keyof TContact | string) {
 		try {
+			if (IsEmpty(value)) return
 			await navigator.clipboard.writeText(value)
 			setClipboardStatus({
 				success: true,

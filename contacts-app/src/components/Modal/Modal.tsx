@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import '@/assets/modules/Modal.css'
 import type { IChildren, TFunction } from '@/types'
@@ -9,32 +8,28 @@ interface IModal extends IChildren {
 	noBackdrop: boolean
 	hideCloseIcon: boolean
 	clickBackdropToClose: boolean
-	onClose: TFunction
+	onCloseCallback: TFunction
 }
 
 export function Modal({
 	children,
 	isOpen = true,
-	onClose,
+	onCloseCallback,
 	noBackdrop = false,
 	hideCloseIcon,
 	clickBackdropToClose = true,
 }: Partial<IModal>) {
-	const [close, setClose] = useState(false)
 	const modalRoot = document.getElementById('modal-root')
 
-	const handleClose = () => {
-		if (onClose) return onClose()
-		setClose(true)
-	}
-
-	if (!modalRoot || !isOpen || close) return null
+	if (!modalRoot || !isOpen) return null
 
 	return createPortal(
 		<div className="modal-wrapper">
-			{!noBackdrop && <BackdropOverlay onClick={clickBackdropToClose ? handleClose : () => null} />}
+			{!noBackdrop && (
+				<BackdropOverlay onClick={clickBackdropToClose ? onCloseCallback : () => null} />
+			)}
 			<div className="modal-container form-container descend">
-				{!hideCloseIcon && <CloseIcon onClick={handleClose} />}
+				{!hideCloseIcon && <CloseIcon onClick={onCloseCallback} />}
 				{children}
 			</div>
 		</div>,

@@ -8,21 +8,21 @@ interface IMenubarContainer {
 		sync: () => Promise<void>
 	}
 }
-export function MenubarContainer({ contactsCount, actionHandler }: IMenubarContainer) {
+export function MenubarContainer({ actionHandler, contactsCount }: IMenubarContainer) {
 	// add/provide for menu details here
 	const menus: Partial<ComponentProps<typeof Item>>[] = [
 		{
 			title: 'Add Contact',
 			iconName: 'fa fa-plus',
-			animation: 'fa fa-beat-fade',
+			animation: 'fa-beat-fade',
 			animateOnLoad: contactsCount > 0 ? false : true,
-			onClick: () => actionHandler.open(),
+			onClick: actionHandler.open,
 		},
 		{
 			title: 'Sync Contacts',
 			iconName: 'fa fa-arrows-rotate',
 			animation: 'fa fa-spin',
-			onClick: () => actionHandler.sync(),
+			onClick: actionHandler.sync,
 		},
 	]
 

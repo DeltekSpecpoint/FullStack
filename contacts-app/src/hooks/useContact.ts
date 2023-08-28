@@ -1,8 +1,11 @@
-import { CONTACT_CONST } from '@/constants'
-import { addContactService, getContactsService, updateContactService } from '@/services/api'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { TContact, TStatus } from '@/types'
-import { CreateError, FilterContacts, IsEmpty } from '@/utils'
-import { useEffect, useRef, useState } from 'react'
+import { ContactService } from '@/services/api'
+import { CreateError, IsEmpty } from '@/utils'
+import { CONTACT_CONST } from '@/constants'
+import { useContactManager } from './useContactManager'
+
+const { EMPTY_CONTACT } = CONTACT_CONST
 
 export default function useContact() {
 	const [contacts, setContacts] = useState<TContact[]>([])
@@ -14,10 +17,14 @@ export default function useContact() {
 	})
 	const contactsCountRef = useRef(0)
 	const timerIdRef = useRef<NodeJS.Timeout>()
-	const [openContact, setOpenContact] = useState<TContact>(CONTACT_CONST.INIT_CONTACT)
+	const [currentContact, setCurrentContact] = useState<TContact>(EMPTY_CONTACT)
 
-	const mutateOpenContact = (contact: Partial<TContact>) =>
-		setOpenContact(prev => ({ ...prev, ...contact }))
+	const { ContactList: CachedContactList } = useContactManager(cachedContacts)
+	const { ContactList, filterContacts } = useContactManager(contacts)
+
+	const mutateCurrentContact = (contact: Partial<TContact>) =>
+		setCurrentContact(prev => ({ ...prev, ...contact }))
+
 	// reset/clear status notification
 	const startCountdownReset = () => {
 		if (timerIdRef) {
@@ -49,7 +56,7 @@ export default function useContact() {
 		setLoading(true)
 
 		try {
-			hydrateLocalStates(await getContactsService())
+			hydrateLocalStates(await ContactService.getAll())
 			setLoading(false)
 
 			updateStatus({
@@ -91,37 +98,33 @@ export default function useContact() {
 	const getLocalStorageContactsRef = useRef(getLocalStorageContacts)
 
 	// side-effect to fetch Contacts from Cached or to Cloud
-	useEffect(() => {
+	useLayoutEffect(() => {
 		getLocalStorageContactsRef.current()
 	}, [])
 
-	// map the updates by id
-	const applyUpdates = (updatedContacts: TContact[]) => {
-		// return cachedContacts.map(existingContact => {
-		// 	return updatedContacts.find(item => item.id === existingContact.id) ?? existingContact
-		// })
-		updatedContacts.forEach(itemUpdate => {
-			const existingContact = cachedContacts.findIndex(
-				existingItem => existingItem.id === itemUpdate.id
-			)
-
-			if (existingContact !== -1) {
+	// create a new copy of Contacts with the updates
+	const createContactsUpdate = (updatedContacts: TContact[]) => {
+		for (const itemUpdate of updatedContacts) {
+			if (CachedContactList.getById(itemUpdate.id)) {
 				// update existing
-				cachedContacts.splice(existingContact, 1, itemUpdate)
+				CachedContactList.updateOne(itemUpdate)
 			} else {
-				// add
-				cachedContacts.push(itemUpdate)
+				// add one to beginning of the list
+				CachedContactList.addOne(itemUpdate)
 			}
-		})
-
-		return cachedContacts
+		}
+		return CachedContactList.getAll()
 	}
 
 	// filter Contact list using Cached memory or local storage
-	const handleSearch = (searchKey = '') => {
+	const handleSearch = (searchKey = '', isStarred = false) => {
+		searchKey = searchKey ? searchKey : localStorage.getItem('contact_searchkey') || ''
+		isStarred = isStarred ? isStarred : localStorage.getItem('contact_bookmark') === 'true'
+
 		const isCached = !IsEmpty(searchKey) && !IsEmpty(cachedContacts)
-		const searchResult = FilterContacts({
+		const searchResult = filterContacts({
 			searchKey,
+			isStarred,
 			contacts: isCached ? cachedContacts : getLocalStorageContacts(),
 		})
 		setContacts(searchResult)
@@ -132,24 +135,19 @@ export default function useContact() {
 	// toggle bookmark (isStarred)
 	const toggleBookmark = async (id: string) => {
 		try {
-			const bookMarked = contacts.find(contact => contact.id === id)
+			const bookMarked = ContactList.getById(id)
 			if (bookMarked) {
 				bookMarked.isStarred = !bookMarked.isStarred
-				bookMarked.modified = new Date()
-				hydrateLocalStates(applyUpdates([bookMarked]))
-
-				// to update current opened contact
-				mutateOpenContact({ isStarred: !openContact.isStarred })
+				hydrateLocalStates(createContactsUpdate([bookMarked]))
 
 				// to update the ContactList view
-				handleSearch(localStorage.getItem('contact_searchkey') ?? '')
+				handleSearch()
 
 				// commit changes to cloud
-				await updateContactService(bookMarked)
-			} else {
-				// to update current opened contact
-				mutateOpenContact({ isStarred: !openContact.isStarred })
+				await ContactService.updateOne(bookMarked)
 			}
+			// to update current opened contact
+			mutateCurrentContact({ isStarred: !currentContact.isStarred })
 		} catch (error) {
 			updateStatus({
 				success: false,
@@ -161,24 +159,42 @@ export default function useContact() {
 	// Add/Edit Contact handlers
 	const commitChanges = async (contactChanges: TContact) => {
 		try {
-			const existingContact = contacts.find(contact => contact.id === contactChanges.id)
+			hydrateLocalStates(createContactsUpdate([contactChanges]))
+			// searchKey available? then, update ContactList
+			handleSearch(localStorage.getItem('contact_searchkey') ?? '')
 
-			// UPDATE ACTION
-			if (existingContact) {
-				hydrateLocalStates(applyUpdates([contactChanges]))
-				// to update the ContactList view
-				handleSearch(localStorage.getItem('contact_searchkey') ?? '')
-				// commit changes to cloud
-				await updateContactService(contactChanges)
+			// commit changes to cloud
+			if (ContactList.getById(contactChanges.id)) {
+				// UPDATE ACTION
+				await ContactService.updateOne(contactChanges)
 			} else {
 				// ADD ACTION
-				hydrateLocalStates(applyUpdates([contactChanges]))
-				handleSearch(localStorage.getItem('contact_searchkey') ?? '')
-				await addContactService(contactChanges)
-			}
+				await ContactService.createOne(contactChanges)
 
-			// run sync to fetch the IDs from Cloud
-			sync()
+				// run sync to fetch the IDs from Cloud
+				await sync()
+			}
+		} catch (error) {
+			updateStatus({
+				success: false,
+				message: 'Something went wrong persist to cloud update.',
+			})
+		}
+	}
+
+	// Delete Contact
+	const remove = async (id: string) => {
+		try {
+			if (ContactList.getById(id)) {
+				hydrateLocalStates(CachedContactList.getAllExcludingId(id))
+
+				mutateCurrentContact(EMPTY_CONTACT)
+				// to update the ContactList view
+				handleSearch(localStorage.getItem('contact_searchkey') ?? '')
+
+				// commit changes to cloud
+				await ContactService.deleteById(id)
+			}
 		} catch (error) {
 			updateStatus({
 				success: false,
@@ -192,9 +208,10 @@ export default function useContact() {
 		cachedContacts,
 		status,
 		loading,
-		openContact,
-		setOpenContact: mutateOpenContact,
+		currentContact,
+		mutateCurrentContact,
 		sync,
+		remove,
 		commitChanges,
 		handleSearch,
 		contactsCount: contactsCountRef.current,

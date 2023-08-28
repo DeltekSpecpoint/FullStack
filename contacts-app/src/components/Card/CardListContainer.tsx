@@ -4,7 +4,7 @@ import { Card } from '@/components'
 import { IsEmpty } from '@/utils'
 
 interface IContactCardContainer {
-	actionHandler: Pick<ComponentProps<typeof Card>, 'onOpen' | 'toggleBookmark'>
+	actionHandler: Pick<ComponentProps<typeof Card>, 'handleClick' | 'toggleBookmark'>
 	contacts: TContact[]
 }
 
@@ -13,13 +13,11 @@ export function CardListContainer({ contacts, actionHandler }: IContactCardConta
 
 	return (
 		<div className="contact-list">
-			{contacts.map(({ id, ...props }) => (
+			{contacts.map(props => (
 				<Card
-					id={id}
-					key={id}
+					key={props.id}
 					iconName="fa fa-chevron-right"
-					onOpen={actionHandler.onOpen}
-					toggleBookmark={actionHandler.toggleBookmark}
+					{...actionHandler}
 					{...props}
 				/>
 			))}

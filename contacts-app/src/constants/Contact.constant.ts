@@ -1,11 +1,11 @@
 import { TContact, TStatus } from '@/types'
 
 export const CONTACT_CONST = {
-	STATUS: {
+	RESET_STATUS: {
 		success: false,
 		message: '',
 	},
-	INIT_CONTACT: {
+	EMPTY_CONTACT: {
 		id: '',
 		firstName: '',
 		lastName: '',
@@ -16,6 +16,6 @@ export const CONTACT_CONST = {
 		modified: new Date(),
 	},
 } satisfies {
-	INIT_CONTACT: TContact
-	STATUS: TStatus
+	EMPTY_CONTACT: TContact
+	RESET_STATUS: TStatus
 }

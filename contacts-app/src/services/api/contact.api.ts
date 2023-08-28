@@ -1,26 +1,30 @@
 import { TContact } from '@/types'
 import { AxiosInstance } from '@/utils'
 
-export async function addContactService(
-	newContact: Omit<TContact, 'id' | 'modified'>
-): Promise<TContact> {
+async function createOne(newContact: TContact): Promise<TContact> {
 	return await AxiosInstance.post('/contacts', newContact)
 }
 
-export async function getContactsService(): Promise<TContact[]> {
+async function getAll(): Promise<TContact[]> {
 	return AxiosInstance.get('/contacts')
 }
 
-export async function getContactByIdService(id: string): Promise<TContact> {
+async function getById(id: string): Promise<TContact> {
 	return await AxiosInstance.get(`/contacts/${id}`)
 }
 
-export async function updateContactService(
-	updateContact: Omit<TContact, 'modified'>
-): Promise<TContact> {
+async function updateOne(updateContact: TContact): Promise<TContact> {
 	return await AxiosInstance.put(`/contacts/${updateContact.id}`, updateContact)
 }
 
-export async function deleteContactByIdService(id: string): Promise<TContact> {
-	return await AxiosInstance.delete(`/contacts/${id}}`)
+async function deleteById(id: string): Promise<TContact> {
+	return await AxiosInstance.delete(`/contacts/${id}`)
+}
+
+export const ContactService = {
+	getAll,
+	getById,
+	createOne,
+	updateOne,
+	deleteById,
 }

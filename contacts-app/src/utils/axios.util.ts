@@ -15,7 +15,7 @@ export const AxiosInstance = axios.create(axiosBaseConfig)
 AxiosInstance.interceptors.response.use(
 	(res: AxiosResponse) => res.data,
 	(err: unknown) => {
-		console.error(`[ContactAPI]: ${CreateError(err).message}}`)
+		console.error(`[ContactAPI]: ${CreateError(err).message}`)
 		throw err
 	}
 )

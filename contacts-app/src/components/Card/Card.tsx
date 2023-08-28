@@ -7,7 +7,7 @@ interface ICard extends IChildren, TContact {
 	className?: string
 	iconName?: string
 	subText?: string
-	onOpen?: TFunction<[id: string]>
+	handleClick?: TFunction<[id: string]>
 	toggleBookmark: TFunction<[id: string]>
 }
 
@@ -22,10 +22,11 @@ export function Card({
 	email,
 	isStarred,
 	subText,
-	onOpen,
+	handleClick,
 	toggleBookmark,
 }: ICard) {
 	const contactLogo = `${firstName ? firstName[0] : ''}${lastName ? lastName[0] : ''}`
+	// to disable/enable click handler when it's used as card-header
 	const isCardHeader = !className.includes('card-header')
 
 	return (
@@ -34,7 +35,7 @@ export function Card({
 				<AnimatedIcon
 					className="card-icon"
 					animation={isCardHeader ? 'fa-beat-fade' : ''}
-					onClick={() => (isCardHeader ? onOpen && onOpen(id) : null)}
+					onClick={() => (isCardHeader ? handleClick && handleClick(id) : null)}
 				>
 					{contactLogo.toUpperCase()}
 				</AnimatedIcon>
@@ -42,7 +43,7 @@ export function Card({
 
 			<div
 				className="contact-card-details"
-				onClick={() => (isCardHeader ? onOpen && onOpen(id) : null)}
+				onClick={() => (isCardHeader ? handleClick && handleClick(id) : null)}
 			>
 				{email && isCardHeader ? (
 					<AnchorWrapper href={`mailto:${email}`}>
@@ -58,10 +59,10 @@ export function Card({
 
 			<AnchorWrapper>
 				<AnimatedIcon
+					title="Bookmark"
 					className={`card-bookmark ${isStarred && !IsEmpty(contactLogo) ? 'lit-bookmark' : ''}`}
-					iconName={`fa-${
-						isStarred && !IsEmpty(contactLogo) ? 'solid enabled' : 'regular disabled'
-					} fa-bookmark`}
+					iconName={`fa-${isStarred && !IsEmpty(contactLogo) ? 'solid enabled' : 'regular disabled'
+						} fa-bookmark`}
 					animation={
 						isStarred && !IsEmpty(contactLogo) ? 'fa-bounce' : !IsEmpty(contactLogo) ? 'pulse' : ''
 					}
@@ -69,12 +70,10 @@ export function Card({
 				/>
 			</AnchorWrapper>
 
-			{onOpen && (
+			{handleClick && (
 				<a
-					className="menu descend"
-					onClick={() => {
-						onOpen(id)
-					}}
+					className={`menu action-button small active scale-down`}
+					onClick={() => handleClick(id)}
 				>
 					<AnimatedIcon
 						className="x-small"

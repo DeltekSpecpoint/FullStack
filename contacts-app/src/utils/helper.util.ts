@@ -1,4 +1,3 @@
-import { TContact } from '@/types'
 import { AxiosError } from 'axios'
 
 type TContactsError = Error & {
@@ -56,37 +55,6 @@ export function CreateError(error: unknown) {
 	return result
 }
 
-type TContactKey = keyof TContact
-interface IFilterContacts {
-	searchKey: string
-	contacts: TContact[]
-	ignoredProps?: TContactKey[]
-}
-/* 
-filter by matching Contact's keys/props of type String,
-AND using "ignoredProps" to ignore further matching
-*/
-export function FilterContacts({
-	searchKey,
-	contacts,
-	ignoredProps = ['id', 'modified', 'isStarred'],
-}: IFilterContacts): TContact[] {
-	if (IsEmpty(contacts)) return []
-	if (IsEmpty(searchKey)) return contacts
-
-	return contacts.filter(filterItem => {
-		return Object.keys(filterItem).some(key => {
-			const props = key as TContactKey
-			const obj = filterItem[props]
-			const isStringType = typeof obj === 'string'
-
-			// look on "string" types, and skip filter using "ignoredProps"
-			if (isStringType && !ignoredProps.includes(props))
-				return obj.toLowerCase().includes(searchKey.trim().toLowerCase())
-		})
-	})
-}
-
 export function TimeAgo(date: Date): string {
 	const now = new Date()
 	const seconds = Math.round((now.getTime() - date.getTime()) / 1000)
@@ -116,7 +84,7 @@ export function TimeAgo(date: Date): string {
 export function IsEmpty<T>(value: T) {
 	const isEmptyObject = (obj: object) => {
 		const noObjKeys = Object.keys(obj).length === 0
-		const emptyPropValues = !Object.values(obj).every(item => {
+		const emptyPropValues = !Object.values(obj).some(item => {
 			if (typeof item === 'boolean') return true
 			return Boolean(item)
 		})

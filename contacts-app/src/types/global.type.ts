@@ -18,7 +18,10 @@ export type TContact = {
 
 export type TModalActions = {
 	open: TFunction<[id?: string, isUpdate?: boolean]>
-	close: () => void
-	commitChanges: (contact: TContact) => void
-	sync: () => Promise<void>
+	close: TFunction
+	commitChanges: TFunction<[contact: TContact]>
+	sync: TFunction<[], Promise<void>>
+	remove: TFunction<[id: string]>
 }
+
+export type TFormActions = 'Add' | 'Edit' | 'Open'

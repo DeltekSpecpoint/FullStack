@@ -7,162 +7,182 @@ import {
 	Header,
 	InlineNotification,
 } from '@/components'
-import { CONTACT_CONST } from '@/constants'
 import { useCopyClipboard } from '@/hooks/utils/useCopyClipboard'
-import { IChildren, TContact, TFunction, TModalActions } from '@/types'
+import { IChildren, TContact, TFormActions, TFunction, TModalActions } from '@/types'
 import { IsEmpty } from '@/utils'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect, useRef } from 'react'
 
 interface IContactInfo extends IChildren {
-	openContact: TContact
-	setOpenContact: TFunction<TContact>
-	modalActions: Partial<TModalActions>
+	currentContact: TContact
+	mutateCurrentContact: TFunction<TContact>
+	modalActions: TModalActions
 	toggleBookmark: TFunction<[id: string]>
-	formAction?: 'Add' | 'Edit' | 'Open'
+	formAction?: TFormActions
 }
 export default function ContactForm({
 	children,
-	openContact: currentContact,
-	setOpenContact,
+	currentContact,
+	mutateCurrentContact,
 	modalActions,
 	toggleBookmark,
 	formAction,
 }: IContactInfo) {
 	const { copyClipboard, clipboardStatus } = useCopyClipboard()
-	const isModify = !IsEmpty(formAction)
-	const isEdit = formAction === 'Edit'
+	const { id, firstName, lastName, mobile, email, address } = currentContact
+	const firstNameRef = useRef<HTMLInputElement>(null)
 
-	const onChange = (formEvt: ChangeEvent<HTMLInputElement>) => {
-		const prop = formEvt.target.id
-		const value = formEvt.target.value
-		setOpenContact({ ...currentContact, [prop]: value })
+	const isAddOrEdit = !IsEmpty(formAction)
+	const isEdit = formAction === 'Edit'
+	const canSubmit = !IsEmpty(firstName) || !IsEmpty(lastName)
+	const bookmarkAction = canSubmit ? toggleBookmark : () => null
+
+	const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
+		const prop = evt.target.id
+		const value = evt.target.value
+		mutateCurrentContact({ ...currentContact, [prop]: value })
 	}
 
-	const canSubmit = !IsEmpty(currentContact.firstName) || !IsEmpty(currentContact.lastName)
+	useEffect(() => {
+		firstNameRef.current?.focus()
+	}, [])
 
 	return (
 		<>
-			{!IsEmpty(currentContact) ? (
+			{/* Open contact card */}
+			{!isAddOrEdit && (
 				<ContactCard
-					onOpen={() => setOpenContact(CONTACT_CONST.INIT_CONTACT)}
-					toggleBookmark={canSubmit ? toggleBookmark : () => null}
 					{...currentContact}
-				/>
-			) : (
-				<ContactCard
-					toggleBookmark={canSubmit ? toggleBookmark : () => null}
-					{...currentContact}
+					toggleBookmark={bookmarkAction}
+					handleClick={() => modalActions.close()}
 				/>
 			)}
 
-			{isModify && (
+			{/* Add/Edit/Delete contact card */}
+			{isAddOrEdit && (
 				<>
+					<ContactCard
+						{...currentContact}
+						toggleBookmark={bookmarkAction}
+					/>
+
 					<Header>
 						<Header.Logo>{isEdit ? 'Edit Contact' : 'Add Contact'}</Header.Logo>
 						<Header.Title subTitle="We will save this contact in your local storage and in cloud." />
 					</Header>
-				</>
-			)}
 
-			<div className="vr">
-				{isModify && (
-					<>
-						<div className="field-container">
+					<div className="mb-34">
+						<div
+							className="field-container"
+							onClick={() => copyClipboard(firstName, 'First Name')}
+						>
 							<AnimatedIcon
 								title="First Name"
 								className={`action-button small active scale-down`}
-								iconName="fa fa-user scale-up"
+								iconName={`fa fa-user${isEdit ? '' : '-plus'} scale-up`}
 							/>
 							<input
-								type="text"
+								ref={firstNameRef}
 								id="firstName"
+								type="text"
 								placeholder="First Name"
 								className="contact-detail"
-								value={currentContact.firstName}
+								maxLength={50}
+								value={firstName}
 								onChange={onChange}
 							/>
 						</div>
-						<div className="field-container">
+						<div
+							className="field-container"
+							onClick={() => copyClipboard(lastName, 'Last Name')}
+						>
 							<input
-								type="text"
 								id="lastName"
+								type="text"
 								placeholder="Last Name"
 								className="contact-detail"
-								value={currentContact.lastName}
+								maxLength={50}
+								value={lastName}
 								onChange={onChange}
 							/>
 						</div>
-					</>
-				)}
-			</div>
+					</div>
+				</>
+			)}
 
-			<div className="vr">
+			{/* First and Last name */}
+			<div className="mb-34">
 				<div
 					className="field-container"
-					onClick={() => copyClipboard(currentContact.mobile, 'mobile')}
+					onClick={() => copyClipboard(mobile, 'Mobile')}
 				>
 					<AnimatedIcon
 						title="Mobile"
 						className={`action-button small active scale-down`}
 						iconName="fa fa-phone scale-up"
 					/>
-					{!isModify ? (
-						<p className="contact-detail">{currentContact.mobile}</p>
+					{!isAddOrEdit ? (
+						<p className="contact-detail">{mobile}</p>
 					) : (
 						<input
-							type="text"
 							id="mobile"
+							type="tel"
+							inputMode="tel"
 							className="contact-detail"
 							placeholder="Mobile Number"
-							value={currentContact.mobile}
+							maxLength={20}
+							value={mobile}
 							onChange={onChange}
 						/>
 					)}
 				</div>
+
 				<div
 					className="field-container"
-					onClick={() => copyClipboard(currentContact.email, 'email')}
+					onClick={() => copyClipboard(email, 'Email')}
 				>
-					<AnchorWrapper href={`mailto:${currentContact.email}`}>
+					<AnchorWrapper href={email ? `mailto:${email}` : ''}>
 						<AnimatedIcon
 							title="Email"
 							className={`action-button small active scale-down`}
-							iconName="fa fa-solid fa-envelope scale-up"
+							iconName="fa fa-solid fa-envelope-open scale-up"
 						/>
 					</AnchorWrapper>
 
-					{!isModify ? (
-						<p className="contact-detail">{currentContact.email}</p>
+					{!isAddOrEdit ? (
+						<p className="contact-detail">{email}</p>
 					) : (
 						<input
-							type="text"
 							id="email"
+							type="email"
+							inputMode="email"
 							className="contact-detail"
 							placeholder="Email"
-							value={currentContact.email}
+							maxLength={50}
+							value={email}
 							onChange={onChange}
 						/>
 					)}
 				</div>
+
 				<div
 					className="field-container"
-					onClick={() => copyClipboard(currentContact.address, 'address')}
+					onClick={() => copyClipboard(address, 'Address')}
 				>
 					<AnimatedIcon
 						title="Address"
 						className={`action-button small active scale-down`}
-						iconName="fa fa-solid fa-map-location-dot scale-up"
+						iconName="fa fa-solid fa-location-dot scale-up"
 					/>
 
-					{!isModify ? (
-						<p className="contact-detail">{currentContact.address}</p>
+					{!isAddOrEdit ? (
+						<p className="contact-detail">{address}</p>
 					) : (
 						<input
-							type="text"
 							id="address"
+							type="text"
 							className="contact-detail"
 							placeholder="Complete Address"
-							value={currentContact.address}
+							value={address}
 							onChange={onChange}
 						/>
 					)}
@@ -173,39 +193,44 @@ export default function ContactForm({
 					{clipboardStatus.message}
 				</InlineNotification>
 			)}
+
+			{/* submit buttons */}
 			<div className="center">
-				{!isModify ? (
-					<Button
-						props={{
-							iconName: 'fa fa-pen-to-square',
-						}}
-						onClick={() => modalActions.open && modalActions.open(currentContact.id, true)}
-					>
-						Edit Contact
-					</Button>
+				{!isAddOrEdit ? (
+					<>
+						<Button
+							variant="cancel"
+							iconName="fa fa-trash-can"
+							onClick={() => modalActions.remove(id)}
+						>
+							Remove
+						</Button>
+						<Button
+							variant="default"
+							iconName="fa fa-trash-can"
+							onClick={() => modalActions.open(id, true)}
+						>
+							Edit Contact
+						</Button>
+					</>
 				) : (
 					<Button
-						props={{
-							variant: 'cancel',
-							disabled: false,
-						}}
-						onClick={() => {
-							setOpenContact(CONTACT_CONST.INIT_CONTACT)
-							modalActions.close && modalActions.close()
-						}}
+						id="cancel"
+						title="Cancel"
+						variant="default"
+						disabled={false}
+						onClick={() => modalActions.close()}
 					>
 						Cancel
 					</Button>
 				)}
 
-				{isModify && (
+				{isAddOrEdit && (
 					<Button
-						props={{
-							disabled: !canSubmit,
-						}}
+						disabled={!canSubmit}
 						onClick={() => {
-							modalActions.commitChanges && modalActions.commitChanges(currentContact)
-							modalActions.close && modalActions.close()
+							modalActions.commitChanges(currentContact)
+							modalActions.close()
 						}}
 					>
 						{isEdit ? 'Save' : 'Add'}

@@ -1,24 +1,24 @@
 import { IChildren, TContact, TFunction, TModalActions, TStatus } from '@/types'
 import { CardListContainer, Header, SearchBar } from '@/components'
-import { IsEmpty } from '@/utils'
 import ContactForm from './ContactForm'
 
 interface IContactContainer extends IChildren {
 	contacts: TContact[]
-	openContact: TContact
-	setOpenContact: TFunction<TContact>
+	currentContact: TContact
+	mutateCurrentContact: TFunction<TContact>
 	toggleBookmark: TFunction<[id: string]>
-	modalActions: Partial<TModalActions>
+	modalActions: TModalActions
 	contactsCount: number
 	status: TStatus
 	searchCallback: TFunction<[searchKey?: string], number>
 }
+
 export function ContactList({
 	children,
 	contacts,
 	contactsCount,
-	openContact,
-	setOpenContact,
+	currentContact,
+	mutateCurrentContact,
 	toggleBookmark,
 	modalActions,
 	status,
@@ -40,16 +40,22 @@ export function ContactList({
 						subTitle='click "+" to create one'
 					/>
 					{status.success || !status.message ? (
-						// eslint-disable-next-line react/no-unescaped-entities
-						<p className="x-small disabled scale-up">Contacts you've added will appear here.</p>
+						<p className="x-small disabled scale-up">Contacts you have added will appear here.</p>
 					) : (
 						<Header.Status status={status} />
 					)}
 				</Header>
 			)}
 
-			{!IsEmpty(openContact) ? (
-				<ContactForm {...{ modalActions, openContact, setOpenContact, toggleBookmark }} />
+			{currentContact.id ? (
+				<ContactForm
+					{...{
+						modalActions,
+						currentContact,
+						toggleBookmark,
+						mutateCurrentContact,
+					}}
+				/>
 			) : (
 				<>
 					{contactsCount > 0 && <SearchBar searchCallback={searchCallback} />}
@@ -57,7 +63,7 @@ export function ContactList({
 						contacts={contacts}
 						actionHandler={{
 							toggleBookmark,
-							onOpen: modalActions.open,
+							handleClick: modalActions.open,
 						}}
 					/>
 				</>

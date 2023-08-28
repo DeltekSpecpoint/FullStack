@@ -4,51 +4,65 @@ import useContact from '@/hooks/useContact'
 import { useState } from 'react'
 import ContactForm from './ContactForm'
 import { CONTACT_CONST } from '@/constants'
+import { TContact, TFormActions, TModalActions } from '@/types'
+import { IsEmpty } from '@/utils'
+import useModal from '@/hooks/useModal'
 
-type TActions = 'Add' | 'Edit' | 'Open'
+const { EMPTY_CONTACT } = CONTACT_CONST
+
 export function Contact() {
 	const {
 		contacts,
 		cachedContacts,
 		status,
 		loading,
-		openContact,
-		setOpenContact,
+		currentContact,
+		mutateCurrentContact,
 		sync,
+		remove,
 		commitChanges,
 		handleSearch,
 		contactsCount,
 		toggleBookmark,
 	} = useContact()
 
-	const [isOpenModalForm, setIsOpenModalForm] = useState(false)
-	const [formAction, serFormAction] = useState<TActions>('Add')
+	const modalProps = useModal({
+		hideCloseIcon: true,
+		clickBackdropToClose: false,
+	})
+
+	const [formAction, serFormAction] = useState<TFormActions>('Add')
 
 	// open: Modal form for Add/Edit/Delete function or View Card with contact info
 	// close: close state, clear the current selected Contact
 	// sync: fetch updates from cloud
-	const modalActions = {
-		open: (id?: string, isUpdate = false) => {
-			if (isUpdate) serFormAction('Edit')
-
+	const modalActions: TModalActions = {
+		open: (id?: string, isEdit = false) => {
 			const selectedContact = cachedContacts.find(selected => selected.id === id)
-			if (id && selectedContact && !isUpdate) {
-				setOpenContact(selectedContact)
-				setIsOpenModalForm(true)
-			} else if (id && selectedContact) {
-				setOpenContact(selectedContact)
-				setIsOpenModalForm(true)
-			} else {
-				serFormAction('Add')
-				setOpenContact(CONTACT_CONST.INIT_CONTACT)
 
-				setIsOpenModalForm(true)
+			if (IsEmpty(selectedContact)) {
+				// Add
+				serFormAction('Add')
+				mutateCurrentContact(EMPTY_CONTACT)
+				modalProps.openModal()
+			} else if (id && selectedContact) {
+				// Edit
+				serFormAction('Edit')
+				mutateCurrentContact(selectedContact)
+				if (isEdit) {
+					modalProps.openModal()
+				}
 			}
 		},
 		close: () => {
-			setIsOpenModalForm(false)
+			mutateCurrentContact(EMPTY_CONTACT)
+			modalProps.closeModal()
 		},
-		commitChanges,
+		remove,
+		commitChanges: (contactUpdate: TContact) => {
+			commitChanges(contactUpdate)
+			modalProps.closeModal()
+		},
 		sync,
 	}
 
@@ -57,16 +71,11 @@ export function Contact() {
 
 	return (
 		<div className="contact-container">
-			<Modal
-				isOpen={isOpenModalForm}
-				hideCloseIcon={true}
-				clickBackdropToClose={false}
-				onClose={modalActions.close}
-			>
+			<Modal {...modalProps}>
 				<ContactForm
 					formAction={formAction}
 					modalActions={modalActions}
-					{...{ openContact, setOpenContact, toggleBookmark }}
+					{...{ currentContact, mutateCurrentContact, toggleBookmark }}
 				/>
 			</Modal>
 
@@ -79,7 +88,7 @@ export function Contact() {
 				modalActions={modalActions}
 				searchCallback={handleSearch}
 				toggleBookmark={toggleBookmark}
-				{...{ contacts, contactsCount, openContact, setOpenContact, status }}
+				{...{ contacts, contactsCount, currentContact, mutateCurrentContact, status }}
 			/>
 		</div>
 	)
