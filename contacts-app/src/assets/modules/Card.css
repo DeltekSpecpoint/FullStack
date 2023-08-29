@@ -1,0 +1,120 @@
+.contact-item {
+	display: flex;
+	align-items: center;
+	place-content: start;
+	margin: 5px 0;
+	padding: 4px;
+	border-radius: 5px;
+	cursor: default !important;
+	background-color: rgba(255, 255, 255, 0.1);
+	transition: var(--transition);
+}
+.contact-item:hover:not(:disabled) {
+	background-color: rgba(255, 255, 255, 0.2);
+	cursor: pointer;
+}
+.contact-item img {
+	width: 35px;
+	height: 35px;
+	margin: 5px;
+	position: relative;
+	padding: 5px;
+	border-radius: 30%;
+	transition: var(--transition);
+}
+
+.contact-item a {
+	color: currentColor;
+	margin: unset;
+}
+
+.contact-item p {
+	color: rgba(255, 255, 255, 0.4);
+	padding: 0;
+	margin: 0;
+}
+
+.contact-card-details {
+	width: 70%;
+	padding: inherit;
+	text-align: start;
+}
+.contact-card-details > a,
+.contact-card-details > p {
+	width: calc(90%);
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: currentColor;
+}
+
+.card-icon {
+	display: flex;
+	width: 50px;
+	height: 50px;
+	justify-content: center;
+	align-items: center;
+
+	font-size: 25px;
+	padding: 2px 8px;
+	margin: 0 5px 0 10px;
+	border-radius: 20px;
+	background: var(--background-color);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0px 0px 20px 1px #ffbb763f;
+}
+
+.card-header {
+	padding: 10px;
+	margin-bottom: 20px;
+	border-radius: 10px;
+	font-size: 17px;
+	cursor: default !important;
+}
+p.regular.enabled,
+a.regular.enabled {
+	font-weight: bold;
+}
+div.contact-item.card-header {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.card-header > a > i {
+	font-size: 14px;
+}
+.card-header > a > .card-icon {
+	cursor: default;
+	font-size: 30px;
+	border-radius: 50%;
+	width: 50px !important;
+	height: 50px !important;
+	border: 3px solid rgba(255, 255, 255, 0.1);
+}
+.contact-item > a > .card-bookmark {
+	position: absolute;
+	top: 35%;
+	right: 47px;
+	font-size: 15px;
+}
+.card-header > a > .card-bookmark {
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	font-size: 30px;
+	border-width: 1px;
+}
+.card-header > a > .card-delete {
+	position: absolute;
+	bottom: 10px;
+	right: 12px;
+	font-size: 20px;
+	border-width: 1px;
+}
+
+.card-header > .menu {
+	position: absolute;
+	right: 10px;
+	top: -162px;
+	gap: 5px;
+}

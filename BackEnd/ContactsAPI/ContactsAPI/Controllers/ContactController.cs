@@ -1,46 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using ContactsAPI.BusinessLogic.Models;
+using ContactsAPI.Services;
 
 namespace ContactsAPI.Controllers
 {
-    [Route("api/[controller]")]
-    public class ContactController : Controller
+    [ApiController]
+    [Route("api/v1/[controller]")]
+    public class ContactsController : Controller
     {
-        // GET: api/<controller>
+        private readonly IContactService _contactService;
+
+        public ContactsController(IContactService contactService)
+        {
+            _contactService = contactService;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContacts()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(await _contactService.GetAll());
         }
 
-        // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Contact>> GetContact(Guid id)
         {
-            return "value";
+            var contact = await _contactService.GetById(id);
+
+            if (contact == null)
+                return NotFound(new { message = "Contact could not be found.", ErrorCode = "NOTFOUND" });
+
+            return Ok(contact);
         }
 
-        // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<ActionResult<Contact>> CreateContact([FromBody] ContactAdd addContact)
         {
+            /* TODO: validate if newContact already exist by First and Last name */
+            var newContact = await _contactService.Add(addContact);
+
+            if (newContact == null)
+                return NotFound(new { message = "Contact could not be created.", ErrorCode = "CREATE_FAILED"});
+
+            var req = HttpContext.Request;
+
+            return Created($"{req.Scheme}://{req.Host}{req.Path}/{newContact.Id}", newContact);
+
         }
 
-        // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<ActionResult<Contact>> UpdateContact(Guid id, [FromBody] ContactUpdate updateContact)
         {
+            if (updateContact.Id != id)
+                // Guid search conflict
+                return Conflict(new { message = $"You're trying to update with conflicting Ids.", ErrorCode = "BAD_REQUEST_UPDATE" });
+
+            var updatedContact = await _contactService.Update(updateContact);
+
+            if (updatedContact == null)
+                return NotFound(new { message = $"Contact with Id: {id} could not be found/updated.", ErrorCode = "UPDATE_FAILED" });
+
+            return Ok(updatedContact);
         }
 
-        // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult<Contact>> DeleteContact(Guid id)
         {
+            var deletedContact = await _contactService.Delete(id);
+
+            if (deletedContact == null)
+                return NotFound(new { message = $"Contact with Id: {id} could not be found/deleted.", ErrorCode = "DELETE_FAILED" });
+
+            return Ok(deletedContact);
         }
     }
 }

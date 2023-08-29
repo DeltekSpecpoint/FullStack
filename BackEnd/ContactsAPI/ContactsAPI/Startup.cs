@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using ContactsAPI.BusinessLogic;
+using ContactsAPI.DataAccess;
+using ContactsAPI.Services;
 
 namespace ContactsAPI
 {
@@ -26,6 +24,18 @@ namespace ContactsAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // inject option to use in-memory db.
+            services.AddDbContext<ContactContext>(options =>
+            {
+                var databaseName = Configuration.GetConnectionString("DbName");
+                options.UseInMemoryDatabase(databaseName);
+            });
+
+            // in-memory db seeding service: (generate 1000 random Contacts)
+            services.AddHostedService<DbSeedingService>();
+            
+            RegisterBusinessLogic.Inject(services);
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -52,6 +62,15 @@ namespace ContactsAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(options =>
+            {
+                var allowedOrigins = Configuration.GetSection("AllowedOrigins").Get<string[]>();
+                options
+                    .WithOrigins(allowedOrigins)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
 
             app.UseSwagger();
 
