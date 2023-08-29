@@ -3,9 +3,9 @@ using ContactsAPI.BusinessLogic.Models;
 
 namespace ContactsAPI.BusinessLogic.Mappers
 {
-	public class ContactMapper<TDto>
+	public static class ContactMapper<TDto>
 	{
-        public Contact ToModel(TDto dto)
+        public static Contact ToModel(TDto dto)
         {
             return dto switch
             {

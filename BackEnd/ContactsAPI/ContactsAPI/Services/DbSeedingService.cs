@@ -21,23 +21,15 @@ namespace ContactsAPI.Services
 
         private static List<Contact> CreateRandomContacts()
         {
-            var newContacts = new List<Contact>();
-
-            for (int i = 1; i < 1001; i++)
+            return Enumerable.Range(1, 1000).Select(id => new Contact
             {
-                var randItem = i.ToString("D4");
-                newContacts.Add(new Contact()
-                {
-                    FirstName = $"First Name {randItem}",
-                    LastName = $"Last Name {randItem}",
-                    Mobile = $"63921123{randItem}",
-                    Email = $"email{randItem}@domain.com",
-                    Address = $"Address {randItem}",
-                    IsStarred = false
-                });
-            }
-
-            return newContacts;
+                FirstName = $"First Name {id}",
+                LastName = $"Last Name {id}",
+                Mobile = $"63921123{id}",
+                Email = $"email{id}@domain.com",
+                Address = $"Address {id}",
+                IsStarred = false
+            }).ToList();
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)

@@ -1,3 +1,19 @@
+.field-container {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin: 5px 0px;
+	padding: 4px 10px;
+	border-radius: 5px;
+	background-color: rgba(255, 255, 255, 0.07);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition: var(--transition);
+}
+.field-container > i {
+	font-size: 14px;
+	padding: 7px;
+	border-radius: 20px;
+}
 .field-container > input {
 	height: 25px;
 	background-color: transparent;
@@ -6,4 +22,17 @@
 	outline: none;
 	padding: unset;
 	margin: 0px 5px;
+}
+
+.contact-label {
+	font-weight: bold !important;
+	margin: initial;
+	text-align: initial;
+	font-size: 11px;
+	color: var(--background-color);
+}
+.contact-detail {
+	margin-top: 0;
+	margin-bottom: 5px;
+	text-align: right;
 }

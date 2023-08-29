@@ -1,10 +1,11 @@
 import { Card } from '@/components'
-import { TContact } from '@/types'
+import { IChildren, TContact } from '@/types'
 import { IsEmpty, TimeAgo } from '@/utils'
 import { ComponentProps } from 'react'
 
 interface IContactCard
-	extends TContact,
+	extends IChildren,
+		TContact,
 		Pick<ComponentProps<typeof Card>, 'handleClick' | 'toggleBookmark'> {}
 
 export function ContactCard(props: IContactCard) {
@@ -17,6 +18,8 @@ export function ContactCard(props: IContactCard) {
 					: `Last Modified ${TimeAgo(new Date(props.modified))}`
 			}
 			{...props}
-		/>
+		>
+			{props.children}
+		</Card>
 	)
 }

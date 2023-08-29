@@ -8,7 +8,7 @@ interface IFilterContacts {
 	contacts: TContact[]
 	ignoredProps?: TContactKey[]
 }
-export function useContactManager(contactsArray: TContact[]) {
+export function useContactController(contactsArray: TContact[]) {
 	const ContactsManager = () => {
 		const _contacts = contactsArray.slice()
 
@@ -21,8 +21,6 @@ export function useContactManager(contactsArray: TContact[]) {
 			getById: (id: string) => _contacts.find(contact => equalId(contact, id)),
 			getIndexById: (id: string) => _contacts.findIndex(contact => equalId(contact, id)),
 			addOne: (addContact: TContact) => {
-				// TODO: assign temp id for offline transaction: this should be UID
-				addContact.id = addContact.id ? addContact.id : Math.floor(Math.random() * 16).toString(16)
 				_contacts.unshift(addContact)
 				return addContact
 			},

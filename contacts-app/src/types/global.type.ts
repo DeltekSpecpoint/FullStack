@@ -1,3 +1,4 @@
+import useContact from '@/hooks/useContact'
 import { TFunction } from '@/types'
 
 export type TStatus = {
@@ -25,3 +26,7 @@ export type TModalActions = {
 }
 
 export type TFormActions = 'Add' | 'Edit' | 'Open'
+
+export type TPartialEntity<T> = Partial<T | [keyof T] | { [key: string]: unknown }>
+
+export type RTUseContact = ReturnType<typeof useContact>

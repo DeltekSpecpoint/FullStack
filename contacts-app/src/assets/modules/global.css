@@ -107,36 +107,6 @@ label {
 	font-weight: 500;
 }
 
-.field-container {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin: 5px 0px;
-	padding: 4px 15px;
-	border-radius: 5px;
-	background-color: rgba(255, 255, 255, 0.07);
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	transition: var(--transition);
-}
-
-.field-container > i {
-	font-size: 14px;
-	padding: 7px;
-	border-radius: 20px;
-}
-.contact-label {
-	font-weight: bold !important;
-	margin: initial;
-	text-align: initial;
-	font-size: 11px;
-	color: var(--background-color);
-}
-.contact-detail {
-	margin-top: 0;
-	margin-bottom: 5px;
-	text-align: right;
-}
-
 .action-container {
 	position: absolute;
 	right: 7px;
@@ -211,9 +181,11 @@ input {
 	background-color: var(--danger-color);
 }
 .submit {
-	height: 45px;
-	padding: 10px 0;
-	font-size: 18px;
+	height: 40px;
+	width: fit-content;
+	min-width: 100px;
+	padding: 10px;
+	font-size: 15px;
 	border-radius: 8px;
 	border: 2px solid rgba(255, 255, 255, 0.1);
 }

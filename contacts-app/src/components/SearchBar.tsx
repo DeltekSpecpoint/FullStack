@@ -45,7 +45,7 @@ export function SearchBar({ children, searchCallback }: ISearchBar) {
 					title="Show Bookmarks"
 					className={`modal-close card-bookmark ${filterBookmarked ? 'lit-bookmark' : ''}`}
 					iconName={`fa-${filterBookmarked ? 'solid enabled' : 'regular disabled'} fa-bookmark`}
-					animation="fa-shake"
+					animation="fa-beat-fade"
 					onClick={filterBookmark}
 				/>
 			</AnchorWrapper>

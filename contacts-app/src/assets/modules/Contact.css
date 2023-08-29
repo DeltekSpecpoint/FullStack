@@ -42,6 +42,7 @@
 	border-radius: 50% !important;
 	font-size: 15px !important;
 }
+
 .clipboard-status {
 	position: absolute;
 	width: 84%;
@@ -49,7 +50,6 @@
 	align-items: center;
 	justify-content: center;
 }
-
 .clipboard-status p {
 	color: currentColor;
 	padding: 0 5px !important;
@@ -67,7 +67,6 @@
 	color: currentColor;
 	transition: var(--transition);
 }
-
 .action-button.active {
 	cursor: pointer;
 	opacity: 1;
@@ -76,6 +75,7 @@
 	border-color: currentColor;
 	background-color: var(--background-color);
 }
+
 .form-container > div {
 	opacity: 0;
 	animation: descend-opacity 0.5s forwards;

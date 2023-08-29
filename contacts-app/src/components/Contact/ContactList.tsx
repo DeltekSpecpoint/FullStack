@@ -1,12 +1,11 @@
-import { IChildren, TContact, TFunction, TModalActions, TStatus } from '@/types'
+import { IChildren, RTUseContact, TContact, TFunction, TModalActions, TStatus } from '@/types'
 import { CardListContainer, Header, SearchBar } from '@/components'
 import ContactForm from './ContactForm'
 
-interface IContactContainer extends IChildren {
+interface IContactContainer
+	extends IChildren,
+		Pick<RTUseContact, 'currentContact' | 'mutateCurrentContact' | 'toggleBookmark'> {
 	contacts: TContact[]
-	currentContact: TContact
-	mutateCurrentContact: TFunction<TContact>
-	toggleBookmark: TFunction<[id: string]>
 	modalActions: TModalActions
 	contactsCount: number
 	status: TStatus

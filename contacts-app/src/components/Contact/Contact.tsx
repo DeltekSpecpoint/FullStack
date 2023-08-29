@@ -26,7 +26,7 @@ export function Contact() {
 		toggleBookmark,
 	} = useContact()
 
-	const modalProps = useModal({
+	const { isOpen, ...modalProps } = useModal({
 		hideCloseIcon: true,
 		clickBackdropToClose: false,
 	})
@@ -55,8 +55,8 @@ export function Contact() {
 			}
 		},
 		close: () => {
-			mutateCurrentContact(EMPTY_CONTACT)
 			modalProps.closeModal()
+			mutateCurrentContact(EMPTY_CONTACT)
 		},
 		remove,
 		commitChanges: (contactUpdate: TContact) => {
@@ -71,13 +71,15 @@ export function Contact() {
 
 	return (
 		<div className="contact-container">
-			<Modal {...modalProps}>
-				<ContactForm
-					formAction={formAction}
-					modalActions={modalActions}
-					{...{ currentContact, mutateCurrentContact, toggleBookmark }}
-				/>
-			</Modal>
+			{isOpen && (
+				<Modal {...modalProps}>
+					<ContactForm
+						formAction={formAction}
+						modalActions={modalActions}
+						{...{ currentContact, mutateCurrentContact, toggleBookmark }}
+					/>
+				</Modal>
+			)}
 
 			<MenubarContainer
 				contactsCount={contactsCount}

@@ -8,15 +8,14 @@ import {
 	InlineNotification,
 } from '@/components'
 import { useCopyClipboard } from '@/hooks/utils/useCopyClipboard'
-import { IChildren, TContact, TFormActions, TFunction, TModalActions } from '@/types'
+import { IChildren, RTUseContact, TFormActions, TModalActions } from '@/types'
 import { IsEmpty } from '@/utils'
 import { ChangeEvent, useEffect, useRef } from 'react'
 
-interface IContactInfo extends IChildren {
-	currentContact: TContact
-	mutateCurrentContact: TFunction<TContact>
+interface IContactInfo
+	extends IChildren,
+		Pick<RTUseContact, 'currentContact' | 'mutateCurrentContact' | 'toggleBookmark'> {
 	modalActions: TModalActions
-	toggleBookmark: TFunction<[id: string]>
 	formAction?: TFormActions
 }
 export default function ContactForm({
@@ -39,7 +38,7 @@ export default function ContactForm({
 	const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
 		const prop = evt.target.id
 		const value = evt.target.value
-		mutateCurrentContact({ ...currentContact, [prop]: value })
+		mutateCurrentContact({ [prop]: value })
 	}
 
 	useEffect(() => {
@@ -63,7 +62,22 @@ export default function ContactForm({
 					<ContactCard
 						{...currentContact}
 						toggleBookmark={bookmarkAction}
-					/>
+					>
+						{currentContact.id && (
+							<AnchorWrapper>
+								<AnimatedIcon
+									title="Delete Contact"
+									className="card-delete"
+									iconName={`enabled danger fa fa-trash`}
+									animation="fa-shake"
+									onClick={() => {
+										modalActions.remove(currentContact.id)
+										modalActions.close()
+									}}
+								/>
+							</AnchorWrapper>
+						)}
+					</ContactCard>
 
 					<Header>
 						<Header.Logo>{isEdit ? 'Edit Contact' : 'Add Contact'}</Header.Logo>
@@ -197,22 +211,12 @@ export default function ContactForm({
 			{/* submit buttons */}
 			<div className="center">
 				{!isAddOrEdit ? (
-					<>
-						<Button
-							variant="cancel"
-							iconName="fa fa-trash-can"
-							onClick={() => modalActions.remove(id)}
-						>
-							Remove
-						</Button>
-						<Button
-							variant="default"
-							iconName="fa fa-trash-can"
-							onClick={() => modalActions.open(id, true)}
-						>
-							Edit Contact
-						</Button>
-					</>
+					<Button
+						iconName="fa fa-pen-to-square"
+						onClick={() => modalActions.open(id, true)}
+					>
+						Edit
+					</Button>
 				) : (
 					<Button
 						id="cancel"
@@ -227,6 +231,7 @@ export default function ContactForm({
 
 				{isAddOrEdit && (
 					<Button
+						title={isEdit ? 'Save' : 'Add'}
 						disabled={!canSubmit}
 						onClick={() => {
 							modalActions.commitChanges(currentContact)

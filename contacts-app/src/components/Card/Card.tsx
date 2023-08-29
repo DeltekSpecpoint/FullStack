@@ -25,17 +25,19 @@ export function Card({
 	handleClick,
 	toggleBookmark,
 }: ICard) {
+	firstName = firstName.trim()
+	lastName = lastName.trim()
 	const contactLogo = `${firstName ? firstName[0] : ''}${lastName ? lastName[0] : ''}`
 	// to disable/enable click handler when it's used as card-header
-	const isCardHeader = !className.includes('card-header')
+	const isCardHeader = className.includes('card-header')
 
 	return (
 		<div className={className}>
 			<AnchorWrapper>
 				<AnimatedIcon
 					className="card-icon"
-					animation={isCardHeader ? 'fa-beat-fade' : ''}
-					onClick={() => (isCardHeader ? handleClick && handleClick(id) : null)}
+					animation={isCardHeader ? '' : 'fa-beat-fade'}
+					onClick={() => (isCardHeader ? null : handleClick && handleClick(id))}
 				>
 					{contactLogo.toUpperCase()}
 				</AnimatedIcon>
@@ -43,10 +45,13 @@ export function Card({
 
 			<div
 				className="contact-card-details"
-				onClick={() => (isCardHeader ? handleClick && handleClick(id) : null)}
+				onClick={() => (isCardHeader ? null : handleClick && handleClick(id))}
 			>
-				{email && isCardHeader ? (
-					<AnchorWrapper href={`mailto:${email}`}>
+				{email && !isCardHeader ? (
+					<AnchorWrapper
+						href={`mailto:${email}`}
+						className="regular enabled"
+					>
 						{firstName} {lastName}
 					</AnchorWrapper>
 				) : (
@@ -61,8 +66,9 @@ export function Card({
 				<AnimatedIcon
 					title="Bookmark"
 					className={`card-bookmark ${isStarred && !IsEmpty(contactLogo) ? 'lit-bookmark' : ''}`}
-					iconName={`fa-${isStarred && !IsEmpty(contactLogo) ? 'solid enabled' : 'regular disabled'
-						} fa-bookmark`}
+					iconName={`fa-${
+						isStarred && !IsEmpty(contactLogo) ? 'solid enabled' : 'regular disabled'
+					} fa-bookmark`}
 					animation={
 						isStarred && !IsEmpty(contactLogo) ? 'fa-bounce' : !IsEmpty(contactLogo) ? 'pulse' : ''
 					}
@@ -72,13 +78,14 @@ export function Card({
 
 			{handleClick && (
 				<a
-					className={`menu action-button small active scale-down`}
+					className={`menu ${!isCardHeader && 'action-button'} small active scale-down`}
 					onClick={() => handleClick(id)}
 				>
 					<AnimatedIcon
 						className="x-small"
 						iconName={iconName}
 					/>
+					{isCardHeader && 'Back'}
 				</a>
 			)}
 			{children}

@@ -7,7 +7,7 @@ namespace ContactsAPI.BusinessLogic.Models;
 	{
         public Contact()
         {
-            Modified = DateTime.Now;
+            Modified = DateTime.UtcNow;
         }
 
         [Key]

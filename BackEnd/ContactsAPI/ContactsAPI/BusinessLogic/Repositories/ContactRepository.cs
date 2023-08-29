@@ -20,7 +20,7 @@ public class ContactRepository : IContactRepository
     
     public async Task<Contact> AddAsync(ContactAdd addContact)
     {
-        var newContact = new ContactMapper<ContactAdd>().ToModel(addContact);
+        var newContact = ContactMapper<ContactAdd>.ToModel(addContact);
 
         try
         {
@@ -67,7 +67,7 @@ public class ContactRepository : IContactRepository
 
     public async Task<Contact> Update(ContactUpdate updateContact)
     {
-        var updatedContact = new ContactMapper<ContactUpdate>().ToModel(updateContact);
+        var updatedContact = ContactMapper<ContactUpdate>.ToModel(updateContact);
 
         try
         {

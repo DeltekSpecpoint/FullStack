@@ -35,13 +35,13 @@
 }
 
 .contact-card-details {
-	width: 75%;
+	width: 70%;
 	padding: inherit;
 	text-align: start;
 }
 .contact-card-details > a,
 .contact-card-details > p {
-	width: calc(98%);
+	width: calc(90%);
 	display: inline-block;
 	white-space: nowrap;
 	overflow: hidden;
@@ -72,7 +72,8 @@
 	font-size: 17px;
 	cursor: default !important;
 }
-p.regular.enabled {
+p.regular.enabled,
+a.regular.enabled {
 	font-weight: bold;
 }
 div.contact-item.card-header {
@@ -99,13 +100,21 @@ div.contact-item.card-header {
 .card-header > a > .card-bookmark {
 	position: absolute;
 	top: 0px;
-	right: 0px;
+	right: 10px;
 	font-size: 30px;
+	border-width: 1px;
+}
+.card-header > a > .card-delete {
+	position: absolute;
+	bottom: 10px;
+	right: 12px;
+	font-size: 20px;
 	border-width: 1px;
 }
 
 .card-header > .menu {
-	position: absolute !important;
-	right: -15px !important;
-	top: -162px !important;
+	position: absolute;
+	right: 10px;
+	top: -162px;
+	gap: 5px;
 }
