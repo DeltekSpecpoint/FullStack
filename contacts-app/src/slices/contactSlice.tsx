@@ -1,60 +1,74 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk  } from '@reduxjs/toolkit';
+import axios from 'axios'
+ 
 
-const getInitialContact = () => {
-  // getting contact  list
-  const localContactList = window.localStorage.getItem('contactList');
-  // if contact list is not empty
-  if (localContactList) {
-    return JSON.parse(localContactList);
-  }
-  const query: any = [];
-  window.localStorage.setItem('contactList',query);
-  return [];
-};
 
-const initialValue = {
-  filterStatus: 'all',
-  contactList: getInitialContact(),
-};
+
+export const getAllContacts = createAsyncThunk(
+  "getAllContacts", 
+  async () => {
+    try {
+      const {data} = await axios.get(
+    'https://localhost:5001/api/Contact', { headers : {Accept : 'application/json'}}
+      );
+     
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+});
+
 
 export const contactSlice = createSlice({
   name: 'contact',
-  initialState: initialValue,
+  initialState: {
+    filterStatus: 'all',
+    contactList: [],
+    isLoading: false,
+    hasError: false
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllContacts.pending, (state, action) => {
+      state.isLoading = true;
+      state.hasError = false;
+    })
+      .addCase(getAllContacts.fulfilled, (state, action) => {
+        state.contactList = action.payload;
+        state.isLoading = false;
+        state.hasError = false
+      })
+      .addCase(getAllContacts.rejected, (state, action) => {
+        state.hasError = true
+        state.isLoading = false;
+      })
+  },
   reducers: {
     addContact: (state, action) => {
-      state.contactList.push(action.payload);
-      const contactList = window.localStorage.getItem('contactList');
-      if (contactList) {
-        const contactListArr = JSON.parse(contactList);
-        contactListArr.push({
-          ...action.payload,
-        });
-        window.localStorage.setItem('contactList', JSON.stringify(contactListArr));
-      } else {
-        window.localStorage.setItem(
-          'contactList',
-          JSON.stringify([
-            {
-              ...action.payload,
-            },
-          ])
-        );
-      }
+      // state.contactList.concat(action.payload);
+      // const contactList = window.localStorage.getItem('contactList');
+      // if (contactList) {
+      //   const contactListArr = JSON.parse(contactList);
+      //   contactListArr.concat({
+      //     ...action.payload,
+      //   });
+      //   window.localStorage.setItem('contactList', JSON.stringify(contactListArr));
+      // } else {
+      //   window.localStorage.setItem(
+      //     'contactList',
+      //     JSON.stringify([
+      //       {
+      //         ...action.payload,
+      //       },
+      //     ])
+      //   );
+      // }
     },
     updateContact: (state, action) => {
-      const contactList = window.localStorage.getItem('contactList');
-      if (contactList) {
-        const contactListArr = JSON.parse(contactList);
-        contactListArr.forEach((contact : any) =>{
-          if (contact.id === action.payload.id) {
-          
-            contact.name = action.payload.name;
-            contact.address = action.payload.address;
-          }
-        });
-        window.localStorage.setItem('contactList', JSON.stringify(contactListArr));
-        state.contactList = [...contactListArr];
-      }
+      console.log(action.payload);
+   
+      
+     
     },
     deleteContact: (state, action) => {
       const contactList = window.localStorage.getItem('contactList');
@@ -74,6 +88,8 @@ export const contactSlice = createSlice({
     },
   },
 });
+export const getContactList = (state: any)   => state.contact.contactList; 
+export const getFilterStatus = (state: any)   => state.contact.filterStatus;
 
 export const { addContact, updateContact, deleteContact, updateFilterStatus } =
 contactSlice.actions;

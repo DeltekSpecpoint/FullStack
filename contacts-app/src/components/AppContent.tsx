@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "../styles/modules/app.module.scss";
 import ContactItem from "./ContactItem";
+import { getContactList, getFilterStatus,getAllContacts } from "../slices/contactSlice";
 
 const container = {
   hidden: { opacity: 1 },
@@ -23,12 +24,20 @@ const child = {
 };
 
 function AppContent() {
-  const contactList = useSelector((state: any) => state.contact.contactList);
-  const filterStatus = useSelector((state: any) => state.contact.filterStatus);
 
+  const dispatch = useDispatch<any>();
+  useEffect(()=>
+  {
+
+    dispatch(getAllContacts());
+  },[]);
+
+  const contactList = useSelector(getContactList);
+  const filterStatus = useSelector(getFilterStatus);
+ 
   const sortedContactList = [...contactList];
   sortedContactList.sort(
-    (a, b) => new Date(b.time).getDate() - new Date(a.time).getDate()
+    (a, b) => new Date(b.createdDT).getDate() - new Date(a.createdDT).getDate()
   );
 
   const filteredContactList = sortedContactList.filter((item) => {
@@ -48,7 +57,7 @@ function AppContent() {
     >
       <AnimatePresence>
         {filteredContactList && filteredContactList.length > 0 ? (
-          filteredContactList.map((contact) => (
+          filteredContactList.map((contact) => ( 
             <ContactItem key={contact.id} contact={contact} />
           ))
         ) : (

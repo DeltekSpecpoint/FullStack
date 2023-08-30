@@ -41,7 +41,7 @@ function ContactsModal({ modalOpen, setModalOpen, type, contact }: Prop) {
   const [errors, setErrors] = useState({ name: "", address: "" });
 
   useEffect(() => {
-    console.log(type, contact);
+   
     if (type === "update" && contact) {
       setName(contact.name);
       setAddress(contact.address);
