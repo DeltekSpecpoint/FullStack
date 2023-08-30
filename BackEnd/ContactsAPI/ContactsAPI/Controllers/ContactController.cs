@@ -2,22 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContactsAPI.Models;
+using ContactsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ContactsAPI.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class ContactController : Controller
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IContactService _contactService;
+
+        public ContactController(IContactService contactService)
         {
-            return new string[] { "value1", "value2" };
+            _contactService = contactService;
         }
 
+        // GET: api/<controller>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Contact>>> GetAllContacts()
+        {
+            return Json(await _contactService.GetAll());
+        }
         // GET api/<controller>/5
         [HttpGet("{id}")]
         public string Get(int id)
