@@ -2,45 +2,101 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContactsAPI.Data;
+using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ContactsAPI.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class ContactController : Controller
     {
-        // GET: api/<controller>
+        private readonly ContactAPIDBContext _dbContext;
+
+        public ContactController(ContactAPIDBContext dbContext)
+        {
+            this._dbContext = dbContext;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> GetContacts()
         {
-            return new string[] { "value1", "value2" };
+            var count = _dbContext.Contacts.Count();
+
+            if (count != 0)
+            {
+            }
+
+            return Ok(await _dbContext.Contacts.ToListAsync());
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetContact([FromRoute] Guid id)
         {
-            return "value";
+            var contact = await _dbContext.Contacts.FindAsync(id);
+
+            if (contact != null)
+            {
+                return Ok(contact);
+            }
+
+            return NotFound();
+
         }
 
-        // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> AddContact(AddContact addContact)
         {
+            var contact = new Contact()
+            {
+                Id = Guid.NewGuid(),
+                FullName = addContact.FullName,
+                Phone = addContact.Phone,
+                Email = addContact.Email
+            };
+
+            await _dbContext.Contacts.AddAsync(contact);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(contact);
         }
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateContact([FromRoute] Guid id, UpdateContact updateContact)
         {
+            var contact = await _dbContext.Contacts.FindAsync(id);
+
+            if (contact != null)
+            {
+                contact.FullName = updateContact.FullName;
+                contact.Phone = updateContact.Phone;
+                contact.Email = updateContact.Email;
+
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(contact);
+            }
+
+            return NotFound();
         }
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteContact([FromRoute] Guid id)
         {
+            var contact = await _dbContext.Contacts.FindAsync(id);
+
+            if (contact != null)
+            {
+                _dbContext.Remove(contact);
+                await _dbContext.SaveChangesAsync();
+                return Ok(contact);
+            }
+
+            return NotFound();
         }
     }
 }
