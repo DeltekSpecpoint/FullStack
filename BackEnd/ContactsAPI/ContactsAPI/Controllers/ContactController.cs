@@ -61,9 +61,27 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetContacts([FromRoute] int page = 1, [FromRoute] int pageSize = 10)
+        public async Task<IActionResult> GetContacts(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string searchKey = ""
+        )
         {
-            int totalContacts = this._dbContext.Contacts.Count();
+            // Search
+            IQueryable<Contact> query = this._dbContext.Contacts;
+
+            if (!string.IsNullOrWhiteSpace(searchKey))
+            {
+                query = query.Where(contact =>
+                    contact.FirstName.Contains(searchKey, StringComparison.OrdinalIgnoreCase) ||
+                    contact.LastName.Contains(searchKey, StringComparison.OrdinalIgnoreCase) ||
+                    contact.Phone.Contains(searchKey, StringComparison.OrdinalIgnoreCase) ||
+                    contact.Email.Contains(searchKey, StringComparison.OrdinalIgnoreCase)
+                );
+            }
+
+            // Pagination
+            int totalContacts = query.Count();
             int totalPages = (int)Math.Ceiling((double)totalContacts/pageSize);
 
             List<Contact> contacts = await this._dbContext.Contacts
