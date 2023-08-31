@@ -20,17 +20,49 @@ namespace ContactsAPI.Controllers
         public ContactController(ContactAPIDBContext dbContext)
         {
             this._dbContext = dbContext;
+
+            if(this._dbContext.Contacts.Count() == 0)
+            {
+                var contacts = new List<Contact>();
+                
+                for (int i = 0; i < 1000; i++)
+                {
+                    List<string> firstNames = new List<string>
+                    {
+                        "Just", "Tan", "Kris", "Chewey", "Olek",
+                        "Caccia", "Ban", "Bailey", "Toki", "Hadi"
+                    };
+                    List<string> lastNames = new List<string>
+                    {
+                        "Smith", "Johnson", "Williams", "Brown", "Jones",
+                        "Miller", "Davis", "Garcia", "Martinez", "Rodriguez"
+                    };
+
+                    Random rnd = new Random();
+                    string firstName = firstNames[rnd.Next(firstNames.Count)];
+                    string lastName = lastNames[rnd.Next(lastNames.Count)];
+                    int areaCode = rnd.Next(100, 999);
+                    int firstNum = rnd.Next(100, 999);
+                    int secondNum = rnd.Next(1000, 9999);
+                    string phoneNumber = $"{areaCode}-{firstNum}-{secondNum}";
+
+                    contacts.Add(new Contact
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Phone = phoneNumber,
+                        Email = $"{firstName.ToLower()}.{lastName.ToLower()}@deltek.com"
+                    });
+                }
+
+                this._dbContext.Contacts.AddRange(contacts);
+                this._dbContext.SaveChanges();
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetContacts()
         {
-            var count = _dbContext.Contacts.Count();
-
-            if (count != 0)
-            {
-            }
-
             return Ok(await _dbContext.Contacts.ToListAsync());
         }
 
@@ -45,7 +77,6 @@ namespace ContactsAPI.Controllers
             }
 
             return NotFound();
-
         }
 
         [HttpPost]
@@ -54,7 +85,8 @@ namespace ContactsAPI.Controllers
             var contact = new Contact()
             {
                 Id = Guid.NewGuid(),
-                FullName = addContact.FullName,
+                FirstName = addContact.FirstName,
+                LastName = addContact.LastName,
                 Phone = addContact.Phone,
                 Email = addContact.Email
             };
@@ -72,7 +104,8 @@ namespace ContactsAPI.Controllers
 
             if (contact != null)
             {
-                contact.FullName = updateContact.FullName;
+                contact.FirstName = updateContact.FirstName;
+                contact.LastName = updateContact.LastName;
                 contact.Phone = updateContact.Phone;
                 contact.Email = updateContact.Email;
 

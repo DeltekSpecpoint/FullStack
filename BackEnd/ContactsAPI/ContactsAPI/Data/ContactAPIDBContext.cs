@@ -9,10 +9,9 @@ namespace ContactsAPI.Data
 {
     public class ContactAPIDBContext : DbContext
     {
+        public DbSet<Contact> Contacts { get; set; }
         public ContactAPIDBContext(DbContextOptions options) : base(options)
         {
         }
-
-        public DbSet<Contact> Contacts { get; set; }
     }
 }

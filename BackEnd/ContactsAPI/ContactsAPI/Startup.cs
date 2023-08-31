@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ContactsAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ContactsAPI.Data;
 
 namespace ContactsAPI
 {
@@ -36,6 +36,8 @@ namespace ContactsAPI
                            .AllowAnyHeader());
             });
 
+            services.AddDbContext<ContactAPIDBContext>(options => options.UseInMemoryDatabase("ContactsDB"));
+            
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -53,8 +55,6 @@ namespace ContactsAPI
                     },
                 });
             });
-
-            services.AddDbContext<ContactAPIDBContext>(options => options.UseInMemoryDatabase("ContactsDB"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
