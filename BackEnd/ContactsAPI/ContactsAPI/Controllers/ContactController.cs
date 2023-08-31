@@ -61,9 +61,36 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetContacts()
+        public async Task<IActionResult> GetContacts([FromRoute] int page = 1, [FromRoute] int pageSize = 10)
         {
-            return Ok(await _dbContext.Contacts.ToListAsync());
+            int totalContacts = this._dbContext.Contacts.Count();
+            int totalPages = (int)Math.Ceiling((double)totalContacts/pageSize);
+
+            List<Contact> contacts = await this._dbContext.Contacts
+                .OrderBy(contact => contact.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
+
+            var paginationMetadata = new
+            {
+                TotalCount = totalContacts,
+                PageSize = pageSize,
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+            Response.Headers.Add(
+                "X-Pagination", 
+                Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    TotalCount = totalContacts,
+                    PageSize = pageSize,
+                    CurrentPage = page,
+                    TotalPages = totalPages
+                })
+            );
+
+            return Ok(contacts);
         }
 
         [HttpGet("{id:guid}")]
