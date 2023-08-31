@@ -1,4 +1,5 @@
-﻿using ContactsAPI.Models;
+﻿using ContactsAPI.Data;
+using ContactsAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +9,9 @@ namespace ContactsAPI.Services
 {
     public interface IContactService
     {
+        public class ContactService : IContactService
+        {
+
+        }
     }
 }

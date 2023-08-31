@@ -1,33 +1,64 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {
+	Container,
+	Button,
+	ButtonGroup,
+	Card,
+	Row,
+	Col,
+	Pagination,
+	ListGroup,
+	Form,
+	InputGroup,
+	Navbar,
+} from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faPencil,
+	faTrashCan,
+	faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 
 import AddEditContact from "../AddEditContactModal/AddEditContactModal.jsx";
-
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import ListGroup from "react-bootstrap/ListGroup";
+import Environment from "../../utilities/environment.js";
 
 const ContactList = () => {
 	const [contactsList, setContactsList] = useState([]);
 	const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 	const [editContactData, setEditContactData] = useState([]);
+	const [searchKey, setSearchKey] = useState("");
+	const [shouldReload, setShouldReload] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
 
 	const getContacts = () => {
+		const skey = searchKey != "" ? `&searchKey=${searchKey}` : "";
+
 		axios
-			.get("https://localhost:44305/api/Contact")
+			.get(Environment.URL_API + `?page=${currentPage}&pageSize=12${skey}`)
 			.then((res) => {
 				setContactsList(res.data);
+				setShouldReload(false);
 			})
 			.catch((err) => console.error(err));
 	};
 
+	const handleInputChange = (e) => {
+		setSearchKey(e.target.value);
+	};
+
+	const handleSearchClick = () => {
+		setShouldReload(true);
+	};
+
+	const handlePageChange = (pageNum) => {
+		setCurrentPage(pageNum);
+		setShouldReload(true);
+	};
+
 	useEffect(() => {
 		getContacts();
-	}, []);
+	}, [shouldReload]);
 
 	const handleEdit = (contactData) => {
 		setEditContactData(contactData);
@@ -36,45 +67,68 @@ const ContactList = () => {
 
 	const handleDelete = (id) => {
 		axios
-			.delete(`https://localhost:44305/api/Contact/${id}`)
+			.delete(Environment.URL_API + id)
 			.then((res) => {
 				setContactsList(contactsList.filter((el) => el.id !== id));
+				setShouldReload(true);
 			})
 			.catch((err) => console.error(err));
 	};
 
 	return (
 		<>
-			<Container>
-				<Row className="justify-content-md-center">
+			<Container className="d-flex justify-content-center">
+				<Row>
 					{contactsList.length > 0
 						? contactsList.map((c, idx) => {
 								return (
 									<Col key={idx} md="auto">
-										<Card style={{ width: "18rem" }} className="mb-2">
-											<Card.Header>{c.fullName}</Card.Header>
+										<Card
+											style={{ width: "18rem", height: "10rem" }}
+											className="mb-2"
+										>
+											<Card.Header>
+												<Row>
+													<Col className="d-flex flex-row">{`${c.firstName} ${c.lastName}`}</Col>
+													<Col className="d-flex flex-row-reverse">
+														<ButtonGroup>
+															<Button
+																key={idx}
+																size="sm"
+																variant="primary"
+																// className="mb-2"
+																onClick={() => handleEdit(c)}
+															>
+																<FontAwesomeIcon icon={faPencil} />
+															</Button>
+															<Button
+																size="sm"
+																variant="danger"
+																onClick={() => handleDelete(c.id)}
+															>
+																<FontAwesomeIcon icon={faTrashCan} />
+															</Button>
+														</ButtonGroup>
+													</Col>
+												</Row>
+											</Card.Header>
 											<Card.Body>
-												<ListGroup variant="flush">
-													<ListGroup.Item>Phone: {c.phone}</ListGroup.Item>
-													<ListGroup.Item>Email: {c.email}</ListGroup.Item>
-												</ListGroup>
-												<ButtonGroup>
-													<Button
-														key={idx}
-														size="sm"
-														variant="primary"
-														onClick={() => handleEdit(c)}
-													>
-														Edit
-													</Button>
-													<Button
-														size="sm"
-														variant="danger"
-														onClick={() => handleDelete(c.id)}
-													>
-														Delete
-													</Button>
-												</ButtonGroup>
+												<Row>
+													<Col sm="3">
+														<Form.Text>Phone</Form.Text>
+													</Col>
+													<Col sm="9">
+														<ListGroup.Item>{c.phone}</ListGroup.Item>
+													</Col>
+												</Row>
+												<Row>
+													<Col sm="3">
+														<Form.Text>Email</Form.Text>
+													</Col>
+													<Col sm="9">
+														<ListGroup.Item>{c.email}</ListGroup.Item>
+													</Col>
+												</Row>
 											</Card.Body>
 										</Card>
 									</Col>
@@ -95,6 +149,42 @@ const ContactList = () => {
 					/>
 				)}
 			</Container>
+			<footer className="footer">
+				<Navbar bg="dark" variant="light" fixed="bottom">
+					<Container>
+						<Row>
+							<Col xs sm>
+								<Container className="mt-2">
+									<InputGroup size="sm" className="mb-3">
+										<Form.Control
+											placeholder="Search"
+											onChange={handleInputChange}
+										/>
+										<Button
+											variant="outline-secondary"
+											onClick={handleSearchClick}
+										>
+											<FontAwesomeIcon icon={faMagnifyingGlass} />
+										</Button>
+									</InputGroup>
+								</Container>
+							</Col>
+							<Col xs sm className="d-flex flex-row-reverse">
+								<Pagination className="mt-2" size="sm">
+									<Pagination.Prev
+										onClick={() => handlePageChange(currentPage - 1)}
+										disabled={currentPage === 1}
+									/>
+									<Pagination.Item active>{currentPage}</Pagination.Item>
+									<Pagination.Next
+										onClick={() => handlePageChange(currentPage + 1)}
+									/>
+								</Pagination>
+							</Col>
+						</Row>
+					</Container>
+				</Navbar>
+			</footer>
 		</>
 	);
 };

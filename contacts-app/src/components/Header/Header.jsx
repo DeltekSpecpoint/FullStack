@@ -1,14 +1,11 @@
 import React, { useState } from "react";
+import { Container, Navbar, Button } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import AddEditContact from "../AddEditContactModal/AddEditContactModal.jsx";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-
-const Header = (props) => {
+const Header = () => {
 	const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
 	let newContactFormMarkup = null;
@@ -29,19 +26,19 @@ const Header = (props) => {
 
 	return (
 		<>
-			<Navbar expand="lg" className="bg-body-tertiary">
+			<Navbar
+				bg="dark"
+				data-bs-theme="dark"
+				className="bg-body-tertiary sticky-top mb-3 px-4 py-3"
+			>
 				<Container>
-					<Navbar.Brand href="#home">Contact App</Navbar.Brand>
+					<Navbar.Brand href="#home">Contacts</Navbar.Brand>
 					<Button variant="success" onClick={() => setIsFormModalOpen(true)}>
 						New
+						<FontAwesomeIcon icon={faPlus} />
 					</Button>
 				</Container>
 			</Navbar>
-			<Container>
-				<InputGroup size="sm" className="mb-3">
-					<Form.Control placeholder="Search" aria-label="Search" />
-				</InputGroup>
-			</Container>
 			{newContactFormMarkup}
 		</>
 	);

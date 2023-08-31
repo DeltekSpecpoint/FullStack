@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Button, Modal, Form } from "react-bootstrap";
 
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import Environment from "../../utilities/environment.js";
 
 const AddEditContactModal = (props) => {
 	const [validated, setValidated] = useState(false);
@@ -41,7 +40,7 @@ const AddEditContactModal = (props) => {
 			if (validated) {
 				axios({
 					method: method,
-					url: `https://localhost:44305/api/Contact/${contactId}`,
+					url: Environment.URL_API + contactId,
 					data: contactData,
 				})
 					.then((res) => {
@@ -59,8 +58,8 @@ const AddEditContactModal = (props) => {
 			</Modal.Header>
 			<Form noValidate validated={validated}>
 				<Modal.Body>
-					<Form.Group className="mb-3" controlId="form.fullName">
-						<Form.Label>Full Name</Form.Label>
+					<Form.Group className="mb-3" controlId="form.firstName">
+						<Form.Label>First Name</Form.Label>
 						{props.data.formType == "create" ? (
 							<Form.Control
 								required
@@ -71,12 +70,32 @@ const AddEditContactModal = (props) => {
 							<Form.Control
 								required
 								type="text"
-								defaultValue={props.data.contactData.fullName}
+								defaultValue={props.data.contactData.firstName}
 								onChange={(e) => handleFormChange(e)}
 							/>
 						)}
 						<Form.Control.Feedback type="invalid">
-							Provide the full name.
+							Provide first name.
+						</Form.Control.Feedback>
+					</Form.Group>
+					<Form.Group className="mb-3" controlId="form.lastName">
+						<Form.Label>Last Name</Form.Label>
+						{props.data.formType == "create" ? (
+							<Form.Control
+								required
+								type="text"
+								onChange={(e) => handleFormChange(e)}
+							/>
+						) : (
+							<Form.Control
+								required
+								type="text"
+								defaultValue={props.data.contactData.lastName}
+								onChange={(e) => handleFormChange(e)}
+							/>
+						)}
+						<Form.Control.Feedback type="invalid">
+							Provide last name.
 						</Form.Control.Feedback>
 					</Form.Group>
 					<Form.Group className="mb-3" controlId="form.phone">
@@ -84,19 +103,19 @@ const AddEditContactModal = (props) => {
 						{props.data.formType == "create" ? (
 							<Form.Control
 								required
-								type="number"
+								type="text"
 								onChange={(e) => handleFormChange(e)}
 							/>
 						) : (
 							<Form.Control
 								required
-								type="number"
+								type="text"
 								defaultValue={props.data.contactData.phone}
 								onChange={(e) => handleFormChange(e)}
 							/>
 						)}
 						<Form.Control.Feedback type="invalid">
-							Provide the phone number.
+							Provide a phone number.
 						</Form.Control.Feedback>
 					</Form.Group>
 					<Form.Group className="mb-3" controlId="form.email">

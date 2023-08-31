@@ -19,9 +19,9 @@ namespace ContactsAPI.Controllers
 
         public ContactController(ContactAPIDBContext dbContext)
         {
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
 
-            if(this._dbContext.Contacts.Count() == 0)
+            if(_dbContext.Contacts.Count() == 0)
             {
                 var contacts = new List<Contact>();
                 
@@ -55,8 +55,9 @@ namespace ContactsAPI.Controllers
                     });
                 }
 
-                this._dbContext.Contacts.AddRange(contacts);
-                this._dbContext.SaveChanges();
+                _dbContext.Contacts.AddRange(contacts);
+                _dbContext.SaveChanges();
+
             }
         }
 
@@ -68,7 +69,7 @@ namespace ContactsAPI.Controllers
         )
         {
             // Search
-            IQueryable<Contact> query = this._dbContext.Contacts;
+            IQueryable<Contact> query = _dbContext.Contacts;
 
             if (!string.IsNullOrWhiteSpace(searchKey))
             {
@@ -84,8 +85,7 @@ namespace ContactsAPI.Controllers
             int totalContacts = query.Count();
             int totalPages = (int)Math.Ceiling((double)totalContacts/pageSize);
 
-            List<Contact> contacts = await this._dbContext.Contacts
-                .OrderBy(contact => contact.Id)
+            var contacts = await query.OrderBy(contact => contact.Id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize).ToListAsync();
 
