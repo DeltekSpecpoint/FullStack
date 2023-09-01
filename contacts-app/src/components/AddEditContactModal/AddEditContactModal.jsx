@@ -6,23 +6,14 @@ import Environment from "../../utilities/environment.js";
 
 const AddEditContactModal = (props) => {
 	const [validated, setValidated] = useState(false);
-	const [contactData, setContactData] = useState({
-		fullName: "",
-		phone: "",
-		email: "",
-	});
+	const [contactData, setContactData] = useState(props.data.contactData);
 
 	useEffect(() => {}, []);
 
 	const handleFormChange = (e) => {
 		const { name, value, id } = e.target;
 
-		setContactData({
-			firstName: name == "firstName" ? value : contactData.firstName,
-			lastName: name == "lastName" ? value : contactData.lastName,
-			phone: name == "phone" ? value : contactData.phone,
-			email: name == "email" ? value : contactData.email,
-		});
+		setContactData({ ...contactData, [name]: value });
 	};
 
 	const handleAddEdit = (e) => {
