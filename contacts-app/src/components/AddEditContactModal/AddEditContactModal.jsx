@@ -15,12 +15,13 @@ const AddEditContactModal = (props) => {
 	useEffect(() => {}, []);
 
 	const handleFormChange = (e) => {
-		const { value, id } = e.target;
+		const { name, value, id } = e.target;
 
 		setContactData({
-			fullName: id == "form.fullName" ? value : contactData.fullName,
-			phone: id == "form.phone" ? value : contactData.phone,
-			email: id == "form.email" ? value : contactData.email,
+			firstName: name == "firstName" ? value : contactData.firstName,
+			lastName: name == "lastName" ? value : contactData.lastName,
+			phone: name == "phone" ? value : contactData.phone,
+			email: name == "email" ? value : contactData.email,
 		});
 	};
 
@@ -64,12 +65,14 @@ const AddEditContactModal = (props) => {
 							<Form.Control
 								required
 								type="text"
+								name="firstName"
 								onChange={(e) => handleFormChange(e)}
 							/>
 						) : (
 							<Form.Control
 								required
 								type="text"
+								name="firstName"
 								defaultValue={props.data.contactData.firstName}
 								onChange={(e) => handleFormChange(e)}
 							/>
@@ -84,12 +87,14 @@ const AddEditContactModal = (props) => {
 							<Form.Control
 								required
 								type="text"
+								name="lastName"
 								onChange={(e) => handleFormChange(e)}
 							/>
 						) : (
 							<Form.Control
 								required
 								type="text"
+								name="lastName"
 								defaultValue={props.data.contactData.lastName}
 								onChange={(e) => handleFormChange(e)}
 							/>
@@ -104,12 +109,14 @@ const AddEditContactModal = (props) => {
 							<Form.Control
 								required
 								type="text"
+								name="phone"
 								onChange={(e) => handleFormChange(e)}
 							/>
 						) : (
 							<Form.Control
 								required
 								type="text"
+								name="phone"
 								defaultValue={props.data.contactData.phone}
 								onChange={(e) => handleFormChange(e)}
 							/>
@@ -124,12 +131,14 @@ const AddEditContactModal = (props) => {
 							<Form.Control
 								required
 								type="email"
+								name="email"
 								onChange={(e) => handleFormChange(e)}
 							/>
 						) : (
 							<Form.Control
 								required
 								type="email"
+								name="email"
 								defaultValue={props.data.contactData.email}
 								onChange={(e) => handleFormChange(e)}
 							/>
