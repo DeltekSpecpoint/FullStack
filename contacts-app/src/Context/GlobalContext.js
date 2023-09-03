@@ -7,7 +7,13 @@ export const GlobalContext = createContext();
 export function GlobalProvider({ children }) {
   const [contacts, setContacts] = useState([]);
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
-
+  const [closeModal, setCloseModal] = useState(false);
+  // const [updatedValue, setUpdatedValue] = useState({
+  //   FirstName: '',
+  //   LastName: '',
+  //   ContactNumber: '',
+  //   Email: '',
+  // });
   useEffect(() => {
         getContacts();
     }, [isUpdateNeeded]);
@@ -33,12 +39,46 @@ export function GlobalProvider({ children }) {
           })
             .then((res) => {
               console.log(res.data);
+              setCloseModal(true);
+              setIsUpdateNeeded(!isUpdateNeeded);
+
             })
             .catch((err) => console.error(err));
     }
 
+    const handleCloseModal = () => {
+          setCloseModal(!closeModal);
+      }
+
+    
+  const handleEditContact = async (id , updatedContactData) => {
+    axios({
+      method: 'PUT',
+      url: `https://localhost:44305/api/Contact/UpdateContact/${id}`,
+      data: updatedContactData,
+    })
+    .then((res) => {
+      setCloseModal(true);
+      // setUpdatedValue(updatedContactData);
+    })
+    .catch((err) => console.error(err));
+};
+
+// const handleAddContact = (updatedContactData) => {
+//   axios({
+//     method: 'POST',
+//     url: 'https://localhost:44305/api/Contact/AddContact',
+//     data: updatedContactData,
+//   })
+//   .then((res) => {
+//     setCloseModal(true);
+//     setUpdatedValue(updatedContactData);
+//   })
+//   .catch((err) => console.error(err));
+// };
+
   return (
-    <GlobalContext.Provider value={{ contacts, handleUpdate, deleteContact }}>
+    <GlobalContext.Provider value={{ contacts, handleUpdate, deleteContact, handleCloseModal, closeModal, handleEditContact}}>
       {children}
     </GlobalContext.Provider>
   );

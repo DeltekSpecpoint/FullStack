@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState , useEffect, useContext } from 'react';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
@@ -12,25 +12,25 @@ import Grid from '@material-ui/core/Grid';
 import AddEditContact from '../Components/AddEditContact';
 import DeleteContact from '../Components/DeleteContact';
 // import { useNavigate } from 'react-router-dom';
+import { GlobalContext } from '../Context/GlobalContext';
 
 
-function ContactCard ({ contact , onUpdate }) {
+function ContactCard ({ contact }) {
+    const { contacts , handleCloseModal} = useContext(GlobalContext);
+
     // const navigate = useNavigate();
     const [openAddEditModal, setOpenAddEditModal] = useState(false);
     const [openAffirmationModal, setOpenAffirmationModal] = useState(false);
 
     const toggleAddEditModal = (contact) => {
-        console.log(onUpdate);
-
         setOpenAddEditModal(!openAddEditModal);
         // navigate(`/update/${contact.Id}`);
-        console.log("Contact" + contact);
+        console.log("OPEN EDIT:" +!openAddEditModal);
     };
 
     const toggleAffirmationModal = () => {
         setOpenAffirmationModal(!openAffirmationModal);
-
-
+        
     };
 
   return (
@@ -60,10 +60,10 @@ function ContactCard ({ contact , onUpdate }) {
             </CardContent>
         </Card>
         {
-            openAddEditModal ? (<AddEditContact contact = {contact} onUpdate={onUpdate}/>) : null
+            openAddEditModal ? (<AddEditContact contact = {contact} />) : null
         }
         {
-            openAffirmationModal ? (<DeleteContact id = {contact.Id} contact = {contact} onUpdate={onUpdate}/>) : null
+            openAffirmationModal ? (<DeleteContact id = {contact.Id} contact = {contact}/>) : null
         }
     </div>
   )

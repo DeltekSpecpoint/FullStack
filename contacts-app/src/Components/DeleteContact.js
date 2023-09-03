@@ -1,37 +1,39 @@
 import { DialogActions, DialogContent, DialogContentText, Dialog, DialogTitle } from '@material-ui/core';
 import axios from 'axios';
-import React , { useState }from 'react';
+import React , { useState, useContext }from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
+import { GlobalContext } from '../Context/GlobalContext';
 
-export default function DeleteContact({ id, contact, onUpdate }) {
-    const [closeModal, setCloseModal] = useState(false);
-    const handleCloseModal = () => {
-        setCloseModal(!closeModal);
-    }
+export default function DeleteContact({ contact }) {
+    const { contacts , deleteContact, handleCloseModal, closeModal } = useContext(GlobalContext);
 
-    const handleDeleteContact =  (id) => {
-        console.log("deleteID: " + id)
+    // const [closeModal, setCloseModal] = useState(false);
+    // const handleCloseModal = () => {
+    //     setCloseModal(!closeModal);
+    // }
+
+    // const handleDeleteContact =  (id) => {
+    //     console.log("deleteID: " + id)
     
-        axios({
-          method: 'DELETE',
-          url: `https://localhost:44305/api/Contact/DeleteContact/${id}`
-        })
-          .then((res) => {
-            setCloseModal(true);
-            console.log(res.data);
-            onUpdate();
-          })
-          .catch((err) => console.error(err));
+    //     axios({
+    //       method: 'DELETE',
+    //       url: `https://localhost:44305/api/Contact/DeleteContact/${id}`
+    //     })
+    //       .then((res) => {
+    //         setCloseModal(true);
+    //         console.log(res.data);
+    //       })
+    //       .catch((err) => console.error(err));
     
-        // try {
-        //   const response = await updateData(contact?.id, updatedValue);
-        //   console.log('Data updated successfully:', response);
-        //   handleCloseModal();
-        // } catch (error) {
-        //   console.error('Failed to update data:', error);
-        // }
-      };
+    //     // try {
+    //     //   const response = await updateData(contact?.id, updatedValue);
+    //     //   console.log('Data updated successfully:', response);
+    //     //   handleCloseModal();
+    //     // } catch (error) {
+    //     //   console.error('Failed to update data:', error);
+    //     // }
+    //   };
 
   return (
     <div>
@@ -42,7 +44,7 @@ export default function DeleteContact({ id, contact, onUpdate }) {
             </DialogContent>
             <DialogActions>
                 <Button size = "medium" onClick = {handleCloseModal}>Cancel</Button>
-                <Button color = "error" variant="outlined" startIcon={<DeleteIcon /> } onClick = {() => handleDeleteContact(contact.Id)}>
+                <Button color = "error" variant="outlined" startIcon={<DeleteIcon /> } onClick = {() => deleteContact(contact.Id)}>
                     Delete
                 </Button>
 

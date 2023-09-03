@@ -9,9 +9,9 @@ export default function Main() {
     const { contacts } = useContext(GlobalContext);
   return (
     <div>
-      <NavBar contacts = {contacts} />
-      <Header contacts = {contacts} />
-      <ContactList contacts = {contacts}/>
+      <NavBar />
+      <Header />
+      <ContactList />
     </div>
   )
 }

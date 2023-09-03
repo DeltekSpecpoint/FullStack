@@ -8,7 +8,7 @@ namespace ContactsAPI.Services
 {
     public class ContactService : IContactService
     {
-        public List <Contact> GetContacts()
+        public List<Contact> GetContacts()
         {
             List<Contact> contacts = new List<Contact>();
             for (int i = 1; i <= 1000; i++)

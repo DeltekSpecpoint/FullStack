@@ -1,4 +1,4 @@
-import React , { useEffect, useState }from 'react';
+import React , { useEffect, useState, useContext }from 'react';
 import { DialogActions, DialogContent, Dialog, DialogTitle } from '@material-ui/core';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
@@ -6,9 +6,11 @@ import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { useParams } from 'react-router-dom';
+import { GlobalContext } from '../Context/GlobalContext';
 
 
-const AddEditContact = ({contact = null , onUpdate }) => {
+const AddEditContact = ({contact = null }) => {
+    const { contacts , handleAddContact, handleEditContact} = useContext(GlobalContext);
     const isCreating = contact == null ? true : false;
     const [closeModal, setCloseModal] = useState(false);
     const [updatedValue, setUpdatedValue] = useState({
@@ -23,10 +25,6 @@ const AddEditContact = ({contact = null , onUpdate }) => {
       ContactNumber: parseInt(updatedValue.ContactNumber, 10), // Parse as base-10 integer
     };
 
-    const handleCloseModal = () => {
-      setCloseModal(!closeModal);
-    }
-
   const handleSendContact = (id = undefined) => {
       const method = isCreating ? 'POST' : 'PUT';
       const url = isCreating ? 'https://localhost:44305/api/Contact/AddContact' : `https://localhost:44305/api/Contact/UpdateContact/${id}`;
@@ -36,12 +34,15 @@ const AddEditContact = ({contact = null , onUpdate }) => {
       data: updatedContactData,
     })
       .then((res) => {
-        setCloseModal(true);
+        // setCloseModal(true);
         setUpdatedValue(updatedContactData);
-        onUpdate();
       })
       .catch((err) => console.error(err));
   };
+
+  const handleCloseModal = () => {
+    setCloseModal(!closeModal);
+}
 
   return (
     <Dialog open = {!closeModal} onClose = {handleCloseModal} fullWidth maxWidth= "sm">
@@ -74,7 +75,9 @@ const AddEditContact = ({contact = null , onUpdate }) => {
       <Button size = "medium" onClick = {handleCloseModal}>Cancel</Button>
       <Button variant="contained"
               endIcon={<SendIcon />}
-              onClick={() => handleSendContact(contact?.Id)}>
+              // onClick={() => handleSendContact(contact?.Id)}>
+              onClick={isCreating ? () => handleEditContact(contact?.Id , updatedContactData) : () => handleEditContact(contact?.Id , updatedContactData)}>
+
           Submit
       </Button>
 
