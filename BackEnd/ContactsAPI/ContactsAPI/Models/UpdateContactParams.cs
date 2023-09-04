@@ -10,7 +10,7 @@ namespace ContactsAPI.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public long ContactNumber { get; set; }
+        public string ContactNumber { get; set; }
         //public Address ContactAddress { get; set; }
 
         //public string Street { get; set; }

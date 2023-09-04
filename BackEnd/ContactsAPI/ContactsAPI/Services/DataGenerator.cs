@@ -61,13 +61,15 @@ namespace ContactsAPI.Services
             {
                 string randomFirstName = GenerateRandomFName();
                 string randomLastName = GenerateRandomLName();
+                string randomContactNumber = GenerateRandomContactNumber();
+
                 var contact = new Contact
                 {
                     Id = Guid.NewGuid(),
                     FirstName = randomFirstName,
                     LastName = randomLastName,
                     Email = $"{randomFirstName}{randomLastName}{i}@mail.com",
-                    ContactNumber = GenerateRandomContactNumber(),
+                    ContactNumber = randomContactNumber
                     //ContactAddress = new Address
                     //{
                     //    Street = GenerateRandomStreet(),
@@ -98,13 +100,21 @@ namespace ContactsAPI.Services
             return _LastNameList[randomIndex];
         }
 
-        private long GenerateRandomContactNumber()
+        private string GenerateRandomContactNumber()
         {
-            long minContactNumber = 639000000000;
-            int lowerPart = _random.Next((int)(minContactNumber % int.MaxValue), int.MaxValue);
-            int upperPart = _random.Next(int.MaxValue);
+            try
+            {
+                Random _random = new Random();
+                int randomFPart = _random.Next(100, 999);
+                int randomSPart = _random.Next(100, 999);
+                int randomTPart = _random.Next(1000, 9999);
+                return $"({randomFPart}) {randomSPart}-{randomTPart}";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
-            return ((long)lowerPart) + ((long)upperPart << 32);
 
         }
 

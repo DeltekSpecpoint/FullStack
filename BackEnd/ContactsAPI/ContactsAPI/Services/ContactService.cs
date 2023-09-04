@@ -18,7 +18,7 @@ namespace ContactsAPI.Services
                     FirstName = "fName" + i,
                     LastName = "lName" + i,
                     Email = "user" + i + "@email.com",
-                    ContactNumber = 639171234567 + i,
+                    ContactNumber = "639171234567" + i,
                 });
             }
             return contacts;

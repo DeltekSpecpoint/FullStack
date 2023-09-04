@@ -16,7 +16,6 @@
 
 //   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
 
-  
 //   useEffect(() => {
 //       axios.get('https://localhost:44305/api/Contact/GetAll?page=1&pagesize=12')
 //               .then((response) => {
@@ -31,7 +30,6 @@
 //   const handleUpdate = () => {
 //       setIsUpdateNeeded(!isUpdateNeeded);
 //     };
-  
 
 //   return (
 //       <BrowserRouter>
@@ -68,22 +66,31 @@
 
 // // export default AppWithProvider;
 
-
-import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './App.css';
-import { GlobalProvider } from './Context/GlobalContext';
-import Main from './Container/Main';
+import React, { useEffect } from "react";
+import "./App.css";
+import { useSelector } from "react-redux";
+import NavBar from "./Container/NavBar";
+import Header from "./Container/Header";
+import ContactList from "./Container/ContactList";
+import AddEditContact from "./Components/AddEditContact";
+import DeleteContact from "./Components/DeleteContact";
 
 function App() {
+  const isAddEditModalOpen = useSelector(
+    (state) => state.contactReducer.isAddEditModalOpen
+  );
+  const isAffirmationModalOpen = useSelector(
+    (state) => state.contactReducer.isAffirmationModalOpen
+  );
+
   return (
-    <GlobalProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<Main />} />
-        </Routes>
-      </BrowserRouter>
-    </GlobalProvider>
+    <>
+      <NavBar />
+      <Header />
+      <ContactList />
+      {isAddEditModalOpen && <AddEditContact />}
+      {isAffirmationModalOpen && <DeleteContact />}
+    </>
   );
 }
 
