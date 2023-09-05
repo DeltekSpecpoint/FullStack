@@ -21,25 +21,6 @@ namespace ContactsAPI.Services
             "Guzman", "Cruz", "Espinosa", "David", "Mabini", "Crisostomo"
         };
 
-        private static List<string> _StreetList = new List<string>
-        {
-            "Augsburg", "Stolberg", "Hamberg", "Munich", "Kiel", "Boppard"
-        };
-
-        private static List<string> _CityList = new List<string>
-        {
-            "Pasig City", "Metro Manila", "Quezon City", "Pasay City", "Makati City", "Cavite City"
-        };
-
-        private static List<string> _RegionList = new List<string>
-        {
-            "NCR", "CALABARZON", "Ilocos Region", "Bicol Region", "Central Luzon", "Davao Region"
-        };
-
-        private static List<string> _PostalCodeList = new List<string>
-        {
-            "1600", "1900", "3111", "1102", "2716", "2566"
-        };
 
         public DataGenerator(ContactsAPIDBContext dbContext)
         {
@@ -70,19 +51,8 @@ namespace ContactsAPI.Services
                     LastName = randomLastName,
                     Email = $"{randomFirstName}{randomLastName}{i}@mail.com",
                     ContactNumber = randomContactNumber
-                    //ContactAddress = new Address
-                    //{
-                    //    Street = GenerateRandomStreet(),
-                    //    City = GenerateRandomCity(),
-                    //    Region = GenerateRandomRegion(),
-                    //    PostalCode = GenerateRandomPostalCode()
-                    //}
                 };
-
-
                 _dbContext.Contacts.Add(contact);
-
-
             }
 
             await _dbContext.SaveChangesAsync();
@@ -117,32 +87,6 @@ namespace ContactsAPI.Services
 
 
         }
-
-        private string GenerateRandomStreet()
-        {
-            int randomIndex = _random.Next(_StreetList.Count);
-            return _StreetList[randomIndex];
-        }
-
-        private string GenerateRandomCity()
-        {
-            int randomIndex = _random.Next(_CityList.Count);
-            return _CityList[randomIndex];
-        }
-
-        private string GenerateRandomRegion()
-        {
-            int randomIndex = _random.Next(_RegionList.Count);
-            return _RegionList[randomIndex];
-        }
-
-        private string GenerateRandomPostalCode()
-        {
-            int randomIndex = _random.Next(_PostalCodeList.Count);
-            return _PostalCodeList[randomIndex];
-        }
-
-
 
     }
 }

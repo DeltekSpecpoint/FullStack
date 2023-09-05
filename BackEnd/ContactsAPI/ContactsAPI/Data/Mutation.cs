@@ -23,16 +23,6 @@ namespace ContactsAPI.Data
                 LastName = addContactParams.LastName,
                 Email = addContactParams.Email,
                 ContactNumber = addContactParams.ContactNumber
-                //,
-                //Address = new Address
-                //{
-                //    Street = addContactParams.Street,
-                //    City = addContactParams.City,
-                //    Province = addContactParams.Province,
-                //    PostalCode = addContactParams.PostalCode
-                //}
-                //,
-                //EmergencyContacts = addContactParams.EmergencyContacts
             };
 
             await contactCollection.InsertOneAsync(contact);

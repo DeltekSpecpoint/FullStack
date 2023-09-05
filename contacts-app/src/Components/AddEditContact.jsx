@@ -5,7 +5,7 @@ import {
   handleShouldReload,
   checkFieldValidations,
   updateCurrentContact,
-} from "../contactReducer";
+} from "../Redux/contactReducer";
 import {
   DialogActions,
   DialogContent,

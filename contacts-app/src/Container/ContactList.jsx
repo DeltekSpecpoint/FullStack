@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateContactsList, handleShouldReload } from "../contactReducer";
+import {
+  updateContactsList,
+  handleShouldReload,
+} from "../Redux/contactReducer";
 import Grid from "@material-ui/core/Grid";
 import { Container } from "@material-ui/core";
 import ContactCard from "./ContactCard";
@@ -9,17 +12,18 @@ import axios from "axios";
 
 function ContactList() {
   const dispatch = useDispatch();
-  const { contactsList, shouldReload, searchTerm } = useSelector(
-    (state) => state.contactReducer
-  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const { contactsList, shouldReload, searchTerm, sortField, isDesc } =
+    useSelector((state) => state.contactReducer);
 
   const getContacts = async () => {
+    const sortOrder = isDesc ? "desc" : "asc";
+
     await axios
       .get(
-        `https://localhost:44305/api/Contact/GetAll?page=1&pagesize=12&searchQuery=${searchTerm}`
+        `https://localhost:44305/api/Contact/GetAll?page=${currentPage}&pagesize=12&searchQuery=${searchTerm}&sortField=${sortField}&sortOrder=${sortOrder}`
       )
       .then((response) => {
-        console.log("s: ", searchTerm);
         dispatch(updateContactsList(response.data));
         console.log(response.data);
       })
@@ -28,13 +32,9 @@ function ContactList() {
       });
   };
 
-  const pageSize = 12; // Number of cards to display per page
-  const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
+    dispatch(handleShouldReload(true));
   };
 
   useEffect(() => {
@@ -67,13 +67,13 @@ function ContactList() {
           height: "50px",
           padding: "10px 0",
         }}>
-        {/* <Pagination
-          count={84} // Calculate the total number of pagesMath.ceil(contacts.length / pageSize)
+        <Pagination
+          count={84} // Calculate the total number of pagesMath.ceil(contactsList.length / pageSize)
           page={currentPage}
           onChange={handlePageChange}
           showFirstButton
           showLastButton
-        /> */}
+        />
       </Grid>
     </>
   );

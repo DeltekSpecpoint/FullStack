@@ -1,20 +1,30 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   updateFormDetails,
   toggleAddEditModal,
   updateCurrentContact,
-} from "../contactReducer";
+  toggleDesc,
+  handleShouldReload,
+  updateSortField,
+} from "../Redux/contactReducer";
 import Grid from "@material-ui/core/Grid";
 import { Container } from "@material-ui/core";
 import SortIcon from "@mui/icons-material/Sort";
+import SouthIcon from "@mui/icons-material/South";
+import NorthIcon from "@mui/icons-material/North";
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 export default function Header() {
   const dispatch = useDispatch();
-  const handleSort = () => {};
+  const { isDesc, sortField } = useSelector((state) => state.contactReducer);
 
+  const handleSort = () => {
+    dispatch(updateSortField("LastName"));
+    dispatch(toggleDesc(!isDesc));
+    dispatch(handleShouldReload(true));
+  };
   const handleCreateClick = () => {
     const currentContact = {
       Id: "",
@@ -41,9 +51,18 @@ export default function Header() {
             </Button>
           </Grid>
           <Grid item xs={6} container justifyContent="flex-end">
-            <Button endIcon={<SortIcon />} onClick={handleSort}>
-              Sort
-            </Button>
+            <Button
+              endIcon={
+                <>
+                  <SortIcon />
+                  {isDesc ? (
+                    <SouthIcon style={{ fontSize: 19 }} />
+                  ) : (
+                    <NorthIcon style={{ fontSize: 19 }} />
+                  )}
+                </>
+              }
+              onClick={handleSort}></Button>
           </Grid>
         </Grid>
       </Container>

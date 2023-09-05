@@ -23,6 +23,8 @@ const initialState = {
     Email: false,
   },
   searchTerm: "",
+  sortField: "",
+  isDesc: false,
 };
 
 export const contactSlice = createSlice({
@@ -53,6 +55,12 @@ export const contactSlice = createSlice({
     updateSearchTerm: (state, action) => {
       state.searchTerm = action.payload;
     },
+    toggleDesc: (state, action) => {
+      state.isDesc = action.payload;
+    },
+    updateSortField: (state, action) => {
+      state.sortField = action.payload;
+    },
   },
 });
 
@@ -67,6 +75,10 @@ export const {
   fieldValidations,
   updateSearchTerm,
   searchTerm,
+  sortField,
+  isDesc,
+  toggleDesc,
+  updateSortField,
 } = contactSlice.actions;
 
 export default contactSlice.reducer;

@@ -8,7 +8,10 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleAffirmationModal, handleShouldReload } from "../contactReducer";
+import {
+  toggleAffirmationModal,
+  handleShouldReload,
+} from "../Redux/contactReducer";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 
@@ -22,8 +25,6 @@ export default function DeleteContact() {
   );
 
   const handleDeleteContact = () => {
-    console.log("deleteID: " + currentContact.Id);
-
     axios({
       method: "DELETE",
       url: `https://localhost:44305/api/Contact/DeleteContact/${currentContact.Id}`,

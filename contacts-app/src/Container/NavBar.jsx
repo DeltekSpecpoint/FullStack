@@ -1,10 +1,6 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  updateContactsList,
-  handleShouldReload,
-  updateSearchTerm,
-} from "../contactReducer";
+import { useDispatch } from "react-redux";
+import { handleShouldReload, updateSearchTerm } from "../Redux/contactReducer";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -12,7 +8,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import axios from "axios";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -57,26 +52,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function NavBar() {
   const dispatch = useDispatch();
-  // const searchTerm = useSelector((state) => (state.contactReducer.searchTerm));
   const handleSearch = (e) => {
     const searchTerm = e.target.value;
     if (e.key === "Enter") {
       dispatch(updateSearchTerm(searchTerm));
       dispatch(handleShouldReload(true));
     }
-
-    // axios
-    //   .get(
-    //     `https://localhost:44305/api/Contact/GetAll?page=1&pagesize=12&searchQuery=${searchTerm}`
-    //   )
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     dispatch(updateContactsList(response.data));
-    //     dispatch(handleShouldReload(true));
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
   };
 
   return (
