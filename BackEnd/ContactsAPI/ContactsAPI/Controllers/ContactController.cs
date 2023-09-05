@@ -195,7 +195,8 @@ namespace ContactsAPI.Controllers
                     query = query.Where(contact =>
                         contact.FirstName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
                         contact.LastName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                        contact.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
+                        contact.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                        contact.ContactNumber.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
                 }
 
                 // Apply pagination

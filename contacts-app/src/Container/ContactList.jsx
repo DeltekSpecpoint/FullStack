@@ -9,17 +9,17 @@ import axios from "axios";
 
 function ContactList() {
   const dispatch = useDispatch();
-  const contactsList = useSelector(
-    (state) => state.contactReducer.contactsList
-  );
-  const shouldReload = useSelector(
-    (state) => state.contactReducer.shouldReload
+  const { contactsList, shouldReload, searchTerm } = useSelector(
+    (state) => state.contactReducer
   );
 
   const getContacts = async () => {
     await axios
-      .get("https://localhost:44305/api/Contact/GetAll?page=1&pagesize=12")
+      .get(
+        `https://localhost:44305/api/Contact/GetAll?page=1&pagesize=12&searchQuery=${searchTerm}`
+      )
       .then((response) => {
+        console.log("s: ", searchTerm);
         dispatch(updateContactsList(response.data));
         console.log(response.data);
       })
@@ -67,13 +67,13 @@ function ContactList() {
           height: "50px",
           padding: "10px 0",
         }}>
-        <Pagination
+        {/* <Pagination
           count={84} // Calculate the total number of pagesMath.ceil(contacts.length / pageSize)
           page={currentPage}
           onChange={handlePageChange}
           showFirstButton
           showLastButton
-        />
+        /> */}
       </Grid>
     </>
   );

@@ -1,4 +1,10 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateContactsList,
+  handleShouldReload,
+  updateSearchTerm,
+} from "../contactReducer";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -49,21 +55,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function NavBar({ contact, onUpdate }) {
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value;
-    console.log("Search term:", searchTerm);
-    axios
-      .get(
-        `https://localhost:44305/api/Contact/GetAll?searchQuery=${searchTerm}`
-      )
-      .then((response) => {
-        console.log(response.data);
-        onUpdate();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+export default function NavBar() {
+  const dispatch = useDispatch();
+  // const searchTerm = useSelector((state) => (state.contactReducer.searchTerm));
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value;
+    if (e.key === "Enter") {
+      dispatch(updateSearchTerm(searchTerm));
+      dispatch(handleShouldReload(true));
+    }
+
+    // axios
+    //   .get(
+    //     `https://localhost:44305/api/Contact/GetAll?page=1&pagesize=12&searchQuery=${searchTerm}`
+    //   )
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     dispatch(updateContactsList(response.data));
+    //     dispatch(handleShouldReload(true));
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
   };
 
   return (
@@ -84,7 +97,7 @@ export default function NavBar({ contact, onUpdate }) {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onChange={handleSearch}
+              onKeyUp={handleSearch}
             />
           </Search>
         </Toolbar>

@@ -22,6 +22,7 @@ const initialState = {
     ContactNumber: false,
     Email: false,
   },
+  searchTerm: "",
 };
 
 export const contactSlice = createSlice({
@@ -49,6 +50,9 @@ export const contactSlice = createSlice({
     checkFieldValidations: (state, action) => {
       state.fieldValidations = action.payload;
     },
+    updateSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
+    },
   },
 });
 
@@ -61,6 +65,8 @@ export const {
   updateContactsList,
   checkFieldValidations,
   fieldValidations,
+  updateSearchTerm,
+  searchTerm,
 } = contactSlice.actions;
 
 export default contactSlice.reducer;
