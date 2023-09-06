@@ -1,153 +1,179 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+	setIsFormModalOpen,
+	setCurrentContactData,
+	setFormChecks,
+} from "../../reducers.js";
+import Environment from "../../utilities/environment.js";
 import axios from "axios";
+import "./AddEditContactModal.css";
 import { Button, Modal, Form } from "react-bootstrap";
 
-import Environment from "../../utilities/environment.js";
+const AddEditContactModal = () => {
+	const dispatch = useDispatch();
+	const { isFormModalOpen, modalDetails, currentContactData, formChecks } =
+		useSelector((state) => state.contact);
 
-const AddEditContactModal = (props) => {
-	const [validated, setValidated] = useState(false);
-	const [contactData, setContactData] = useState(props.data.contactData);
+	const isFieldEmpty = (value) => {
+		return value.length > 0;
+	};
 
-	useEffect(() => {}, []);
+	const isMobileEmailValid = (type, value) => {
+		const phonePattern =
+			/^(\([0-9]{3}\)\s*|[0-9]{3}[-\s]*)[0-9]{3}[-\s]*[0-9]{4}$/;
+		const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		const pattern = type == "phone" ? phonePattern : emailPattern;
+
+		return pattern.test(value);
+	};
+
+	const handleFormFieldChecks = (e) => {
+		const { name, value } = e.target;
+
+		switch (name) {
+			case "firstName":
+				dispatch(setFormChecks({ ...formChecks, [name]: isFieldEmpty(value) }));
+				break;
+			case "lastName":
+				dispatch(setFormChecks({ ...formChecks, [name]: isFieldEmpty(value) }));
+				break;
+			case "phone":
+				dispatch(
+					setFormChecks({
+						...formChecks,
+						[name]: isFieldEmpty(value) && isMobileEmailValid("phone", value),
+					})
+				);
+				break;
+			case "email":
+				const isEmailValid =
+					isFieldEmpty(value) && isMobileEmailValid("email", value);
+
+				dispatch(
+					setFormChecks({
+						...formChecks,
+						[name]: isEmailValid,
+					})
+				);
+				break;
+		}
+	};
 
 	const handleFormChange = (e) => {
-		const { name, value, id } = e.target;
+		handleFormFieldChecks(e);
+		const { name, value } = e.target;
 
-		setContactData({ ...contactData, [name]: value });
+		dispatch(setCurrentContactData({ ...currentContactData, [name]: value }));
 	};
 
 	const handleAddEdit = (e) => {
 		let form = e.currentTarget;
 
-		if (form.checkValidity() === false) {
-			e.preventDefault();
-			e.stopPropagation();
-		} else {
-			setValidated(true);
-
-			const contactId =
-				props.data.formType == "create" ? "" : props.data.contactData.id;
-			const method = props.data.formType == "create" ? "post" : "put";
-
-			if (validated) {
-				axios({
-					method: method,
-					url: Environment.URL_API + contactId,
-					data: contactData,
-				})
-					.then((res) => {
-						props.data.setIsFormModalOpen(false);
-					})
-					.catch((err) => console.error(err));
-			}
-		}
+		// if (
+		// 	formChecks.firstName &&
+		// 	formChecks.lastName &&
+		// 	formChecks.phone &&
+		// 	formChecks.email
+		// ) {
+		// setValidated(true);
+		// let form = e.currentTarget;
+		// if (form.checkValidity() === false) {
+		// 	e.preventDefault();
+		// 	e.stopPropagation();
+		// } else {
+		// 	setValidated(true);
+		// 	const contactId =
+		// 		modalDetails.type == "create" ? "" : currentContactData.id;
+		// 	const method = modalDetails.type == "create" ? "post" : "put";
+		// 	if (validated) {
+		// 		axios({
+		// 			method: method,
+		// 			url: Environment.URL_API + contactId,
+		// 			data: currentContactData,
+		// 		})
+		// 			.then((res) => {
+		// 				dispatch(setIsFormModalOpen(false));
+		// 			})
+		// 			.catch((err) => console.error(err));
+		// 	}
+		// }
+		// } else setValidated(false);
 	};
 
 	return (
-		<Modal show={props.data.isFormModalOpen} backdrop="static" keyboard={false}>
+		<Modal show={isFormModalOpen} backdrop="static" keyboard={false}>
 			<Modal.Header>
-				<Modal.Title>{props.data.title}</Modal.Title>
+				<Modal.Title>{modalDetails.title}</Modal.Title>
 			</Modal.Header>
-			<Form noValidate validated={validated}>
+			<Form>
 				<Modal.Body>
 					<Form.Group className="mb-3" controlId="form.firstName">
 						<Form.Label>First Name</Form.Label>
-						{props.data.formType == "create" ? (
-							<Form.Control
-								required
-								type="text"
-								name="firstName"
-								onChange={(e) => handleFormChange(e)}
-							/>
-						) : (
-							<Form.Control
-								required
-								type="text"
-								name="firstName"
-								defaultValue={props.data.contactData.firstName}
-								onChange={(e) => handleFormChange(e)}
-							/>
-						)}
-						<Form.Control.Feedback type="invalid">
-							Provide first name.
-						</Form.Control.Feedback>
+						<Form.Control
+							required
+							type="text"
+							name="firstName"
+							defaultValue={currentContactData.firstName}
+							onChange={handleFormChange}
+						/>
+						{currentContactData.lastName.length > 0 && !formChecks.firstName ? (
+							<span className="fieldInvalid">Provide first name.</span>
+						) : null}
 					</Form.Group>
 					<Form.Group className="mb-3" controlId="form.lastName">
 						<Form.Label>Last Name</Form.Label>
-						{props.data.formType == "create" ? (
-							<Form.Control
-								required
-								type="text"
-								name="lastName"
-								onChange={(e) => handleFormChange(e)}
-							/>
-						) : (
-							<Form.Control
-								required
-								type="text"
-								name="lastName"
-								defaultValue={props.data.contactData.lastName}
-								onChange={(e) => handleFormChange(e)}
-							/>
-						)}
-						<Form.Control.Feedback type="invalid">
-							Provide last name.
-						</Form.Control.Feedback>
+						<Form.Control
+							required
+							type="text"
+							name="lastName"
+							defaultValue={currentContactData.lastName}
+							onChange={handleFormChange}
+						/>
+						{currentContactData.lastName.length > 0 && !formChecks.lastName ? (
+							<span className="fieldInvalid">Provide last name.</span>
+						) : null}
 					</Form.Group>
 					<Form.Group className="mb-3" controlId="form.phone">
 						<Form.Label>Phone</Form.Label>
-						{props.data.formType == "create" ? (
-							<Form.Control
-								required
-								type="text"
-								name="phone"
-								onChange={(e) => handleFormChange(e)}
-							/>
-						) : (
-							<Form.Control
-								required
-								type="text"
-								name="phone"
-								defaultValue={props.data.contactData.phone}
-								onChange={(e) => handleFormChange(e)}
-							/>
-						)}
-						<Form.Control.Feedback type="invalid">
-							Provide a phone number.
-						</Form.Control.Feedback>
+						<Form.Control
+							required
+							type="text"
+							name="phone"
+							defaultValue={currentContactData.phone}
+							onChange={handleFormChange}
+						/>
+						{currentContactData.lastName.length > 0 && !formChecks.phone ? (
+							<span className="fieldInvalid">
+								Provide a valid phone number.
+							</span>
+						) : null}
 					</Form.Group>
 					<Form.Group className="mb-3" controlId="form.email">
 						<Form.Label>Email</Form.Label>
-						{props.data.formType == "create" ? (
-							<Form.Control
-								required
-								type="email"
-								name="email"
-								onChange={(e) => handleFormChange(e)}
-							/>
-						) : (
-							<Form.Control
-								required
-								type="email"
-								name="email"
-								defaultValue={props.data.contactData.email}
-								onChange={(e) => handleFormChange(e)}
-							/>
-						)}
-						<Form.Control.Feedback type="invalid">
-							Provide a valid email address.
-						</Form.Control.Feedback>
+						<Form.Control
+							required
+							type="email"
+							name="email"
+							defaultValue={currentContactData.email}
+							onChange={handleFormChange}
+						/>
+						{currentContactData.lastName.length > 0 && !formChecks.email ? (
+							<span className="fieldInvalid">
+								Provide a valid email address.
+							</span>
+						) : null}
 					</Form.Group>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button
 						variant="secondary"
-						onClick={() => props.data.setIsFormModalOpen(false)}
+						onClick={() => dispatch(setIsFormModalOpen(false))}
 					>
 						Cancel
 					</Button>
-					<Button variant="primary" onClick={(e) => handleAddEdit(e)}>
-						{props.data.buttonName}
+					<Button variant="primary" onClick={handleAddEdit}>
+						{modalDetails.buttonLabel}
 					</Button>
 				</Modal.Footer>
 			</Form>

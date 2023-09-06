@@ -1,4 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+	setIsFormModalOpen,
+	setModalDetails,
+	setCurrentContactData,
+} from "../../reducers.js";
+import Environment from "../../utilities/environment.js";
 import axios from "axios";
 import {
 	Container,
@@ -19,20 +26,21 @@ import {
 	faTrashCan,
 	faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-
 import AddEditContact from "../AddEditContactModal/AddEditContactModal.jsx";
-import Environment from "../../utilities/environment.js";
 
 const ContactList = () => {
+	const dispatch = useDispatch();
+	const { isFormModalOpen, currentContactData } = useSelector(
+		(state) => state.contact
+	);
+
 	const [contactsList, setContactsList] = useState([]);
-	const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-	const [editContactData, setEditContactData] = useState([]);
 	const [searchKey, setSearchKey] = useState("");
 	const [shouldReload, setShouldReload] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const getContacts = () => {
-		const skey = searchKey != "" ? `&searchKey=${searchKey}` : "";
+		const skey = searchKey !== "" ? `&searchKey=${searchKey}` : "";
 
 		axios
 			.get(Environment.URL_API + `?page=${currentPage}&pageSize=12${skey}`)
@@ -56,13 +64,16 @@ const ContactList = () => {
 		setShouldReload(true);
 	};
 
-	useEffect(() => {
-		getContacts();
-	}, [shouldReload]);
-
 	const handleEdit = (contactData) => {
-		setEditContactData(contactData);
-		setIsFormModalOpen(true);
+		const modalDetails = {
+			type: "edit",
+			title: "Edit Contact",
+			buttonLabel: "Save",
+		};
+
+		dispatch(setModalDetails(modalDetails));
+		dispatch(setCurrentContactData(contactData));
+		dispatch(setIsFormModalOpen(true));
 	};
 
 	const handleDelete = (id) => {
@@ -74,6 +85,10 @@ const ContactList = () => {
 			})
 			.catch((err) => console.error(err));
 	};
+
+	useEffect(() => {
+		getContacts();
+	}, [shouldReload]);
 
 	return (
 		<>
@@ -96,7 +111,6 @@ const ContactList = () => {
 																key={idx}
 																size="sm"
 																variant="primary"
-																// className="mb-2"
 																onClick={() => handleEdit(c)}
 															>
 																<FontAwesomeIcon icon={faPencil} />
@@ -136,18 +150,6 @@ const ContactList = () => {
 						  })
 						: null}
 				</Row>
-				{isFormModalOpen && (
-					<AddEditContact
-						data={{
-							title: "Edit Contact",
-							formType: "edit",
-							buttonName: "Save",
-							contactData: editContactData,
-							isFormModalOpen,
-							setIsFormModalOpen,
-						}}
-					/>
-				)}
 			</Container>
 			<footer className="footer">
 				<Navbar bg="dark" variant="light" fixed="bottom">
