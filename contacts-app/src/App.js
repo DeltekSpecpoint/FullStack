@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setFormChecks } from "./reducers";
+
+import Header from "./components/Header/Header";
+import ContactList from "./components/ContactList/ContactList";
+import AddEditContact from "./components/AddEditContactModal/AddEditContactModal.jsx";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const dispatch = useDispatch();
+	const { isFormModalOpen } = useSelector((state) => state.contact);
+	const formChecks = {
+		isInitial: true,
+		firstName: false,
+		lastName: false,
+		phone: false,
+		email: false,
+	};
+
+	useEffect(() => {
+		dispatch(setFormChecks(formChecks));
+	}, [isFormModalOpen]);
+
+	return (
+		<div className="App">
+			<Header />
+			<ContactList />
+			{isFormModalOpen && <AddEditContact />}
+		</div>
+	);
 }
 
 export default App;
