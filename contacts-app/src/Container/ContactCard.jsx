@@ -5,6 +5,7 @@ import {
   toggleAddEditModal,
   updateCurrentContact,
   toggleAffirmationModal,
+  checkFieldValidations,
 } from "../Redux/contactReducer";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -21,6 +22,14 @@ function ContactCard({ contact }) {
       formTitle: "Edit Contact",
       formType: "Edit",
     };
+
+    const editFieldValidation = {
+      FirstName: true,
+      LastName: true,
+      ContactNumber: true,
+      Email: true,
+    };
+    dispatch(checkFieldValidations(editFieldValidation));
     dispatch(updateFormDetails(formDetails));
     dispatch(updateCurrentContact(contact));
     dispatch(toggleAddEditModal(true));

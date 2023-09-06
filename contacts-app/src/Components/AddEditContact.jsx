@@ -34,11 +34,11 @@ const AddEditContact = () => {
   const [isEditingLastName, setIsEditingLastName] = useState(false);
   const [isEditingContactNumber, setIsEditingContactNumber] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
-
+  const [isDisabledBtn, setIsDisabledBtn] = useState(true);
   const handleSendContact = (id) => {
-    const method = formDetails.formType == "Create" ? "POST" : "PUT";
+    const method = formDetails.formType === "Create" ? "POST" : "PUT";
     const url =
-      formDetails.formType == "Create"
+      formDetails.formType === "Create"
         ? "https://localhost:44305/api/Contact/AddContact"
         : `https://localhost:44305/api/Contact/UpdateContact/${id}`;
 
@@ -84,10 +84,10 @@ const AddEditContact = () => {
           );
           break;
       }
+      setIsDisabledBtn(false);
     } else {
       dispatch(checkFieldValidations({ ...fieldValidations, [name]: false }));
     }
-
     dispatch(updateCurrentContact({ ...currentContact, [name]: value }));
   };
 
@@ -106,6 +106,8 @@ const AddEditContact = () => {
         break;
       case "ContactNumber":
         setIsEditingContactNumber(true);
+        break;
+      default:
         break;
     }
   };
@@ -137,8 +139,8 @@ const AddEditContact = () => {
             name="FirstName"
             label="First Name"
             defaultValue={currentContact.FirstName}
-            onChange={handleChange}
             required
+            onChange={handleChange}
             onFocus={(e) => handleFocusBlur(e, "FirstName")}
             onBlur={(e) => handleFocusBlur(e, "FirstName")}
             error={isEditingFirstName ? !fieldValidations.FirstName : false}
@@ -152,8 +154,8 @@ const AddEditContact = () => {
             name="LastName"
             label="Last Name"
             defaultValue={currentContact.LastName}
-            onChange={handleChange}
             required
+            onChange={handleChange}
             onFocus={(e) => handleFocusBlur(e, "LastName")}
             onBlur={(e) => handleFocusBlur(e, "LastName")}
             error={isEditingLastName ? !fieldValidations.LastName : false}
@@ -167,8 +169,8 @@ const AddEditContact = () => {
             name="ContactNumber"
             label="Contact Number"
             defaultValue={currentContact.ContactNumber}
-            onChange={handleChange}
             required
+            onChange={handleChange}
             onFocus={(e) => handleFocusBlur(e, "ContactNumber")}
             onBlur={(e) => handleFocusBlur(e, "ContactNumber")}
             error={
@@ -184,6 +186,7 @@ const AddEditContact = () => {
             name="Email"
             label="Email"
             defaultValue={currentContact.Email}
+            required
             onChange={handleChange}
             onFocus={(e) => handleFocusBlur(e, "Email")}
             onBlur={(e) => handleFocusBlur(e, "Email")}
@@ -202,7 +205,14 @@ const AddEditContact = () => {
         <Button
           variant="contained"
           endIcon={<SendIcon />}
-          onClick={() => handleSendContact(currentContact?.Id)}>
+          onClick={() => handleSendContact(currentContact?.Id)}
+          disabled={
+            (formDetails.formTitle === "Create Contact" && isDisabledBtn) ||
+            !fieldValidations.FirstName ||
+            !fieldValidations.LastName ||
+            !fieldValidations.Email ||
+            !fieldValidations.ContactNumber
+          }>
           Submit
         </Button>
       </DialogActions>
