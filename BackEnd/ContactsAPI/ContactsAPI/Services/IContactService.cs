@@ -1,11 +1,10 @@
-﻿using System;
+﻿using ContactsAPI.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ContactsAPI.Services
 {
     public interface IContactService
     {
+        List<Contact> GetContacts();
     }
 }
