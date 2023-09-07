@@ -1,0 +1,173 @@
+// ---------------------------------------------
+// Utility file for contact
+// ---------------------------------------------
+
+$prefix: "c-"; //c stands for contact component
+$color: (
+  black: #000000,
+  white: #ffffff,
+  blue: #2E5984,
+  blue2: #0072ea
+);
+
+$directions: (
+  col: column,
+  row: row,
+  col-r: column-reverse,
+  row-r: row-reverse
+);
+
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer * 0.75,
+  4: $spacer * 1,
+  5: $spacer * 1.25,
+  6: $spacer * 1.5,
+  7: $spacer * 1.75,
+  8: $spacer * 2
+);
+
+$aligns: (
+  center: center,
+  fs: flex-start,
+  fe: flex-end,
+  start: start,
+  end: end,
+  sb: space-between,
+  sa: space-around,
+  se: space-evenly,
+);
+
+$textAligns: (center, end, start, left, right);
+
+$fontWeights: (
+  1: 100,
+  2: 200,
+  3: 300,
+  4: 400,
+  5: 500,
+  6: 600,
+  7: 700,
+  8: 800
+);
+
+$fontSize: (
+  s: 10px,
+  m: 14px,
+  l: 16px
+);
+
+.contact {
+  // --------------------------------------------------
+  // Color pallete
+  // --------------------------------------------------
+  @each $key, $value in $color {
+    .#{$prefix}background-#{$key} {
+      background: $value;
+    }
+
+    .#{$prefix}color-#{$key} {
+      color: $value;
+    }
+  }
+
+  // --------------------------------------------------
+  // Fonts
+  // --------------------------------------------------
+  @each $key, $value in $fontWeights {
+    .#{$prefix}fw-#{$key} {
+      font-weight: $value;
+    }
+  }
+
+  @each $key, $value in $fontSize {
+    .#{$prefix}fs-#{$key} {
+      font-size: $value;
+    }
+  }
+
+  // -------------------------------------------------
+  // Spacing
+  // -------------------------------------------------
+  @each $key, $value in $spacers {
+    // --------------------------------------------------
+    // Display
+    // --------------------------------------------------
+    .#{$prefix}flex {
+      display: flex;
+    }
+
+    .#{$prefix}flex-wrap {
+      flex-wrap: wrap;
+    }
+
+    .#{$prefix}flex-wrap-r {
+      flex-wrap: wrap-reverse;
+    }
+
+    .#{$prefix}flex-nowrap {
+      flex-wrap: nowrap;
+    }
+
+    @each $key, $value in $directions {
+      .#{$prefix}flex-#{$key} {
+        flex-direction: $value;
+      }
+    }
+
+    @each $key, $value in $aligns {
+      .#{$prefix}justify-#{$key} {
+        justify-content: $value;
+      }
+
+      .#{$prefix}align-#{$key} {
+        align-items: $value;
+      }
+    }
+
+    // Paddings
+    .#{$prefix}p-#{$key} {
+        padding: $value $value $value $value;
+    }
+
+    .#{$prefix}pt-#{$key} {
+      padding-top: $value;
+    }
+
+    .#{$prefix}pb-#{$key} {
+      padding-bottom: $value;
+    }
+
+    .#{$prefix}pl-#{$key} {
+      padding-left: $value;
+    }
+
+    .#{$prefix}pr-#{$key} {
+      padding-right: $value;
+    }
+
+    // Margins
+    .#{$prefix}m-#{$key} {
+      margin: $value $value $value $value;
+    }
+
+    .#{$prefix}mt-#{$key} {
+      margin-top: $value;
+    }
+
+    .#{$prefix}mb-#{$key} {
+      margin-bottom: $value;
+    }
+
+    .#{$prefix}ml-#{$key} {
+      margin-left: $value;
+    }
+
+    .#{$prefix}mr-#{$key} {
+      margin-right: $value;
+    }
+  }
+}
